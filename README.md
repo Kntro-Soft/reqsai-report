@@ -5466,9 +5466,95 @@ Los siguientes mock-ups presentan la versión de alta fidelidad de la aplicació
 
 <img src="assets/ui/mobile/mockups/mobile-billing-subscription-screen.png" alt="Mobile Billing & Subscription Screen Mockup" style="width: 400px">
 
-### 6.4.3. Applications User Flow Diagrams
+**Web Application User Flow Diagrams**
 
+Los user flow diagrams de la aplicación web de Reqs-AI representan el recorrido funcional que sigue el usuario dentro de la plataforma. A diferencia de los wireframes y wireflows, estos diagramas permiten observar de forma más directa cómo se conectan las acciones principales del usuario con los módulos del sistema: autenticación, onboarding, creación de workspace, navegación principal, gestión de proyectos, sesiones de descubrimiento, revisión de historias generadas por IA, integraciones, facturación y configuración del equipo.
 
+Cada user flow evidencia una ruta de uso concreta, mostrando cómo el usuario avanza desde una necesidad inicial hasta una acción final dentro de la web application. Esto permite validar la continuidad de la experiencia, la coherencia entre módulos y la relación entre las pantallas diseñadas.
+
+#### Flujo de autenticación y acceso
+
+##### Registro hacia inicio de sesión
+
+**Descripción:** Este user flow muestra la transición entre la pantalla de registro y la pantalla de inicio de sesión. El flujo permite validar que un visitante puede crear una cuenta o volver al login si ya cuenta con credenciales, manteniendo una navegación clara en el acceso inicial a Reqs-AI.
+
+<img src="assets/ui/web/user-flows/01-authentication-signup-to-login-user-flow.png" alt="Registro hacia inicio de sesión" width="100%">
+
+#### Flujo de onboarding y creación de workspace
+
+##### Dashboard vacío hacia configuración del workspace
+
+**Descripción:** Este user flow representa el recorrido inicial del usuario cuando aún no tiene un workspace creado. Desde el dashboard vacío, el usuario puede iniciar la creación del espacio de trabajo, seleccionar el caso de uso principal y completar la configuración base para adaptar Reqs-AI a su organización.
+
+<img src="assets/ui/web/user-flows/02-onboarding-empty-dashboard-to-workspace-setup-user-flow.png" alt="Dashboard vacío hacia configuración del workspace" width="100%">
+
+##### Creación del workspace hacia confirmación exitosa
+
+**Descripción:** Este flujo evidencia el proceso de carga y creación del workspace. La pantalla muestra cómo el sistema comunica el avance de configuración y luego confirma que el workspace fue creado correctamente, permitiendo al usuario continuar hacia el entorno principal de trabajo.
+
+<img src="assets/ui/web/user-flows/03-workspace-creation-loading-to-success-user-flow.png" alt="Creación del workspace hacia confirmación exitosa" width="100%">
+
+#### Flujo de navegación principal y proyectos
+
+##### Home del workspace hacia proyectos
+
+**Descripción:** Este user flow muestra la navegación desde el dashboard principal del workspace hacia el módulo de proyectos. Permite validar que el usuario puede revisar proyectos activos, acceder a métricas generales y administrar iniciativas asociadas a clientes o productos específicos.
+
+<img src="assets/ui/web/user-flows/04-workspace-home-to-projects-user-flow.png" alt="Home del workspace hacia proyectos" width="100%">
+
+#### Flujo de sesiones de descubrimiento
+
+##### Sesiones hacia discovery sessions
+
+**Descripción:** Este flujo representa la navegación desde la página general de sesiones hacia la vista de discovery sessions. Permite revisar reuniones procesadas, métricas de sesiones, estados de avance y accesos a sesiones asistidas por IA.
+
+<img src="assets/ui/web/user-flows/05-sessions-to-discovery-sessions-user-flow.png" alt="Sesiones hacia discovery sessions" width="100%">
+
+##### Discovery sessions hacia inicio de sesión en vivo
+
+**Descripción:** Este user flow muestra cómo el usuario inicia una sesión de descubrimiento en vivo desde el módulo de sesiones. El flujo valida la configuración previa de la sesión, incluyendo título, proyecto asociado, modo de facilitación y opciones de captura antes de lanzar la reunión asistida por IA.
+
+<img src="assets/ui/web/user-flows/06-discovery-sessions-to-live-session-modal-user-flow.png" alt="Discovery sessions hacia inicio de sesión en vivo" width="100%">
+
+#### Flujo de historias de usuario generadas por IA
+
+##### Historias de usuario hacia revisión detallada
+
+**Descripción:** Este flujo evidencia cómo el usuario accede al detalle de una historia generada por IA desde el listado principal. El panel de revisión permite validar la descripción, prioridad, nivel de confianza, criterios de aceptación en formato Gherkin y acciones de edición o aprobación antes de utilizar la historia en el backlog.
+
+<img src="assets/ui/web/user-flows/07-user-stories-to-story-review-user-flow.png" alt="Historias de usuario hacia revisión detallada" width="100%">
+
+#### Flujo de integraciones externas
+
+##### Integraciones hacia conexión con Jira
+
+**Descripción:** Este user flow muestra el proceso para conectar Reqs-AI con Jira desde la página de integraciones. El flujo permite validar la autorización, configuración y vinculación con Atlassian para exportar historias aprobadas hacia herramientas ágiles sin copiar información manualmente.
+
+<img src="assets/ui/web/user-flows/08-integrations-to-jira-connection-user-flow.png" alt="Integraciones hacia conexión con Jira" width="100%">
+
+#### Flujo de facturación y suscripción
+
+##### Gestión de billing y suscripción
+
+**Descripción:** Este flujo representa la vista de facturación y suscripción del workspace. Permite revisar el plan activo, el consumo de tokens de IA, los colaboradores activos, el método de pago, el historial de facturas y las acciones de upgrade o administración del plan.
+
+<img src="assets/ui/web/user-flows/09-billing-subscription-management-user-flow.png" alt="Gestión de billing y suscripción" width="100%">
+
+#### Flujo de configuración y equipo
+
+##### Settings hacia gestión de equipo
+
+**Descripción:** Este user flow muestra la navegación desde la configuración general del workspace hacia la administración del equipo. Permite validar la gestión de miembros, roles, permisos, invitaciones y alertas internas, asegurando control sobre el acceso y las responsabilidades dentro de la organización.
+
+<img src="assets/ui/web/user-flows/10-settings-to-team-management-user-flow.png" alt="Settings hacia gestión de equipo" width="100%">
+
+#### Flujo general de la web application
+
+##### Vista general del user flow completo
+
+**Descripción:** Este diagrama resume el recorrido global de la web application de Reqs-AI. Integra las rutas principales entre dashboard, proyectos, sesiones, historias de usuario, integraciones, billing y settings, mostrando cómo los módulos se conectan dentro de una experiencia continua y coherente para el usuario.
+
+<img src="assets/ui/web/user-flows/11-complete-web-application-user-flow-overview.png" alt="Vista general del user flow completo" width="100%">
 
 **Mobile Application User Flow Diagrams**
 
@@ -5505,14 +5591,20 @@ Los siguientes mock-ups presentan la versión de alta fidelidad de la aplicació
 ## 6.5. Applications Prototyping
 
 **Web Application Prototyping**
-En esta sección se presentan el prototipo interactivo de alta fidelidad para la aplicación web de Reqs-AI, construido con Figma. El prototipo integra los Mock-ups finales en una experiencia navegable que simula el comportamiento real del producto digital.
+
+En esta sección se presenta el prototipo interactivo de alta fidelidad para la aplicación web de Reqs-AI, construido con Figma. El prototipo integra los mock-ups finales en una experiencia navegable que simula el comportamiento real de la plataforma, permitiendo validar la usabilidad, la consistencia visual y la fluidez de las transiciones entre las pantallas principales.
+
+El prototipo web permite recorrer los flujos más importantes del sistema, como el inicio de sesión, la creación del workspace, la navegación por el dashboard, la gestión de proyectos, el inicio de sesiones de descubrimiento, la revisión de historias de usuario generadas por IA, la conexión con Jira, la administración de la suscripción y la configuración del equipo.
+
+<img src="./assets/ui/web/prototype/web-application-prototype.png" alt="Web Application Prototype" width="100%">
 
 **Enlace al prototipo:**
 
 El prototipo interactivo de la aplicación web de Reqs-AI se encuentra disponible en el siguiente enlace: [Reqs-AI Web Application Prototype](https://www.figma.com/proto/UVAwp3YUbl7HdyW36b40d6/Web-application-prototype?node-id=25-16791&p=f&t=eUjvMWP8QbWcmZbl-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=25%3A16791&show-proto-sidebar=1)
 
+El video del prototipo interactivo se encuentra disponible en el siguiente enlace: [Reqs-AI Web Application Prototype Video](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202319668_upc_edu_pe/IQDz-JGNFecGR5wGEjgFKkb1Ab_PQSFGMfoLZ4QStDYVWiw?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=ThYQDY)
 
-**Mobile Application Prototyping**
+*Mobile Application Prototyping**
 
 En esta sección se presentan el prototipo interactivo de alta fidelidad para la aplicación móvil de Reqs-AI, construido con Figma. El prototipo integra los Mock-ups finales en una experiencia navegable que simula el comportamiento real del producto digital, permitiendo validar la usabilidad, la consistencia visual y la fluidez de las transiciones entre pantallas.
 
