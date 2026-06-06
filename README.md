@@ -1809,14 +1809,18 @@ Esta capa contiene el núcleo del negocio del BC IAM: reglas de autenticación, 
 
 **Atributos:**
 
-| Atributo                    | Tipo            | Columna JPA                    | Descripción                                                    |
-|-----------------------------|-----------------|--------------------------------|----------------------------------------------------------------|
-| `id`                        | `AccountId`     | `id`                           | Identificador único de la cuenta (UUID).                       |
-| `email`                     | `Email`         | `@Embedded`                    | Correo electrónico único de acceso, normalizado a minúsculas.  |
-| `passwordHash`              | `String`        | `password_hash`                | Hash BCrypt de la contraseña.                                  |
-| `status`                    | `AccountStatus` | `status`                       | Estado actual de la cuenta en su ciclo de vida.                |
-| `verificationCode`          | `String?`       | `verification_code`            | Código OTP de verificación de correo. Nulo una vez verificado. |
-| `verificationCodeExpiresAt` | `Instant?`      | `verification_code_expires_at` | Fecha de expiración del OTP.                                   |
+| Atributo                      | Tipo            | Columna JPA                       | Descripción                                                                 |
+|-------------------------------|-----------------|-----------------------------------|-----------------------------------------------------------------------------|
+| `id`                          | `AccountId`     | `id`                              | Identificador único de la cuenta (UUID).                                    |
+| `email`                       | `Email`         | `@Embedded`                       | Correo electrónico único de acceso, normalizado a minúsculas.               |
+| `passwordHash`                | `String`        | `password_hash`                   | Hash BCrypt de la contraseña.                                               |
+| `status`                      | `AccountStatus` | `status`                          | Estado actual de la cuenta en su ciclo de vida.                             |
+| `verificationCode`            | `String?`       | `verification_code`               | Código OTP de verificación de correo. Nulo una vez verificado.              |
+| `verificationCodeExpiresAt`   | `Instant?`      | `verification_code_expires_at`    | Fecha de expiración del OTP.                                                |
+| `passwordResetToken`          | `String?`       | `password_reset_token`            | Token de un solo uso para reset de contraseña. Nulo si no hay flujo activo. |
+| `passwordResetTokenExpiresAt` | `Instant?`      | `password_reset_token_expires_at` | Fecha de expiración del token de reset.                                     |
+| `termsAcceptedAt`             | `Instant?`      | `terms_accepted_at`               | Fecha en que el usuario aceptó los Términos y Condiciones.                  |
+| `termsVersion`                | `String?`       | `terms_version`                   | Versión de los T&C aceptados (ej. `"2026-01"`).                             |
 
 **Constructores:**
 
@@ -1827,14 +1831,17 @@ Esta capa contiene el núcleo del negocio del BC IAM: reglas de autenticación, 
 
 **Métodos de negocio:**
 
-| Método                                                     | Visibilidad | Parámetros                           | Retorna | Descripción                            | Excepciones lanzadas                                                    |
-|------------------------------------------------------------|-------------|--------------------------------------|---------|----------------------------------------|-------------------------------------------------------------------------|
-| `verifyEmail(String code, Instant now)`                    | `public`    | `code: String`, `now: Instant`       | `void`  | Valida el OTP y activa la cuenta.      | `InvalidVerificationCodeException` si el código es incorrecto o expiró. |
-| `changePassword(String newPasswordHash)`                   | `public`    | `newPasswordHash: String`            | `void`  | Reemplaza el hash de contraseña.       | —                                                                       |
-| `suspend()`                                                | `public`    | —                                    | `void`  | Transición a estado `SUSPENDED`.       | `CannotSuspendAccountException` si ya está suspendida o eliminada.      |
-| `activate()`                                               | `public`    | —                                    | `void`  | Transición a estado `ACTIVE`.          | —                                                                       |
-| `delete()`                                                 | `public`    | —                                    | `void`  | Baja lógica: estado `DELETED`.         | —                                                                       |
-| `generateVerificationCode(String code, Instant expiresAt)` | `public`    | `code: String`, `expiresAt: Instant` | `void`  | Almacena nuevo OTP (usado en reenvío). | —                                                                       |
+| Método                                                             | Visibilidad | Parámetros                                                 | Retorna | Descripción                                                                      | Excepciones lanzadas                                                     |
+|--------------------------------------------------------------------|-------------|------------------------------------------------------------|---------|----------------------------------------------------------------------------------|--------------------------------------------------------------------------|
+| `verifyEmail(String code, Instant now)`                            | `public`    | `code: String`, `now: Instant`                             | `void`  | Valida el OTP y activa la cuenta.                                                | `InvalidVerificationCodeException` si el código es incorrecto o expiró.  |
+| `changePassword(String newPasswordHash)`                           | `public`    | `newPasswordHash: String`                                  | `void`  | Reemplaza el hash de contraseña.                                                 | —                                                                        |
+| `suspend()`                                                        | `public`    | —                                                          | `void`  | Transición a estado `SUSPENDED`.                                                 | `CannotSuspendAccountException` si ya está suspendida o eliminada.       |
+| `activate()`                                                       | `public`    | —                                                          | `void`  | Transición a estado `ACTIVE`.                                                    | —                                                                        |
+| `delete()`                                                         | `public`    | —                                                          | `void`  | Baja lógica: estado `DELETED`.                                                   | —                                                                        |
+| `generateVerificationCode(String code, Instant expiresAt)`         | `public`    | `code: String`, `expiresAt: Instant`                       | `void`  | Almacena nuevo OTP (usado en reenvío).                                           | —                                                                        |
+| `generatePasswordResetToken(String token, Instant expiresAt)`      | `public`    | `token: String`, `expiresAt: Instant`                      | `void`  | Genera token de reset y establece su expiración. Solo válido en estado `ACTIVE`. | `AccountNotVerifiedException` si la cuenta no está activa.               |
+| `resetPassword(String token, Instant now, String newPasswordHash)` | `public`    | `token: String`, `now: Instant`, `newPasswordHash: String` | `void`  | Valida el token y reemplaza el hash; invalida el token tras uso.                 | `InvalidPasswordResetTokenException` si el token es incorrecto o expiró. |
+| `acceptTerms(String version, Instant acceptedAt)`                  | `public`    | `version: String`, `acceptedAt: Instant`                   | `void`  | Registra la aceptación de los Términos y Condiciones en la versión indicada.     | —                                                                        |
 
 **Métodos de consulta:**
 
@@ -2046,16 +2053,17 @@ Esta capa contiene el núcleo del negocio del BC IAM: reglas de autenticación, 
 
 **Domain Exceptions**
 
-| Clase                              | Extiende                         | HTTP Status | Error Code                  | Cuándo se lanza                                          |
-|------------------------------------|----------------------------------|-------------|-----------------------------|----------------------------------------------------------|
-| `AccountNotFoundException`         | `EntityNotFoundException`        | 404         | `ACCOUNT_NOT_FOUND`         | No se encuentra la cuenta por ID o email.                |
-| `AccountAlreadyExistsException`    | `BusinessRuleViolationException` | 409         | `ACCOUNT_ALREADY_EXISTS`    | Intento de registrar un email ya existente.              |
-| `InvalidCredentialsException`      | `AuthenticationException`        | 401         | `INVALID_CREDENTIALS`       | Email o contraseña incorrectos en sign-in.               |
-| `AccountNotVerifiedException`      | `BusinessRuleViolationException` | 409         | `ACCOUNT_NOT_VERIFIED`      | Intento de autenticarse sin haber verificado el correo.  |
-| `CannotSuspendAccountException`    | `BusinessRuleViolationException` | 409         | `CANNOT_SUSPEND_ACCOUNT`    | La cuenta ya está suspendida o eliminada.                |
-| `InvalidRefreshTokenException`     | `AuthenticationException`        | 401         | `INVALID_REFRESH_TOKEN`     | El refresh token no existe, fue revocado o ya expiró.    |
-| `InvalidVerificationCodeException` | `BusinessRuleViolationException` | 409         | `INVALID_VERIFICATION_CODE` | El OTP es incorrecto o ha expirado.                      |
-| `UserNotFoundException`            | `EntityNotFoundException`        | 404         | `USER_NOT_FOUND`            | No se encuentra el perfil de usuario por ID o accountId. |
+| Clase                                | Extiende                         | HTTP Status | Error Code                     | Cuándo se lanza                                          |
+|--------------------------------------|----------------------------------|-------------|--------------------------------|----------------------------------------------------------|
+| `AccountNotFoundException`           | `EntityNotFoundException`        | 404         | `ACCOUNT_NOT_FOUND`            | No se encuentra la cuenta por ID o email.                |
+| `AccountAlreadyExistsException`      | `BusinessRuleViolationException` | 409         | `ACCOUNT_ALREADY_EXISTS`       | Intento de registrar un email ya existente.              |
+| `InvalidCredentialsException`        | `AuthenticationException`        | 401         | `INVALID_CREDENTIALS`          | Email o contraseña incorrectos en sign-in.               |
+| `AccountNotVerifiedException`        | `BusinessRuleViolationException` | 409         | `ACCOUNT_NOT_VERIFIED`         | Intento de autenticarse sin haber verificado el correo.  |
+| `CannotSuspendAccountException`      | `BusinessRuleViolationException` | 409         | `CANNOT_SUSPEND_ACCOUNT`       | La cuenta ya está suspendida o eliminada.                |
+| `InvalidRefreshTokenException`       | `AuthenticationException`        | 401         | `INVALID_REFRESH_TOKEN`        | El refresh token no existe, fue revocado o ya expiró.    |
+| `InvalidVerificationCodeException`   | `BusinessRuleViolationException` | 409         | `INVALID_VERIFICATION_CODE`    | El OTP es incorrecto o ha expirado.                      |
+| `UserNotFoundException`              | `EntityNotFoundException`        | 404         | `USER_NOT_FOUND`               | No se encuentra el perfil de usuario por ID o accountId. |
+| `InvalidPasswordResetTokenException` | `AuthenticationException`        | 401         | `INVALID_PASSWORD_RESET_TOKEN` | El token de reset no existe, ya fue usado o ha expirado. |
 
 ---
 
@@ -2066,6 +2074,8 @@ Esta capa contiene el núcleo del negocio del BC IAM: reglas de autenticación, 
 | `AccountCreatedEvent`             | `iam/api/`                 | `accountId`, `userId`, `email`, `occurredAt`                   | Se completa `SignUpCommandHandler` exitosamente. | Interno.                                                  |
 | `EmailVerificationRequestedEvent` | `iam/api/`                 | `email`, `verificationCode`, `expirationMinutes`, `occurredAt` | Se crea una cuenta nueva o se reenvía el OTP.    | `EmailVerificationRequestedEventListener` (envía correo). |
 | `AccountVerifiedEvent`            | `iam/domain/model/events/` | `accountId`, `occurredAt`                                      | La cuenta transiciona a estado `ACTIVE`.         | Interno.                                                  |
+| `PasswordResetRequestedEvent`     | `iam/api/`                 | `email`, `resetToken`, `expirationMinutes`, `occurredAt`       | Se ejecuta `ForgotPasswordCommandHandler`.       | `PasswordResetRequestedEventListener` (envía correo).     |
+| `TermsAcceptedEvent`              | `iam/domain/model/events/` | `accountId`, `termsVersion`, `occurredAt`                      | Se completa `AcceptTermsCommandHandler`.         | Interno (auditoría legal).                                |
 
 ---
 
@@ -2082,6 +2092,9 @@ Esta capa contiene el núcleo del negocio del BC IAM: reglas de autenticación, 
 | `RevokeRefreshTokenCommand`     | `domain/model/commands/` | `refreshToken: String`                                                          | `RevokeRefreshTokenCommandHandler`     |
 | `UpdateUserProfileCommand`      | `domain/model/commands/` | `userId: String`, `firstName: String`, `lastName: String`, `avatarUrl: String?` | `UpdateUserProfileCommandHandler`      |
 | `UpdateUserPreferencesCommand`  | `domain/model/commands/` | `userId: String`, `lastVisitedOrgId: String?`, `lastVisitedProjectId: String?`  | `UpdateUserPreferencesCommandHandler`  |
+| `ForgotPasswordCommand`         | `domain/model/commands/` | `email: String`                                                                 | `ForgotPasswordCommandHandler`         |
+| `ResetPasswordCommand`          | `domain/model/commands/` | `token: String`, `newPassword: String`                                          | `ResetPasswordCommandHandler`          |
+| `AcceptTermsCommand`            | `domain/model/commands/` | `accountId: String`, `termsVersion: String`                                     | `AcceptTermsCommandHandler`            |
 
 **Queries**
 
@@ -2108,14 +2121,17 @@ Esta capa es la puerta de entrada HTTP al BC IAM. Expone los endpoints de autent
 | **Tag OpenAPI** | `"Authentication"`                                                               |
 | **Propósito**   | Contrato OpenAPI para registro, autenticación y gestión de sesiones. Sin lógica. |
 
-| Método HTTP | Path           | Nombre del método        | Request DTO                     | Response DTO                | Códigos HTTP       |
-|-------------|----------------|--------------------------|---------------------------------|-----------------------------|--------------------|
-| `POST`      | `/sign-up`     | `signUp`                 | `SignUpRequest`                 | `AuthenticatedUserResponse` | 201, 400, 409      |
-| `POST`      | `/sign-in`     | `signIn`                 | `SignInRequest`                 | `AuthenticatedUserResponse` | 200, 400, 401, 409 |
-| `POST`      | `/verify`      | `verifyEmail`            | `VerifyEmailRequest`            | `void`                      | 200, 400, 409      |
-| `POST`      | `/resend-code` | `resendVerificationCode` | `ResendVerificationCodeRequest` | `void`                      | 200, 400, 404      |
-| `POST`      | `/refresh`     | `refreshSession`         | `RefreshSessionRequest`         | `AuthenticatedUserResponse` | 200, 401           |
-| `POST`      | `/sign-out`    | `signOut`                | `RevokeRefreshTokenRequest`     | `void`                      | 204, 401           |
+| Método HTTP | Path               | Nombre del método        | Request DTO                     | Response DTO                | Códigos HTTP       |
+|-------------|--------------------|--------------------------|---------------------------------|-----------------------------|--------------------|
+| `POST`      | `/sign-up`         | `signUp`                 | `SignUpRequest`                 | `AuthenticatedUserResponse` | 201, 400, 409      |
+| `POST`      | `/sign-in`         | `signIn`                 | `SignInRequest`                 | `AuthenticatedUserResponse` | 200, 400, 401, 409 |
+| `POST`      | `/verify`          | `verifyEmail`            | `VerifyEmailRequest`            | `void`                      | 200, 400, 409      |
+| `POST`      | `/resend-code`     | `resendVerificationCode` | `ResendVerificationCodeRequest` | `void`                      | 200, 400, 404      |
+| `POST`      | `/refresh`         | `refreshSession`         | `RefreshSessionRequest`         | `AuthenticatedUserResponse` | 200, 401           |
+| `POST`      | `/sign-out`        | `signOut`                | `RevokeRefreshTokenRequest`     | `void`                      | 204, 401           |
+| `POST`      | `/forgot-password` | `forgotPassword`         | `ForgotPasswordRequest`         | `void`                      | 200, 404           |
+| `POST`      | `/reset-password`  | `resetPassword`          | `ResetPasswordRequest`          | `void`                      | 200, 400, 401      |
+| `POST`      | `/accept-terms`    | `acceptTerms`            | `AcceptTermsRequest`            | `void`                      | 200, 400, 401      |
 
 **`AuthenticationControllerImpl` (Implementation)**
 
@@ -2125,14 +2141,17 @@ Esta capa es la puerta de entrada HTTP al BC IAM. Expone los endpoints de autent
 | **Anotaciones** | `@Slf4j`, `@RestController`, `@RequiredArgsConstructor` |
 | **Implementa**  | `AuthenticationController`                              |
 
-| Handler                                | Para qué endpoint   |
-|----------------------------------------|---------------------|
-| `SignUpCommandHandler`                 | `POST /sign-up`     |
-| `SignInCommandHandler`                 | `POST /sign-in`     |
-| `VerifyEmailCommandHandler`            | `POST /verify`      |
-| `ResendVerificationCodeCommandHandler` | `POST /resend-code` |
-| `RefreshSessionCommandHandler`         | `POST /refresh`     |
-| `RevokeRefreshTokenCommandHandler`     | `POST /sign-out`    |
+| Handler                                | Para qué endpoint       |
+|----------------------------------------|-------------------------|
+| `SignUpCommandHandler`                 | `POST /sign-up`         |
+| `SignInCommandHandler`                 | `POST /sign-in`         |
+| `VerifyEmailCommandHandler`            | `POST /verify`          |
+| `ResendVerificationCodeCommandHandler` | `POST /resend-code`     |
+| `RefreshSessionCommandHandler`         | `POST /refresh`         |
+| `RevokeRefreshTokenCommandHandler`     | `POST /sign-out`        |
+| `ForgotPasswordCommandHandler`         | `POST /forgot-password` |
+| `ResetPasswordCommandHandler`          | `POST /reset-password`  |
+| `AcceptTermsCommandHandler`            | `POST /accept-terms`    |
 
 ---
 
@@ -2179,6 +2198,9 @@ Esta capa es la puerta de entrada HTTP al BC IAM. Expone los endpoints de autent
 | `RevokeRefreshTokenRequest`     | `interfaces/rest/dto/request/` | `refreshToken: String`                                                       | `@NotBlank`                                                         |
 | `UpdateProfileRequest`          | `interfaces/rest/dto/request/` | `firstName: String`, `lastName: String`, `avatarUrl: String?`                | `@NotBlank` en `firstName` y `lastName`                             |
 | `UpdatePreferencesRequest`      | `interfaces/rest/dto/request/` | `lastVisitedOrgId: String?`, `lastVisitedProjectId: String?`                 | Opcionales, sin `@NotBlank`                                         |
+| `ForgotPasswordRequest`         | `interfaces/rest/dto/request/` | `email: String`                                                              | `@NotBlank`, `@Email`                                               |
+| `ResetPasswordRequest`          | `interfaces/rest/dto/request/` | `token: String`, `newPassword: String`                                       | `@NotBlank` en ambos, `@Size(min=8)` en `newPassword`               |
+| `AcceptTermsRequest`            | `interfaces/rest/dto/request/` | `termsVersion: String`                                                       | `@NotBlank`                                                         |
 
 ---
 
@@ -2550,7 +2572,7 @@ Esta capa contiene las reglas de negocio de suscripciones, cuotas de uso y ciclo
 |----------------------|-----------------------|------------------------|--------------------------------------------------------------|
 | `id`                 | `SubscriptionId`      | `id`                   | Identificador único de la suscripción (UUID).                |
 | `organizationId`     | `OrganizationId`      | `organization_id`      | Referencia a la organización propietaria.                    |
-| `planType`           | `PlanType`            | `plan_type`            | Plan actual: FREE, PRO o ENTERPRISE.                         |
+| `planType`           | `PlanType`            | `plan_type`            | Plan actual: `FREE`, `PRO` o `TEAM`.                         |
 | `status`             | `SubscriptionStatus`  | `status`               | Estado actual de la suscripción en su ciclo de vida.         |
 | `providerRef`        | `PaymentProviderRef?` | `@Embedded`            | Referencia al proveedor de pagos externo. Nulo en plan FREE. |
 | `currentPeriodStart` | `Instant`             | `current_period_start` | Inicio del período de facturación vigente.                   |
@@ -2650,11 +2672,11 @@ Esta capa contiene las reglas de negocio de suscripciones, cuotas de uso y ciclo
 
 **Valores:**
 
-| Valor        | Descripción en el negocio                                           |
-|--------------|---------------------------------------------------------------------|
-| `FREE`       | Plan gratuito con cuotas reducidas. Sin proveedor de pagos externo. |
-| `PRO`        | Plan de pago mensual con cuotas ampliadas.                          |
-| `ENTERPRISE` | Plan corporativo con cuotas máximas y soporte dedicado.             |
+| Valor  | Descripción en el negocio                                                                    |
+|--------|----------------------------------------------------------------------------------------------|
+| `FREE` | Plan gratuito con cuotas reducidas. Sin proveedor de pagos externo.                          |
+| `PRO`  | Plan de pago mensual con cuotas ampliadas para analistas individuales.                       |
+| `TEAM` | Plan de equipo (≡ "Plan Equipo" de negocio) con cuotas máximas y colaboración multi-miembro. |
 
 ---
 
@@ -3078,17 +3100,20 @@ Representa la unidad raíz de tenencia multi-organizacional. Contiene los límit
 | `planLimits` | `PlanLimits`         | Límites operativos actuales según el plan de facturación      |
 | `settings`   | `GenerationSettings` | Preferencias de generación (idioma de reuniones, ej. `es-PE`) |
 
-| Método                         | Descripción                                             |
-|--------------------------------|---------------------------------------------------------|
-| `rename(name)`                 | Actualiza el nombre de la organización                  |
-| `updateLimits(limits)`         | Reemplaza los límites de plan tras un evento de Billing |
-| `deactivate()`                 | Cambia el estado a `INACTIVE`                           |
-| `reactivate()`                 | Cambia el estado a `ACTIVE`                             |
-| `delete()`                     | Cambia el estado a `DELETED`                            |
+| Método                                       | Descripción                                                                                                                                             |
+|----------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `rename(name)`                               | Actualiza el nombre de la organización                                                                                                                  |
+| `updateLimits(limits)`                       | Reemplaza los límites de plan tras un evento de Billing                                                                                                 |
+| `updateSettings(settings)`                   | Reemplaza las preferencias de generación de la organización                                                                                             |
+| `deactivate()`                               | Cambia el estado a `INACTIVE`                                                                                                                           |
+| `reactivate()`                               | Cambia el estado a `ACTIVE`                                                                                                                             |
+| `delete()`                                   | Cambia el estado a `DELETED`                                                                                                                            |
+| `transferOwnership(UserId newOwnerMemberId)` | Designa a `newOwnerMemberId` como nuevo `OWNER` y degrada al actual `OWNER` a `ADMIN`. Invariante: siempre hay exactamente un `OWNER` por organización. | `MemberNotFoundException` si el miembro destino no existe o no está activo. |
 
-| Excepción lanzada                        | Condición de disparo            |
-|------------------------------------------|---------------------------------|
-| `OrganizationSlugAlreadyExistsException` | El slug ya existe en el sistema |
+| Excepción lanzada                        | Condición de disparo                                        |
+|------------------------------------------|-------------------------------------------------------------|
+| `OrganizationSlugAlreadyExistsException` | El slug ya existe en el sistema                             |
+| `OwnershipTransferException`             | El miembro destino no está activo o no pertenece a la org   |
 
 ---
 
@@ -3314,6 +3339,24 @@ Value Object inmutable que describe el contexto técnico de un proyecto. Utiliza
 
 ---
 
+**`GenerationSettings`** — `com.kntrosoft.reqsai.workspace.domain.model.valueobjects`
+
+Value Object inmutable que encapsula las preferencias de generación de la organización. Respalda US14 (idioma de reuniones) y US15 (política de retención de audios). Definido como `record` de Java.
+
+| Campo                | Tipo     | Descripción                                                                                                          |
+|----------------------|----------|----------------------------------------------------------------------------------------------------------------------|
+| `meetingLanguage`    | `String` | Código BCP-47 del idioma principal de las reuniones (ej. `"es-PE"`). Usado por STT y el LLM.                         |
+| `audioRetentionDays` | `Int`    | Días de retención de los archivos de audio tras ser transcritos. `0` = eliminación inmediata; `-1` = nunca eliminar. |
+
+**Validaciones en compact constructor:**
+
+| Regla                                       | Excepción lanzada       | Error Code                    |
+|---------------------------------------------|-------------------------|-------------------------------|
+| `meetingLanguage` no puede ser nulo o vacío | `InvalidValueException` | `INVALID_GENERATION_SETTINGS` |
+| `audioRetentionDays` debe ser ≥ -1          | `InvalidValueException` | `INVALID_GENERATION_SETTINGS` |
+
+---
+
 **Enumeraciones**
 
 | Enumeración      | Valores                                                                                                                                                                                                                   |
@@ -3331,26 +3374,27 @@ Value Object inmutable que describe el contexto técnico de un proyecto. Utiliza
 
 Todas las excepciones se ubican en `com.kntrosoft.reqsai.workspace.domain.model.exceptions` y extienden `RuntimeException`.
 
-| Excepción                                | Mensaje representativo                                   |
-|------------------------------------------|----------------------------------------------------------|
-| `OrganizationNotFoundException`          | `"Organization not found: {id}"`                         |
-| `OrganizationSlugAlreadyExistsException` | `"Slug already in use: {slug}"`                          |
-| `MemberNotFoundException`                | `"Member not found: {id}"`                               |
-| `MemberAlreadyExistsException`           | `"User is already a member of this organization"`        |
-| `MemberPlanLimitExceededException`       | `"Member limit reached for this plan"`                   |
-| `InsufficientPermissionsException`       | `"User does not have required permission: {permission}"` |
-| `ProjectNotFoundException`               | `"Project not found: {id}"`                              |
-| `ProjectNameAlreadyExistsException`      | `"Project name already exists in this organization"`     |
-| `ProjectPlanLimitExceededException`      | `"Project limit reached for this plan"`                  |
-| `ProjectRoleNotFoundException`           | `"Project role not found: {id}"`                         |
-| `ProjectRoleNameAlreadyExistsException`  | `"Role name already exists in this project"`             |
-| `ProjectMemberNotFoundException`         | `"Project member not found: {id}"`                       |
-| `ProjectMemberAlreadyExistsException`    | `"Member is already assigned to this project"`           |
-| `ProjectDocumentNotFoundException`       | `"Document not found: {id}"`                             |
-| `DocumentPlanLimitExceededException`     | `"Document limit reached for this project"`              |
-| `GlossaryNotFoundException`              | `"Glossary not found for project: {projectId}"`          |
-| `GlossaryTermNotFoundException`          | `"Glossary term not found: {id}"`                        |
-| `GlossaryTermPlanLimitExceededException` | `"Glossary term limit reached for this project"`         |
+| Excepción                                | Mensaje representativo                                     |
+|------------------------------------------|------------------------------------------------------------|
+| `OrganizationNotFoundException`          | `"Organization not found: {id}"`                           |
+| `OrganizationSlugAlreadyExistsException` | `"Slug already in use: {slug}"`                            |
+| `MemberNotFoundException`                | `"Member not found: {id}"`                                 |
+| `MemberAlreadyExistsException`           | `"User is already a member of this organization"`          |
+| `MemberPlanLimitExceededException`       | `"Member limit reached for this plan"`                     |
+| `InsufficientPermissionsException`       | `"User does not have required permission: {permission}"`   |
+| `ProjectNotFoundException`               | `"Project not found: {id}"`                                |
+| `ProjectNameAlreadyExistsException`      | `"Project name already exists in this organization"`       |
+| `ProjectPlanLimitExceededException`      | `"Project limit reached for this plan"`                    |
+| `ProjectRoleNotFoundException`           | `"Project role not found: {id}"`                           |
+| `ProjectRoleNameAlreadyExistsException`  | `"Role name already exists in this project"`               |
+| `ProjectMemberNotFoundException`         | `"Project member not found: {id}"`                         |
+| `ProjectMemberAlreadyExistsException`    | `"Member is already assigned to this project"`             |
+| `ProjectDocumentNotFoundException`       | `"Document not found: {id}"`                               |
+| `DocumentPlanLimitExceededException`     | `"Document limit reached for this project"`                |
+| `GlossaryNotFoundException`              | `"Glossary not found for project: {projectId}"`            |
+| `GlossaryTermNotFoundException`          | `"Glossary term not found: {id}"`                          |
+| `GlossaryTermPlanLimitExceededException` | `"Glossary term limit reached for this project"`           |
+| `OwnershipTransferException`             | `"Cannot transfer ownership: target member is not active"` |
 
 ---
 
@@ -3358,12 +3402,13 @@ Todas las excepciones se ubican en `com.kntrosoft.reqsai.workspace.domain.model.
 
 Todos los eventos se ubican en `com.kntrosoft.reqsai.workspace.domain.events`.
 
-| Evento                       | Campos principales                              | Consumidor                                      |
-|------------------------------|-------------------------------------------------|-------------------------------------------------|
-| `OrganizationCreatedEvent`   | `organizationId`, `ownerId`, `planLimits`       | Billing BC → `AssignFreeSubscriptionCommand`    |
-| `MemberInvitedEvent`         | `memberId`, `organizationId`, `email`, `role`   | Infraestructura → envío de email de invitación  |
-| `ProjectCreatedEvent`        | `projectId`, `organizationId`, `createdBy`      | Interno → creación automática de `Glossary`     |
-| `PlanLimitsUpdatedEvent`     | `organizationId`, `newLimits`                   | Interno → refresco de límites en Organization   |
+| Evento                      | Campos principales                                              | Consumidor                                                                          |
+|-----------------------------|-----------------------------------------------------------------|-------------------------------------------------------------------------------------|
+| `OrganizationCreatedEvent`  | `organizationId`, `ownerId`, `planLimits`                       | Billing BC → `AssignFreeSubscriptionCommand`                                        |
+| `MemberInvitedEvent`        | `memberId`, `organizationId`, `email`, `role`                   | Infraestructura → envío de email de invitación                                      |
+| `ProjectCreatedEvent`       | `projectId`, `organizationId`, `createdBy`                      | Interno → creación automática de `Glossary`                                         |
+| `PlanLimitsUpdatedEvent`    | `organizationId`, `newLimits`                                   | Interno → refresco de límites en Organization                                       |
+| `OwnershipTransferredEvent` | `organizationId`, `previousOwnerId`, `newOwnerId`, `occurredAt` | Auditoría. Infraestructura → notificación email al nuevo y al anterior Propietario. |
 
 ### 5.3.2. Interface Layer
 
@@ -4295,14 +4340,14 @@ El Bounded Context de Integration Gateway gestiona las integraciones de Reqs-AI 
 
 Representa la conexión configurada entre un proyecto de Reqs-AI y una herramienta externa. Almacena las credenciales de acceso de forma encriptada y el mapeo de configuración necesario para la exportación.
 
-| Campo            | Tipo                  | Descripción                                               |
-|------------------|-----------------------|-----------------------------------------------------------|
-| `id`             | `IntegrationId`       | Identificador único de la integración                     |
-| `projectId`      | `ProjectId`           | Proyecto de Reqs-AI asociado                              |
-| `provider`       | `IntegrationProvider` | Proveedor externo: `JIRA`, `TRELLO`, `LINEAR`             |
-| `status`         | `IntegrationStatus`   | Estado: `ACTIVE`, `INACTIVE`, `ERROR`                     |
-| `config`         | `IntegrationConfig`   | Configuración de conexión (URL, proyecto destino, mapeos) |
-| `encryptedToken` | `String`              | Token de acceso OAuth encriptado con AES                  |
+| Campo            | Tipo                  | Descripción                                                                               |
+|------------------|-----------------------|-------------------------------------------------------------------------------------------|
+| `id`             | `IntegrationId`       | Identificador único de la integración                                                     |
+| `projectId`      | `ProjectId`           | Proyecto de Reqs-AI asociado                                                              |
+| `provider`       | `IntegrationProvider` | Proveedor externo: actualmente solo `JIRA`. Diseño extensible para futuras integraciones. |
+| `status`         | `IntegrationStatus`   | Estado: `ACTIVE`, `INACTIVE`, `ERROR`                                                     |
+| `config`         | `IntegrationConfig`   | Configuración de conexión (URL, proyecto destino, mapeos)                                 |
+| `encryptedToken` | `String`              | Token de acceso OAuth encriptado con AES                                                  |
 
 | Método                        | Descripción                                     |
 |-------------------------------|-------------------------------------------------|
@@ -4357,11 +4402,11 @@ Value Object inmutable que encapsula la configuración específica de cada integ
 | `projectKey`       | `String`              | Clave del proyecto destino en la herramienta externa                     |
 | `issueTypeMapping` | `Map<String, String>` | Mapeo de tipos de historia a tipos de issue del proveedor                |
 
-| Enumeración           | Valores                                   | Descripción                           |
-|-----------------------|-------------------------------------------|---------------------------------------|
-| `IntegrationProvider` | `JIRA`, `TRELLO`, `LINEAR`                | Proveedores de integración soportados |
-| `IntegrationStatus`   | `ACTIVE`, `INACTIVE`, `ERROR`             | Estado operativo de la integración    |
-| `ExportStatus`        | `PENDING`, `EXPORTED`, `SYNCED`, `FAILED` | Estado del ciclo de exportación       |
+| Enumeración           | Valores                                   | Descripción                                                                                                        |
+|-----------------------|-------------------------------------------|--------------------------------------------------------------------------------------------------------------------|
+| `IntegrationProvider` | `JIRA`                                    | Proveedor de integración cubierto por el alcance actual del producto. El enum está diseñado para extensión futura. |
+| `IntegrationStatus`   | `ACTIVE`, `INACTIVE`, `ERROR`             | Estado operativo de la integración                                                                                 |
+| `ExportStatus`        | `PENDING`, `EXPORTED`, `SYNCED`, `FAILED` | Estado del ciclo de exportación                                                                                    |
 
 ---
 
@@ -4606,7 +4651,7 @@ Accede directamente a los repositorios JPA de Requirement Discovery para obtener
 
 ### 5.5.6. Bounded Context Software Architecture Component Level Diagrams
 
-En esta sección se presenta el diagrama de componentes C4 (Nivel 3) del BC Integration Gateway. El container es el módulo Spring Modulith completo. Los componentes reflejan la descomposición por capas, incluyendo los handlers de comandos para crear y gestionar integraciones y exportaciones, el `IntegrationProviderFactory` que abstrae los proveedores externos (Jira, Trello, Linear) y los adapters de infraestructura para comunicación con las API externas.
+En esta sección se presenta el diagrama de componentes C4 (Nivel 3) del BC Integration Gateway. El container es el módulo Spring Modulith completo. Los componentes reflejan la descomposición por capas, incluyendo los handlers de comandos para crear y gestionar integraciones y exportaciones, el `IntegrationProviderFactory` que abstrae el proveedor externo (actualmente Jira) y el adapter de infraestructura para comunicación con la API de Atlassian.
 
 ![Gateway Component Diagram](assets/diagrams/gateway/gateway-component.png)
 
@@ -4614,7 +4659,7 @@ En esta sección se presenta el diagrama de componentes C4 (Nivel 3) del BC Inte
 
 #### 5.5.7.1. Bounded Context Domain Layer Class Diagrams
 
-En esta sección se presenta el diagrama de clases UML del Domain Layer del BC Integration Gateway. Incluye los dos Aggregate Roots (`Integration`, `ExportRecord`), el Value Object `IntegrationConfig` (con `baseUrl`, `projectKey` e `issueTypeMapping`), las enumeraciones (`IntegrationProvider` con JIRA/TRELLO/LINEAR, `IntegrationStatus`, `ExportStatus`), los Domain Events y las excepciones de dominio. El BC es agnóstico al proveedor concreto gracias al patrón Strategy implementado via `IntegrationProvider`.
+En esta sección se presenta el diagrama de clases UML del Domain Layer del BC Integration Gateway. Incluye los dos Aggregate Roots (`Integration`, `ExportRecord`), el Value Object `IntegrationConfig` (con `baseUrl`, `projectKey` e `issueTypeMapping`), las enumeraciones (`IntegrationProvider` con `JIRA` como valor inicial, `IntegrationStatus`, `ExportStatus`), los Domain Events y las excepciones de dominio. El BC es agnóstico al proveedor concreto gracias al patrón Strategy implementado via `IntegrationProvider`.
 
 ![Gateway Domain Class Diagram](assets/diagrams/gateway/gateway-class.png)
 
