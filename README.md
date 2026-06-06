@@ -2432,6 +2432,83 @@ Esta capa orquesta los casos de uso del BC IAM. No contiene lógica de negocio; 
 
 ---
 
+**`ForgotPasswordCommandHandler`**
+
+| Campo                  | Detalle                                                                                                                                                                                          |
+|------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Paquete**            | `com.kntrosoft.reqsai.iam.application.authentication.forgotpassword`                                                                                                                             |
+| **Anotaciones**        | `@Slf4j`, `@Service`, `@RequiredArgsConstructor`, `@Transactional`                                                                                                                               |
+| **Command que recibe** | `ForgotPasswordCommand`                                                                                                                                                                          |
+| **Retorna**            | `void`                                                                                                                                                                                           |
+| **Propósito**          | Genera un token de reset de un solo uso, lo almacena en `Account` y publica el evento para enviar el correo. Responde siempre `200 OK` sin revelar si el email existe (seguridad por oscuridad). |
+
+**Flujo:**
+
+| Paso | Acción                                                                            | Excepción lanzada |
+|------|-----------------------------------------------------------------------------------|-------------------|
+| 1    | Buscar `Account` por email; si no existe, retornar silenciosamente.               | —                 |
+| 2    | Generar token con `VerificationServicePort.generateCode()` y calcular expiración. | —                 |
+| 3    | Llamar `account.generatePasswordResetToken(token, expiresAt)` y persistir.        | —                 |
+| 4    | Publicar `PasswordResetRequestedEvent(email, token, expirationMinutes)`.          | —                 |
+
+---
+
+**`ResetPasswordCommandHandler`**
+
+| Campo                  | Detalle                                                                              |
+|------------------------|--------------------------------------------------------------------------------------|
+| **Paquete**            | `com.kntrosoft.reqsai.iam.application.authentication.resetpassword`                  |
+| **Anotaciones**        | `@Slf4j`, `@Service`, `@RequiredArgsConstructor`, `@Transactional`                   |
+| **Command que recibe** | `ResetPasswordCommand`                                                               |
+| **Retorna**            | `void`                                                                               |
+| **Propósito**          | Valida el token de reset, actualiza el hash de contraseña e invalida el token.       |
+
+**Dependencias:**
+
+| Puerto                  | Para qué se usa                                  |
+|-------------------------|--------------------------------------------------|
+| `AccountRepositoryPort` | Buscar `Account` por token de reset y persistir. |
+| `HashingServicePort`    | Hashear la nueva contraseña con BCrypt.          |
+
+**Flujo:**
+
+| Paso | Acción                                                                 | Excepción lanzada                                 |
+|------|------------------------------------------------------------------------|---------------------------------------------------|
+| 1    | Buscar `Account` cuyo `passwordResetToken` coincida (hash SHA-256).    | `InvalidPasswordResetTokenException`              |
+| 2    | Hashear `newPassword` con `HashingServicePort.encode()`.               | —                                                 |
+| 3    | Llamar `account.resetPassword(token, Instant.now(), newPasswordHash)`. | `InvalidPasswordResetTokenException` si expirado. |
+| 4    | Persistir `Account` (token queda nulo tras la llamada del método).     | —                                                 |
+
+---
+
+**`AcceptTermsCommandHandler`**
+
+| Campo                  | Detalle                                                                                    |
+|------------------------|--------------------------------------------------------------------------------------------|
+| **Paquete**            | `com.kntrosoft.reqsai.iam.application.authentication.acceptterms`                          |
+| **Anotaciones**        | `@Slf4j`, `@Service`, `@RequiredArgsConstructor`, `@Transactional`                         |
+| **Command que recibe** | `AcceptTermsCommand`                                                                       |
+| **Retorna**            | `void`                                                                                     |
+| **Propósito**          | Registra la aceptación de los Términos y Condiciones de la cuenta del usuario autenticado. |
+
+**Dependencias:**
+
+| Puerto                      | Para qué se usa                                  |
+|-----------------------------|--------------------------------------------------|
+| `AccountRepositoryPort`     | Cargar y persistir `Account`.                    |
+| `ApplicationEventPublisher` | Publicar `TermsAcceptedEvent` para auditoría.    |
+
+**Flujo:**
+
+| Paso | Acción                                                       | Excepción lanzada          |
+|------|--------------------------------------------------------------|----------------------------|
+| 1    | Cargar `Account` por `accountId`.                            | `AccountNotFoundException` |
+| 2    | Llamar `account.acceptTerms(termsVersion, Instant.now())`.   | —                          |
+| 3    | Persistir `Account` actualizado.                             | —                          |
+| 4    | Publicar `TermsAcceptedEvent(accountId, termsVersion, now)`. | —                          |
+
+---
+
 **Query Handlers**
 
 | Clase                              | Paquete                     | Query que recibe            | Retorna | Notas                                                                                       |
@@ -2444,9 +2521,10 @@ Esta capa orquesta los casos de uso del BC IAM. No contiene lógica de negocio; 
 
 **Event Listeners**
 
-| Clase                                     | Evento que escucha                | Qué hace                                                      | Puertos que usa                |
-|-------------------------------------------|-----------------------------------|---------------------------------------------------------------|--------------------------------|
-| `EmailVerificationRequestedEventListener` | `EmailVerificationRequestedEvent` | Envía correo de verificación con OTP mediante plantilla HTML. | `EmailNotificationServicePort` |
+| Clase                                     | Evento que escucha                  | Qué hace                                                                | Puertos que usa                |
+|-------------------------------------------|-------------------------------------|-------------------------------------------------------------------------|--------------------------------|
+| `EmailVerificationRequestedEventListener` | `EmailVerificationRequestedEvent`   | Envía correo de verificación con OTP mediante plantilla HTML.           | `EmailNotificationServicePort` |
+| `PasswordResetRequestedEventListener`     | `PasswordResetRequestedEvent`       | Envía correo con enlace de reset de contraseña mediante plantilla HTML. | `EmailNotificationServicePort` |
 
 ---
 
@@ -2469,12 +2547,12 @@ Esta capa orquesta los casos de uso del BC IAM. No contiene lógica de negocio; 
 
 **Service Ports** — `application/ports/`:
 
-| Interfaz                       | Paquete               | Métodos clave                                                                                                              | Implementación en infra         |
-|--------------------------------|-----------------------|----------------------------------------------------------------------------------------------------------------------------|---------------------------------|
-| `TokenServicePort`             | `ports/token/`        | `generateToken(String userId): String`, `validateToken(String token): boolean`, `getUserIdFromToken(String token): String` | `JwtTokenServiceAdapter`        |
-| `HashingServicePort`           | `ports/hashing/`      | `encode(String raw): String`, `matches(String raw, String hash): boolean`                                                  | `BCryptHashingServiceAdapter`   |
-| `VerificationServicePort`      | `ports/verification/` | `generateCode(): String`, `generateExpirationMinutes(): int`                                                               | `OtpVerificationServiceAdapter` |
-| `EmailNotificationServicePort` | `ports/email/`        | `sendVerificationEmail(String to, String code, int expirationMinutes): void`                                               | `SmtpEmailNotificationAdapter`  |
+| Interfaz                       | Paquete               | Métodos clave                                                                                                                                                     | Implementación en infra         |
+|--------------------------------|-----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
+| `TokenServicePort`             | `ports/token/`        | `generateToken(String userId): String`, `validateToken(String token): boolean`, `getUserIdFromToken(String token): String`                                        | `JwtTokenServiceAdapter`        |
+| `HashingServicePort`           | `ports/hashing/`      | `encode(String raw): String`, `matches(String raw, String hash): boolean`                                                                                         | `BCryptHashingServiceAdapter`   |
+| `VerificationServicePort`      | `ports/verification/` | `generateCode(): String`, `generateExpirationMinutes(): int`                                                                                                      | `OtpVerificationServiceAdapter` |
+| `EmailNotificationServicePort` | `ports/email/`        | `sendVerificationEmail(String to, String code, int expirationMinutes): void`; `sendPasswordResetEmail(String to, String resetToken, int expirationMinutes): void` | `SmtpEmailNotificationAdapter`  |
 
 ---
 
@@ -2572,7 +2650,7 @@ Esta capa contiene las reglas de negocio de suscripciones, cuotas de uso y ciclo
 |----------------------|-----------------------|------------------------|--------------------------------------------------------------|
 | `id`                 | `SubscriptionId`      | `id`                   | Identificador único de la suscripción (UUID).                |
 | `organizationId`     | `OrganizationId`      | `organization_id`      | Referencia a la organización propietaria.                    |
-| `planType`           | `PlanType`            | `plan_type`            | Plan actual: `FREE`, `PRO` o `TEAM`.                         |
+| `planType`           | `PlanType`            | `plan_type`            | Plan actual: `FREE`, `PRO` o `ENTERPRISE`.                   |
 | `status`             | `SubscriptionStatus`  | `status`               | Estado actual de la suscripción en su ciclo de vida.         |
 | `providerRef`        | `PaymentProviderRef?` | `@Embedded`            | Referencia al proveedor de pagos externo. Nulo en plan FREE. |
 | `currentPeriodStart` | `Instant`             | `current_period_start` | Inicio del período de facturación vigente.                   |
@@ -2672,11 +2750,11 @@ Esta capa contiene las reglas de negocio de suscripciones, cuotas de uso y ciclo
 
 **Valores:**
 
-| Valor  | Descripción en el negocio                                                                    |
-|--------|----------------------------------------------------------------------------------------------|
-| `FREE` | Plan gratuito con cuotas reducidas. Sin proveedor de pagos externo.                          |
-| `PRO`  | Plan de pago mensual con cuotas ampliadas para analistas individuales.                       |
-| `TEAM` | Plan de equipo (≡ "Plan Equipo" de negocio) con cuotas máximas y colaboración multi-miembro. |
+| Valor        | Descripción en el negocio                                                                                                                                           |
+|--------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `FREE`       | Plan gratuito con cuotas reducidas. Sin proveedor de pagos externo.                                                                                                 |
+| `PRO`        | Plan de pago mensual con cuotas ampliadas para analistas individuales y startups.                                                                                   |
+| `ENTERPRISE` | Plan corporativo B2B para el segmento Enterprise (≡ "Plan Equipo" en naming de marketing). Contratos anuales, cuotas máximas, miembros ilimitados, roles avanzados. |
 
 ---
 
@@ -3522,13 +3600,15 @@ Los comandos se ubican en `com.kntrosoft.reqsai.workspace.application.commands`.
 
 **Comandos de organización:**
 
-| Comando                         | Campos                                  |
-|---------------------------------|-----------------------------------------|
-| `CreateOrganizationCommand`     | `name`, `slug`, `ownerId`               |
-| `RenameOrganizationCommand`     | `organizationId`, `name`, `requestedBy` |
-| `DeactivateOrganizationCommand` | `organizationId`, `requestedBy`         |
-| `DeleteOrganizationCommand`     | `organizationId`, `requestedBy`         |
-| `ApplyPlanLimitsCommand`        | `organizationId`, `planLimits`          |
+| Comando                             | Campos                                                                   |
+|-------------------------------------|--------------------------------------------------------------------------|
+| `CreateOrganizationCommand`         | `name`, `slug`, `ownerId`                                                |
+| `RenameOrganizationCommand`         | `organizationId`, `name`, `requestedBy`                                  |
+| `UpdateOrganizationSettingsCommand` | `organizationId`, `meetingLanguage`, `audioRetentionDays`, `requestedBy` |
+| `TransferOwnershipCommand`          | `organizationId`, `newOwnerMemberId`, `requestedBy`                      |
+| `DeactivateOrganizationCommand`     | `organizationId`, `requestedBy`                                          |
+| `DeleteOrganizationCommand`         | `organizationId`, `requestedBy`                                          |
+| `ApplyPlanLimitsCommand`            | `organizationId`, `planLimits`                                           |
 
 **Comandos de miembro:**
 
@@ -3689,6 +3769,34 @@ Agrega un término al glosario verificando el límite del plan y generando el em
 | 3    | Llama a `glossary.addTerm(term, definition, synonyms, addedBy)`                            |
 | 4    | Persiste el glosario con `GlossaryRepository`                                              |
 | 5    | Despacha `UpdateGlossaryTermEmbeddingCommand` (asíncrono) para generar el embedding con IA |
+
+---
+
+**`UpdateOrganizationSettingsCommandHandler`**
+
+Actualiza las preferencias de generación de la organización (idioma de reuniones y política de retención de audios). Respalda US14 y US15.
+
+| Paso | Acción                                                                           | Excepción lanzada                                  |
+|------|----------------------------------------------------------------------------------|----------------------------------------------------|
+| 1    | Recuperar `Organization` por `organizationId`.                                   | `OrganizationNotFoundException`                    |
+| 2    | Verificar que `requestedBy` tenga rol `OWNER` o `ADMIN`; lanzar excepción si no. | `InsufficientPermissionsException`                 |
+| 3    | Construir `GenerationSettings(meetingLanguage, audioRetentionDays)`.             | `InvalidValueException` si valores fuera de rango. |
+| 4    | Llamar `organization.updateSettings(settings)` y persistir.                      | —                                                  |
+
+---
+
+**`TransferOwnershipCommandHandler`**
+
+Transfiere la propiedad de la organización al miembro destino, garantizando la invariante de un único `OWNER`.
+
+| Paso | Acción                                                                                                                             | Excepción lanzada                                       |
+|------|------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------|
+| 1    | Recuperar `Organization` por `organizationId`.                                                                                     | `OrganizationNotFoundException`                         |
+| 2    | Verificar que `requestedBy` sea el actual `OWNER`.                                                                                 | `InsufficientPermissionsException`                      |
+| 3    | Recuperar `Member` destino por `newOwnerMemberId`; verificar que sea `ACTIVE` en la organización.                                  | `MemberNotFoundException`, `OwnershipTransferException` |
+| 4    | Llamar `organization.transferOwnership(newOwnerMemberId)` que degrada al actual `OWNER` a `ADMIN` y promueve al destino a `OWNER`. | —                                                       |
+| 5    | Persistir los dos `Member` afectados en una única transacción.                                                                     | —                                                       |
+| 6    | Publicar `OwnershipTransferredEvent(organizationId, previousOwnerId, newOwnerId)`.                                                 | —                                                       |
 
 ---
 
