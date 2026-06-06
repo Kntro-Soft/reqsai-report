@@ -1,4 +1,4 @@
-<body>
+﻿<body>
     <div style="text-align: center; font-weight: bolder">
         <p>Universidad Peruana de Ciencias Aplicadas - Ingeniería de Software - 8 Ciclo</p>
         <img src="assets/brand/logo-upc.png" alt="logo of UPC"/>
@@ -1162,7 +1162,7 @@ El propósito del proceso de diseño de Reqs-AI es establecer una arquitectura d
 
 Este diseño está directamente orientado a satisfacer las necesidades críticas de nuestros dos segmentos objetivos:
 * **Para el Líder Técnico de Startup:** La arquitectura priorizará el rendimiento y la integración (flujos automatizados hacia herramientas como Jira), asegurando agilidad y la reducción del tiempo entre el *discovery* y el desarrollo.
-* **Para la Analista Enterprise:** El diseño se centrará en la seguridad y la privacidad de los datos, estableciendo una arquitectura *Multitenancy* con aislamiento de datos estricto (*Row Level Security*), cumpliendo así con las exigencias corporativas y mitigando los riesgos de fuga de información.
+* **Para la Analista Enterprise:** El diseño se centrará en la seguridad y la privacidad de los datos, estableciendo una arquitectura *Multitenancy* con aislamiento de datos estricto (*schema-per-tenant*), cumpliendo así con las exigencias corporativas y mitigando los riesgos de fuga de información.
 
 A nivel de negocio para la startup Kntro-Soft, el diseño tiene el propósito de habilitar el modelo de distribución SaaS (Software as a Service). La arquitectura debe soportar el sistema de suscripciones y facturación, gestionar los límites de consumo de los motores de IA (LLM) para mantener la rentabilidad, y asegurar que la plataforma pueda escalar el procesamiento de múltiples organizaciones concurrentes sin degradar la experiencia de usuario.
 
@@ -1174,39 +1174,39 @@ En esta sección se presentan las entradas fundamentales requeridas para ejecuta
 
 A continuación, se detallan las Historias de Usuario primarias que tienen el mayor impacto arquitectónico en el diseño de Reqs-AI. Estas funcionalidades han sido seleccionadas porque introducen requerimientos complejos de procesamiento asíncrono (análisis de audio en tiempo real), integración con servicios de Inteligencia Artificial (LLM) y aislamiento estricto de datos (Multitenancy), elementos que dictarán la topología base del sistema.
 
-| Epic / User Story ID | Título                             | Descripción                                                                                                                                                                                     | Criterios de Aceptación                                                                                                                                                                                                                                                          | Relacionado con (Epic ID) |
-|:---------------------|:-----------------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:--------------------------|
-| **US11**             | Crear organización                 | Como usuario autenticado sin organización, quiero crear un espacio de trabajo con el nombre de mi empresa, para centralizar proyectos en un entorno separado.                                   | **Given** un usuario autenticado sin organización<br>**When** crea una organización con un nombre válido<br>**Then** el sistema genera el espacio de trabajo<br>**And** asigna al usuario el rol inamovible de 'Propietario'                                                     | EP02                      |
-| **US21**             | Cargar documentos del cliente      | Como miembro, quiero subir documentos del cliente al proyecto, para que las historias generadas reflejen el vocabulario del negocio (RAG).                                                      | **Given** un usuario configurando un proyecto<br>**When** sube un glosario en PDF válido<br>**Then** el sistema debe fragmentar (chunking), vectorizar y persistir el documento en una base de datos vectorial en menos de 10 segundos                                           | EP04                      |
-| **US37**             | Generación automática de historias | Como analista, quiero que el sistema procese el audio en vivo y redacte automáticamente historias de usuario estructuradas con criterios de aceptación, para ahorrar horas de redacción manual. | **Given** una sesión de captura de audio activa<br>**When** el sistema recibe y transcribe el flujo de voz<br>**Then** el motor de IA procesa el texto generado<br>**And** redacta una historia de usuario en formato Gherkin<br>**And** la añade al backlog de la sesión actual | EP06                      |
+| Epic / User Story ID | Título                                    | Descripción                                                                                                                                                                                     | Criterios de Aceptación                                                                                                                                                                                                                                                                                                                      | Relacionado con (Epic ID) |
+|:---------------------|:------------------------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:--------------------------|
+| **US11**             | Crear organización                        | Como usuario autenticado sin organización, quiero crear un espacio de trabajo con el nombre de mi empresa, para centralizar proyectos en un entorno separado.                                   | **Given** un usuario autenticado sin organización<br>**When** crea una organización con un nombre válido<br>**Then** el sistema genera el espacio de trabajo<br>**And** asigna al usuario el rol inamovible de 'Propietario'                                                                                                                 | EP02                      |
+| **US21**             | Cargar documentos del cliente             | Como miembro, quiero subir documentos del cliente al proyecto, para que las historias generadas reflejen el vocabulario del negocio (RAG).                                                      | **Given** un usuario configurando un proyecto<br>**When** sube un glosario en PDF válido<br>**Then** el sistema debe fragmentar (chunking), vectorizar y persistir el documento en una base de datos vectorial en menos de 10 segundos                                                                                                       | EP04                      |
+| **US43**             | Sugerir nueva historia durante la reunión | Como Tech Lead, quiero que el asistente proponga una nueva historia en estado PENDING cuando el cliente menciona una necesidad, para capturar requisitos sin dejar de escuchar la conversación. | **Given** una sesión en estado RECORDING<br>**When** el sistema recibe, transcribe y analiza el flujo de voz<br>**Then** el motor de IA genera una sugerencia en estado PENDING<br>**And** la envía al panel del Tech Lead para revisión<br>**And** no la añade al backlog hasta que el Tech Lead la confirme con permiso CONFIRM_SUGGESTION | EP08                      |
 
 **Justificación del Impacto Arquitectónico:**
 
 *   **US11 (Crear organización):** Define el modelo base de multi-tenant y la asignación de ownership; requiere aislamiento de datos, provisión de recursos por organización y reglas consistentes para separar el acceso entre organizaciones.
 *   **US21 (Cargar documentos del cliente):** Obliga a definir un pipeline de ingesta asíncrona con chunking, embeddings y almacenamiento vectorial, controlando tiempos de procesamiento, costos y límites por organización.
-*   **US37 (Generación automática de historias):** Exige procesamiento en tiempo real con baja latencia, orquestación de STT y LLM, y manejo de estados de sesión y reintentos sin perder datos durante la captura en vivo.
+*   **US43 (Sugerir nueva historia durante la reunión):** Exige procesamiento en tiempo real con baja latencia, orquestación de STT y LLM, manejo del ciclo PENDING → ACCEPTED/REJECTED de sugerencias vía permiso `CONFIRM_SUGGESTION`, y tolerancia a fallos sin perder datos durante la captura en vivo.
 
 #### 4.1.2.2. Quality attribute Scenarios
 
 En esta sección se definen los escenarios de atributos de calidad más críticos que guiarán las decisiones arquitectónicas de Reqs-AI. Se ha priorizado el Rendimiento (necesario para el procesamiento de audio en tiempo real), la Seguridad (aislamiento de datos), la Disponibilidad (para tolerar fallas externas) y la Modificabilidad (cambio de proveedores de IA).
 
-| Atributo                            | Fuente                              | Estímulo                                                                                                | Artefacto                                | Entorno                                           | Respuesta                                                                                                                                                     | Medida                                                                               |
-|:------------------------------------|:------------------------------------|:--------------------------------------------------------------------------------------------------------|:-----------------------------------------|:--------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------|
-| **Performance (Streaming)**         | Líder Técnico / Analista Enterprise | El usuario habla durante la sesión de levantamiento de requerimientos.                                  | Motor de Transcripción (STT)             | Operación normal del sistema.                     | El sistema procesa el flujo de audio continuo y renderiza el texto en la interfaz del cliente.                                                                | La transcripción parcial debe aparecer en pantalla en **menos de 2 segundos**.       |
-| **Performance (Consolidación)**     | Líder Técnico / Analista Enterprise | El usuario detiene la grabación de la sesión para generar el Gherkin final.                             | Motor de Procesamiento e Integración LLM | Operación normal del sistema.                     | El sistema procesa la transcripción, consulta al LLM y retorna el documento estructurado.                                                                     | El documento final se entrega en **menos de 20 segundos** tras finalizar la sesión.  |
-| **Security (Seguridad)**            | Usuario autenticado del Tenant A    | Intenta acceder a través de la API a un ID de proyecto o archivo de audio del Tenant B.                 | API Gateway / Base de Datos              | Operación normal del sistema.                     | El sistema intercepta la petición, verifica el contexto de seguridad (Row Level Security) y deniega el acceso.                                                | El acceso se bloquea el **100% de las veces** y se registra el intento en auditoría. |
-| **Availability (Disponibilidad)**   | Proveedor externo de IA (API)       | El servicio del LLM no responde (Timeout) o devuelve un error 500 durante una sesión en vivo.           | Motor de Integración de IA               | Entorno degradado (Falla de dependencia externa). | El sistema persiste la transcripción con estado Pendiente y encola la solicitud en memoria mediante Eventos de Spring asíncronos para reintentar la conexión. | Se recupera la operación con **0 bytes perdidos**.                                   |
-| **Modifiability (Modificabilidad)** | Arquitecto de Software              | El negocio decide cambiar de proveedor de LLM (ej. de OpenAI a Anthropic) por un incremento de precios. | Módulo de Integración de IA              | Tiempo de diseño/desarrollo.                      | El desarrollador implementa un nuevo adaptador (Adapter) para la nueva API sin alterar la lógica de negocio core.                                             | El cambio se completa e integra en **menos de 16 horas de desarrollo**.              |
+| Atributo                            | Fuente                              | Estímulo                                                                                                | Artefacto                                | Entorno                                           | Respuesta                                                                                                                                                              | Medida                                                                               |
+|:------------------------------------|:------------------------------------|:--------------------------------------------------------------------------------------------------------|:-----------------------------------------|:--------------------------------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------|
+| **Performance (Streaming)**         | Líder Técnico / Analista Enterprise | El usuario habla durante la sesión de levantamiento de requerimientos.                                  | Motor de Transcripción (STT)             | Operación normal del sistema.                     | El sistema procesa el flujo de audio continuo y renderiza el texto en la interfaz del cliente.                                                                         | La transcripción parcial debe aparecer en pantalla en **menos de 2 segundos**.       |
+| **Performance (Consolidación)**     | Líder Técnico / Analista Enterprise | El usuario detiene la grabación de la sesión para generar el Gherkin final.                             | Motor de Procesamiento e Integración LLM | Operación normal del sistema.                     | El sistema procesa la transcripción, consulta al LLM y retorna el documento estructurado.                                                                              | El documento final se entrega en **menos de 20 segundos** tras finalizar la sesión.  |
+| **Security (Seguridad)**            | Usuario autenticado del Tenant A    | Intenta acceder a través de la API a un ID de proyecto o archivo de audio del Tenant B.                 | API Gateway / Base de Datos              | Operación normal del sistema.                     | El sistema intercepta la petición, resuelve el esquema del tenant desde el contexto de seguridad (schema-per-tenant) y deniega el acceso a datos de otra organización. | El acceso se bloquea el **100% de las veces** y se registra el intento en auditoría. |
+| **Availability (Disponibilidad)**   | Proveedor externo de IA (API)       | El servicio del LLM no responde (Timeout) o devuelve un error 500 durante una sesión en vivo.           | Motor de Integración de IA               | Entorno degradado (Falla de dependencia externa). | El sistema persiste la transcripción con estado Pendiente y encola la solicitud en memoria mediante Eventos de Spring asíncronos para reintentar la conexión.          | Se recupera la operación con **0 bytes perdidos**.                                   |
+| **Modifiability (Modificabilidad)** | Arquitecto de Software              | El negocio decide cambiar de proveedor de LLM (ej. de OpenAI a Anthropic) por un incremento de precios. | Módulo de Integración de IA              | Tiempo de diseño/desarrollo.                      | El desarrollador implementa un nuevo adaptador (Adapter) para la nueva API sin alterar la lógica de negocio core.                                                      | El cambio se completa e integra en **menos de 16 horas de desarrollo**.              |
 
 #### 4.1.2.3. Constraints
 
 Esta sección describe las restricciones innegociables impuestas por el modelo de negocio, las capacidades técnicas del equipo y la viabilidad del proyecto. Las principales restricciones incluyen la dependencia de API de LLM externos y el uso del stack tecnológico (Java/Spring Boot y Angular/Vue.js). A continuación, se detallan:
 
-| Constraint ID | Título                               | Descripción                                                                                                                                             | Criterios de Aceptación                                                                                                                                                                              | Relacionado con (Epic ID) |
-|:--------------|:-------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:--------------------------|
-| **CON-01**    | Stack Tecnológico Backend y Frontend | Como equipo de desarrollo, debemos utilizar Java (Spring Boot) para el backend y Angular o Vue.js para el frontend.                                     | **Given** un nuevo componente a desarrollar<br>**When** el equipo inicie su construcción<br>**Then** el código debe estar escrito en Java 17+ usando Spring Boot o TypeScript usando Angular/Vue.js. | EP01, EP02                |
-| **CON-02**    | Uso de APIs de LLM externas          | Como Arquitecto de Software, debo integrar el sistema con APIs de modelos de terceros (ej. OpenAI, Anthropic), ya que no alojaremos modelos propios.    | **Given** la necesidad de generar Gherkin<br>**When** el sistema realice una inferencia<br>**Then** la petición debe enrutarse hacia la API REST del proveedor seleccionado.                         | EP04                      |
-| **CON-03**    | Despliegue en Cloud Pública          | Como responsable de infraestructura, debo asegurar que los componentes sean desplegados en la nube (AWS, Azure o GCP), para evitar costos *on-premise*. | **Given** la liberación de una nueva versión<br>**When** se ejecute el pipeline de despliegue<br>**Then** los artefactos deben aprovisionarse en la nube pública seleccionada.                       | Todas                     |
+| Constraint ID | Título                               | Descripción                                                                                                                                                         | Criterios de Aceptación                                                                                                                                                                              | Relacionado con (Epic ID) |
+|:--------------|:-------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:--------------------------|
+| **CON-01**    | Stack Tecnológico Backend y Frontend | Como equipo de desarrollo, debemos utilizar Java (Spring Boot) para el backend y Angular o Vue.js para el frontend.                                                 | **Given** un nuevo componente a desarrollar<br>**When** el equipo inicie su construcción<br>**Then** el código debe estar escrito en Java 17+ usando Spring Boot o TypeScript usando Angular/Vue.js. | EP01, EP02                |
+| **CON-02**    | Uso de APIs de LLM externas          | Como Arquitecto de Software, debo integrar el sistema con APIs de modelos de terceros (ej. Google Gemini, OpenAI, Anthropic), ya que no alojaremos modelos propios. | **Given** la necesidad de generar Gherkin<br>**When** el sistema realice una inferencia<br>**Then** la petición debe enrutarse hacia la API REST del proveedor seleccionado.                         | EP04                      |
+| **CON-03**    | Despliegue en Cloud Pública          | Como responsable de infraestructura, debo asegurar que los componentes sean desplegados en la nube (AWS, Azure o GCP), para evitar costos *on-premise*.             | **Given** la liberación de una nueva versión<br>**When** se ejecute el pipeline de despliegue<br>**Then** los artefactos deben aprovisionarse en la nube pública seleccionada.                       | Todas                     |
 
 **Justificación de Restricciones:**
 
@@ -1221,11 +1221,11 @@ En esta sección se establece el conjunto de Architectural Drivers acordados por
 | Driver ID | Título de Driver                                          | Descripción                                                                                                                                                                                                                        | Importancia para Stakeholders (High, Medium, Low) | Impacto en Architecture Technical Complexity (High, Medium, Low) |
 |:----------|:----------------------------------------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:--------------------------------------------------|:-----------------------------------------------------------------|
 | **AD-01** | Procesamiento de Audio en Tiempo Real e Integración LLM   | El sistema debe ingestar flujos continuos de audio (STT) en <2s y consolidar la inferencia del modelo LLM (Gherkin) en <20s, gestionando operaciones asíncronas durante las reuniones.                                             | High                                              | High                                                             |
-| **AD-02** | Arquitectura Multitenancy y Aislamiento de Datos          | El diseño debe garantizar la separación estricta de la información (Row Level Security) entre organizaciones corporativas, denegando el 100% de los accesos cruzados.                                                              | High                                              | High                                                             |
+| **AD-02** | Arquitectura Multitenancy y Aislamiento de Datos          | El diseño debe garantizar la separación estricta de la información (schema-per-tenant: un esquema PostgreSQL por organización) entre organizaciones corporativas, denegando el 100% de los accesos cruzados.                       | High                                              | High                                                             |
 | **AD-03** | Tolerancia a Fallos en Servicios de IA Externos           | El sistema debe ser capaz de soportar caídas de las APIs de IA (Timeout/5xx) sin perder datos, procesando las sesiones de forma asíncrona mediante el patrón Observer (Eventos de Spring) y control de estado en la Base de Datos. | High                                              | High                                                             |
 | **AD-04** | Dependencia Estricta de APIs de LLM Externas              | Todo el procesamiento de inteligencia generativa dependerá de proveedores externos, lo que obliga al diseño a gestionar *rate limits* y costos operativos.                                                                         | High                                              | High                                                             |
 | **AD-05** | Ingesta de Contexto del Cliente y Motor RAG               | El sistema debe fragmentar (chunking) y vectorizar los PDFs de contexto de las empresas en <10s para proveer Retrieval-Augmented Generation en las inferencias.                                                                    | High                                              | Medium                                                           |
-| **AD-06** | Modificabilidad de Proveedores de Inteligencia Artificial | La arquitectura debe ser agnóstica al proveedor del LLM, permitiendo el reemplazo de la API de IA (ej. de OpenAI a Anthropic) en <16 horas de desarrollo mediante adaptadores.                                                     | High                                              | Medium                                                           |
+| **AD-06** | Modificabilidad de Proveedores de Inteligencia Artificial | La arquitectura debe ser agnóstica al proveedor del LLM, permitiendo el reemplazo de la API de IA (ej. de Gemini a OpenAI) en <16 horas de desarrollo mediante adaptadores (puerto `RequirementGenerationPort`).                   | High                                              | Medium                                                           |
 | **AD-07** | Despliegue en Cloud Pública                               | Todos los componentes deben ser contenerizados y desplegados en una nube pública como AWS o Azure para minimizar costos *on-premise* y permitir la escalabilidad.                                                                  | Medium                                            | Medium                                                           |
 | **AD-08** | Stack Tecnológico Base de Desarrollo                      | El backend debe desarrollarse en Java (Spring Boot) y el frontend en Angular/Vue.js debido al conocimiento técnico previo del equipo, limitando la adopción de otros lenguajes core.                                               | Medium                                            | Low                                                              |
 
@@ -1234,7 +1234,7 @@ En esta sección se establece el conjunto de Architectural Drivers acordados por
 En esta sección se detalla el proceso seguido durante las iteraciones (Stages) del *Quality Attribute Workshop* para definir la arquitectura de Reqs-AI. En cada etapa, el equipo enfrentó un conjunto específico de *Architectural Drivers* y evaluó distintos patrones o tácticas de diseño, sopesando sus pros y contras (Trade-offs) para asegurar que la solución cumpla con los atributos de calidad exigidos sin incurrir en *over-engineering* para la etapa actual de la startup.
 
 **Iteración 1: Topología Base y Multitenancy (Drivers: AD-02, AD-07, AD-08)**
-En esta primera iteración se evaluó la estructura general del backend y cómo gestionar el aislamiento de datos. Se descartó la arquitectura de Microservicios por su alta complejidad operativa, optando por un **Monolito Modular** en Spring Boot (AD-08). Para resolver la separación de datos entre empresas (AD-02), se debatió entre *Database-per-Tenant* y *Shared-Database*. Se eligió la base de datos compartida aplicando políticas estrictas de **Row Level Security (RLS)** a nivel de base de datos (ej. PostgreSQL), lo que garantiza el aislamiento del 100% de la información mientras se optimizan los costos de despliegue en la nube (AD-07).
+En esta primera iteración se evaluó la estructura general del backend y cómo gestionar el aislamiento de datos. Se descartó la arquitectura de Microservicios por su alta complejidad operativa, optando por un **Monolito Modular** en Spring Boot (AD-08). Para resolver la separación de datos entre empresas (AD-02), se debatió entre *Database-per-Tenant*, *Shared-Database con Row Level Security* y *Schema-per-Tenant*. Se eligió **Schema-per-Tenant** (un esquema PostgreSQL por organización dentro de una misma base de datos), con resolución dinámica del esquema a partir del contexto de seguridad (JWT) y migraciones Flyway ejecutadas por esquema. Esta opción ofrece un aislamiento fuerte (cada organización en su propio esquema) sin el costo operativo de una base de datos por tenant, optimizando el despliegue en la nube (AD-07).
 
 **Iteración 2: Ingesta de Audio en Tiempo Real y Tolerancia a Fallos (Drivers: AD-01, AD-03)**
 El reto principal fue cumplir con la latencia <2 s para la transcripción en vivo (AD-01). Se evaluó REST Polling, Server-Sent Events (SSE) y WebSockets. Se eligió **WebSockets** por permitir una comunicación bidireccional continua (necesaria para mandar fragmentos de audio al server y recibir texto del STT simultáneamente). Para la tolerancia a fallos ante caídas de las API de IA (AD-03), se descartó la complejidad de un **Message Broker externo** y se adoptó el uso de **Colas en Memoria RAM (Patrón Observer)** junto con persistencia de estado en la Base de Datos, optimizando la latencia y reduciendo costos de infraestructura en el MVP.
@@ -1246,16 +1246,16 @@ Finalmente, el equipo abordó cómo evitar el acoplamiento con las API de IA de 
 
 La siguiente matriz resume la evaluación de los patrones candidatos considerados para los Drivers más críticos, justificando técnica y económicamente la decisión final del equipo.
 
-| Driver ID | Título de Driver                          | Pattern 1                                                                                                                                                                                                                                                                                                                                                 | Pattern 2                                                                                                                                                                                                                                                                                                                                      | Pattern 3                                                                                                                                                                                                                |
-|:----------|:------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **AD-01** | Procesamiento de Audio en Tiempo Real     | **REST Long Polling**<br>**Pro:** Fácil implementación inicial.<br>**Con:** Genera una alta latencia de red e interrumpe el flujo continuo del audio, incumpliendo la meta de <2s. *(Descartado)*                                                                                                                                                         | **WebSockets** *(Elegido)*<br>**Pro:** Comunicación bidireccional y persistente, latencia casi nula para *streaming* de audio a texto.<br>**Con:** Añade complejidad al manejo de estados y balanceo de carga.                                                                                                                                 | **Server-Sent Events (SSE)**<br>**Pro:** Excelente para enviar texto del servidor al cliente con soporte HTTP nativo.<br>**Con:** Es unidireccional. No sirve para que el cliente envíe su audio en vivo. *(Descartado)* |
-| **AD-02** | Arquitectura Multitenancy y Aislamiento   | **Database per Tenant**<br>**Pro:** Aislamiento físico de datos impecable. Fácil restauración.<br>**Con:** Costos exorbitantes para una startup si la plataforma escala a miles de pequeñas empresas. *(Descartado)*                                                                                                                                      | **Shared Database con Row Level Security** *(Elegido)*<br>**Pro:** Maximiza la economía de infraestructura. El motor (PostgreSQL) asegura que un inquilino jamás vea datos ajenos.<br>**Con:** Un error en la configuración de la política expone a todos.                                                                                     | *(No se evaluó un 3er patrón)*                                                                                                                                                                                           |
-| **AD-03** | Tolerancia a Fallos en Servicios Externos | **Cola en Memoria RAM local (Patrón Observer con @Async)** *(Elegido)*<br>**Pro:** Muy rápido (latencia mínima), simplicidad de código y no requiere aprovisionar infraestructura extra (RabbitMQ/Kafka).<br>**Con:** Si el servidor se reinicia abruptamente, los eventos en memoria se pierden, por lo que el estado debe respaldarse en Base de Datos. | **Message Broker Persistente (ej. RabbitMQ / Kafka)** *(Descartado)*<br>**Pro:** Garantiza la durabilidad total de los mensajes y retries automáticos si el pod falla.<br>**Con:** Exceso de ingeniería (Overengineering) para la etapa actual del proyecto. Requiere aprovisionar, configurar y pagar por otro componente pesado en el cloud. | *(No se evaluó un 3er patrón)*                                                                                                                                                                                           |
-| **AD-06** | Modificabilidad de Proveedores IA         | **Arquitectura Monolítica en Capas**<br>**Pro:** Modelo mental simple para el equipo (Controllers, Services, Repositories).<br>**Con:** Lógica de negocio altamente acoplada al SDK del proveedor de IA. Tomaría semanas migrar. *(Descartado)*                                                                                                           | **Arquitectura Hexagonal (Ports & Adapters)** *(Elegido)*<br>**Pro:** El dominio ignora qué IA se usa. Cambiar a Anthropic solo exige escribir un nuevo Adapter para el Port correspondiente en <16h.<br>**Con:** Exige escribir más código *boilerplate* y dominar Inyección de Dependencias.                                                 | *(No se evaluó un 3er patrón)*                                                                                                                                                                                           |
+| Driver ID | Título de Driver                          | Pattern 1                                                                                                                                                                                                                                                                                                                                                 | Pattern 2                                                                                                                                                                                                                                                                                                                                      | Pattern 3                                                                                                                                                                                                                                                                                          |
+|:----------|:------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **AD-01** | Procesamiento de Audio en Tiempo Real     | **REST Long Polling**<br>**Pro:** Fácil implementación inicial.<br>**Con:** Genera una alta latencia de red e interrumpe el flujo continuo del audio, incumpliendo la meta de <2s. *(Descartado)*                                                                                                                                                         | **WebSockets** *(Elegido)*<br>**Pro:** Comunicación bidireccional y persistente, latencia casi nula para *streaming* de audio a texto.<br>**Con:** Añade complejidad al manejo de estados y balanceo de carga.                                                                                                                                 | **Server-Sent Events (SSE)**<br>**Pro:** Excelente para enviar texto del servidor al cliente con soporte HTTP nativo.<br>**Con:** Es unidireccional. No sirve para que el cliente envíe su audio en vivo. *(Descartado)*                                                                           |
+| **AD-02** | Arquitectura Multitenancy y Aislamiento   | **Database per Tenant**<br>**Pro:** Aislamiento físico de datos impecable. Fácil restauración.<br>**Con:** Costos exorbitantes para una startup si la plataforma escala a miles de pequeñas empresas. *(Descartado)*                                                                                                                                      | **Shared Database con Row Level Security**<br>**Pro:** Maximiza la economía de infraestructura.<br>**Con:** Un error en una política RLS expone a todos los inquilinos a la vez; aislamiento solo lógico. *(Descartado)*                                                                                                                       | **Schema per Tenant** *(Elegido)*<br>**Pro:** Aislamiento fuerte (un esquema PostgreSQL por organización) sin el costo de una BD por tenant; resolución de esquema desde el JWT y Flyway por esquema.<br>**Con:** Migraciones a aplicar en N esquemas y gestión del pool de conexiones por tenant. |
+| **AD-03** | Tolerancia a Fallos en Servicios Externos | **Cola en Memoria RAM local (Patrón Observer con @Async)** *(Elegido)*<br>**Pro:** Muy rápido (latencia mínima), simplicidad de código y no requiere aprovisionar infraestructura extra (RabbitMQ/Kafka).<br>**Con:** Si el servidor se reinicia abruptamente, los eventos en memoria se pierden, por lo que el estado debe respaldarse en Base de Datos. | **Message Broker Persistente (ej. RabbitMQ / Kafka)** *(Descartado)*<br>**Pro:** Garantiza la durabilidad total de los mensajes y retries automáticos si el pod falla.<br>**Con:** Exceso de ingeniería (Overengineering) para la etapa actual del proyecto. Requiere aprovisionar, configurar y pagar por otro componente pesado en el cloud. | *(No se evaluó un 3er patrón)*                                                                                                                                                                                                                                                                     |
+| **AD-06** | Modificabilidad de Proveedores IA         | **Arquitectura Monolítica en Capas**<br>**Pro:** Modelo mental simple para el equipo (Controllers, Services, Repositories).<br>**Con:** Lógica de negocio altamente acoplada al SDK del proveedor de IA. Tomaría semanas migrar. *(Descartado)*                                                                                                           | **Arquitectura Hexagonal (Ports & Adapters)** *(Elegido)*<br>**Pro:** El dominio ignora qué IA se usa. Cambiar a Anthropic solo exige escribir un nuevo Adapter para el Port correspondiente en <16h.<br>**Con:** Exige escribir más código *boilerplate* y dominar Inyección de Dependencias.                                                 | *(No se evaluó un 3er patrón)*                                                                                                                                                                                                                                                                     |
 
 ### 4.1.5. Quality Attribute Scenario Refinements
 
-Tras finalizar las iteraciones del *Quality Attribute Workshop* y definir los patrones arquitectónicos base (WebSockets para el streaming, Shared DB con Row Level Security para el multitenancy, y Arquitectura Orientada Eventos en Memoria para la tolerancia a fallos), procedemos a refinar los escenarios de atributos de calidad priorizados. Estos refinamientos incorporan los artefactos tecnológicos que ahora conocemos y mapean directamente los escenarios con los objetivos de negocio (Business Goals) de la plataforma SaaS, identificando además las preguntas abiertas y riesgos remanentes (Issues).
+Tras finalizar las iteraciones del *Quality Attribute Workshop* y definir los patrones arquitectónicos base (WebSockets para el streaming, Schema-per-Tenant para el multitenancy, y Arquitectura Orientada Eventos en Memoria para la tolerancia a fallos), procedemos a refinar los escenarios de atributos de calidad priorizados. Estos refinamientos incorporan los artefactos tecnológicos que ahora conocemos y mapean directamente los escenarios con los objetivos de negocio (Business Goals) de la plataforma SaaS, identificando además las preguntas abiertas y riesgos remanentes (Issues).
 
 A continuación, se presenta la versión final de los escenarios refinados en orden de prioridad.
 
@@ -1349,11 +1349,11 @@ A continuación, se presenta la versión final de los escenarios refinados en or
   </tr>
   <tr>
     <td style="padding: 8px;"><strong>Artifact (if Known):</strong></td>
-    <td style="padding: 8px;">API Gateway, Spring Security y Base de Datos PostgresSQL (Shared DB con RLS).</td>
+    <td style="padding: 8px;">API Gateway, Spring Security y Base de Datos PostgreSQL (un esquema por organización, schema-per-tenant).</td>
   </tr>
   <tr>
     <td style="padding: 8px;"><strong>Response:</strong></td>
-    <td style="padding: 8px;">El filtro RLS de la base de datos deniega la lectura, la API retorna un error 403 Forbidden y el evento se guarda en los logs de auditoría.</td>
+    <td style="padding: 8px;">El enrutamiento por tenant (resolución de esquema desde el JWT) impide el acceso a datos de otra organización, la API retorna un error 403 Forbidden y el evento se guarda en los logs de auditoría.</td>
   </tr>
   <tr>
     <td style="padding: 8px;"><strong>Response Measure:</strong></td>
@@ -1361,11 +1361,11 @@ A continuación, se presenta la versión final de los escenarios refinados en or
   </tr>
   <tr>
     <td colspan="2" style="padding: 8px;"><strong>Questions:</strong></td>
-    <td style="padding: 8px;">¿Cómo afecta la validación de políticas RLS al rendimiento de las consultas complejas (JOIN) cuando la tabla principal supere el millón de registros?</td>
+    <td style="padding: 8px;">¿Cómo afecta la resolución y conmutación de esquema por tenant al rendimiento y al pool de conexiones cuando crece el número de organizaciones activas?</td>
   </tr>
   <tr>
     <td colspan="2" style="padding: 8px;"><strong>Issues:</strong></td>
-    <td style="padding: 8px;">Un error humano del DBA al configurar una nueva política RLS podría exponer datos cruzados masivamente si no hay pruebas automatizadas que lo verifiquen.</td>
+    <td style="padding: 8px;">Un error en el aprovisionamiento del esquema de un nuevo tenant o en la resolución del tenant podría exponer datos cruzados si no hay pruebas automatizadas que lo verifiquen.</td>
   </tr>
 </table>
 
@@ -1497,7 +1497,7 @@ A través de este proceso analítico y evolutivo, el sistema quedó dividido arq
 | Bounded Context               | Tipo de Subdominio   | Agregado(s) Principal(es) | Responsabilidad Principal                                                                                                  |
 |:------------------------------|:---------------------|:--------------------------|:---------------------------------------------------------------------------------------------------------------------------|
 | **1. Requirement Discovery**  | Core Domain          | Session, User Story       | Ingesta de audio (WebSockets), inferencia mediante LLMs, fragmentación de contexto (RAG) y generación del formato Gherkin. |
-| **2. Workspace Management**   | Generic Subdomain    | Organization, Project     | Aislamiento Multitenant (Row Level Security), gestión de proyectos, roles corporativos y almacenamiento de glosarios.      |
+| **2. Workspace Management**   | Generic Subdomain    | Organization, Project     | Aislamiento Multitenant (schema-per-tenant), gestión de proyectos, roles corporativos y almacenamiento de glosarios.       |
 | **3. IAM**                    | Generic Subdomain    | User                      | Autenticación, registro, validación de correo y gestión de credenciales seguras.                                           |
 | **4. Billing & Subscription** | Generic Subdomain    | Subscription              | Integración con pasarelas de pago, upgrades/downgrades de planes y monitoreo de consumo de cuotas/tokens.                  |
 | **5. Integration Gateway**    | Supporting Subdomain | ExternalConnection        | Capa Anticorrupción (ACL) para autorizar credenciales (OAuth) y exportar historias hacia herramientas externas como Jira.  |
@@ -1617,7 +1617,7 @@ Tras este debate, definimos formalmente los patrones de integración estratégic
     *   **Justificación:** Para evitar el *vendor lock-in* con proveedores de IA cuyos contratos de API evolucionan mensualmente (OpenAI, Anthropic, AssemblyAI, Deepgram, entre otros), el ACL traduce las solicitudes de inferencia y los flujos de audio internos del dominio al esquema específico del proveedor activo. El modelo de dominio de Requirement Discovery permanece estable e independiente de los cambios externos, lo que es crítico en un Core Domain donde la inferencia de IA representa la principal propuesta de valor del producto.
     *   **Naturaleza del contrato traducido por el ACL:** El Gateway de IA expone al dominio dos abstracciones bien definidas: una para la inferencia de lenguaje (recibe la transcripción de la reunión, el glosario del proyecto y el historial de historias previas; devuelve historias estructuradas en Gherkin) y otra para la transcripción de audio en tiempo real (recibe fragmentos de audio en streaming; devuelve segmentos de texto con marcas temporales). Cada adaptador concreto es responsable de traducir estas abstracciones al contrato particular del proveedor —con sus formatos de autenticación, sus estructuras de mensaje, sus parámetros de configuración y sus esquemas de respuesta—, sin que el dominio conozca esa especificidad.
     *   **Análisis de Impacto del Patrón ACL en la evolución del sistema:** El equipo evaluó tres escenarios donde el ACL es estratégicamente determinante:
-        1.  *Cambio de proveedor de IA:* Migrar el motor de inferencia de un proveedor a otro —motivado por costo, calidad de razonamiento, latencia o regulación de datos en regiones específicas— requiere únicamente desarrollar un nuevo adaptador interno. El modelo de dominio, la lógica de RAG y los flujos de sesiones permanecen completamente inmutables.
+        1.  *Cambio de proveedor de IA:** Migrar el motor de inferencia de un proveedor a otro —motivado por costo, calidad de razonamiento, latencia o regulación de datos en regiones específicas— requiere únicamente desarrollar un nuevo adaptador interno. El modelo de dominio, la lógica de RAG y los flujos de sesiones permanecen completamente inmutables.
         2.  *Cambio de modelo dentro del mismo proveedor:* Las actualizaciones de modelos dentro de un mismo proveedor frecuentemente alteran el comportamiento esperado ante ciertos tipos de instrucciones. El ACL encapsula los ajustes necesarios de construcción de prompts específicos por modelo sin que esos detalles se propaguen al Domain.
         3.  *Estrategia de continuidad ante degradación:* Si el proveedor primario sufre una interrupción del servicio o impone restricciones de consumo agresivas, el ACL puede orquestar un desvío automático hacia un proveedor secundario equivalente, garantizando la continuidad del Core sin que el dominio conozca la sustitución.
     *   **Tradeoff consciente y costo del aislamiento:** Mantener múltiples adaptadores —uno por cada proveedor soportado— representa una carga de mantenimiento real: cada cambio en una API externa exige actualizar el adaptador correspondiente y verificar la paridad funcional. Sin embargo, en una categoría de mercado donde los proveedores liberan modelos disruptivos cada pocos meses y sus políticas de precios pueden cambiar unilateralmente, el costo de quedar atado a un único vendor supera ampliamente el costo de mantener la abstracción.
@@ -1725,13 +1725,13 @@ El sistema Reqs-AI está compuesto por los siguientes contenedores principales:
 3.  **Lógica Core (Backend — Monolito Modular):**
     *   **Reqs-AI Backend Application:** Desarrollado en **Java 25 con Spring Boot 4**, se despliega como un único contenedor Docker que concentra toda la inteligencia de negocio del producto. Está estructurado internamente como un **Monolito Modular** con Spring Modulith: los 5 Bounded Contexts operan como módulos independientes con fronteras de acceso estrictas, comunicándose entre sí mediante interfaces públicas y eventos en memoria —sin tráfico de red interno—, lo que elimina la latencia distribuida y garantiza la coherencia transaccional. Esta decisión prioriza la simplicidad operativa y el *Time-to-Market* en la etapa actual, manteniendo la arquitectura preparada para una migración selectiva si el volumen futuro lo justifica.
 
-    | # | Bounded Context        | Responsabilidad principal                                                                                   |
-    |---|------------------------|-------------------------------------------------------------------------------------------------------------|
-    | 1 | Requirement Discovery  | Captura de audio en tiempo real, transcripción, motor RAG y generación de historias en Gherkin.             |
-    | 2 | Workspace Management   | Jerarquía de organizaciones y proyectos, glosarios técnicos y aplicación de Row Level Security multitenant. |
-    | 3 | IAM                    | Identidad, autenticación, autorización por roles y gestión de permisos corporativos.                        |
-    | 4 | Billing & Subscription | Planes de suscripción, control de cuotas e integración con la pasarela de pagos.                            |
-    | 5 | Integration Gateway    | Exportación de historias aprobadas hacia las herramientas de gestión que el cliente ya utiliza.             |
+    | # | Bounded Context        | Responsabilidad principal                                                                                              |
+    |---|------------------------|------------------------------------------------------------------------------------------------------------------------|
+    | 1 | Requirement Discovery  | Captura de audio en tiempo real, transcripción, motor RAG y generación de historias en Gherkin.                        |
+    | 2 | Workspace Management   | Jerarquía de organizaciones y proyectos, glosarios técnicos y aislamiento multitenant por esquema (schema-per-tenant). |
+    | 3 | IAM                    | Identidad, autenticación, autorización por roles y gestión de permisos corporativos.                                   |
+    | 4 | Billing & Subscription | Planes de suscripción, control de cuotas e integración con la pasarela de pagos.                                       |
+    | 5 | Integration Gateway    | Exportación de historias aprobadas hacia las herramientas de gestión que el cliente ya utiliza.                        |
 
 4.  **Almacenamiento de Datos (AWS RDS):**
     *   **Database:** Base de datos relacional administrada en **AWS RDS** con **PostgreSQL** y la extensión **pgvector**. La elección de pgvector es una decisión estratégica crítica que permite almacenar y consultar *embeddings* vectoriales directamente en la base de datos relacional, habilitando el motor RAG y las búsquedas semánticas sin necesidad de una base de datos vectorial separada.
@@ -1789,6 +1789,8 @@ La infraestructura de despliegue se divide en los entornos de cliente, la red de
 ## 5.1. Bounded Context: IAM
 
 El BC IAM gestiona la identidad, autenticación y sesiones de los usuarios de Reqs-AI. Es responsable desde el registro de cuenta hasta la emisión y rotación de tokens de acceso, verificación de correo electrónico, actualización de perfil y almacenamiento de preferencias de navegación del usuario. No administra roles ni permisos por organización; esa responsabilidad pertenece al BC Workspace Management.
+
+> **Multitenancy (schema-per-tenant):** la identidad (`Account`, `User`) y el registro de tenants (mapeo organización → esquema) residen en un **esquema compartido (`public`)**, mientras que los datos de negocio (proyectos, sesiones, historias) viven en el **esquema propio de cada organización**. Durante el login, IAM **resuelve el tenant** del usuario y emite un JWT que transporta el identificador de tenant/esquema; un `TenantResolver` en el Shared Kernel conmuta el esquema activo del `DataSource` en cada petición.
 
 ### 5.1.1. Domain Layer
 
@@ -3066,14 +3068,15 @@ El Bounded Context de Workspace Management gestiona las organizaciones, miembros
 
 Representa la unidad raíz de tenencia multi-organizacional. Contiene los límites de plan activos que controlan los recursos disponibles.
 
-| Campo        | Tipo             | Descripción                                              |
-|--------------|------------------|----------------------------------------------------------|
-| `id`         | `OrganizationId` | Identificador único de la organización                   |
-| `name`       | `String`         | Nombre visible de la organización                        |
-| `slug`       | `String`         | Identificador URL único (inmutable tras creación)        |
-| `ownerId`    | `UserId`         | Referencia al usuario propietario                        |
-| `status`     | `OrgStatus`      | Estado: `ACTIVE`, `INACTIVE`, `DELETED`                  |
-| `planLimits` | `PlanLimits`     | Límites operativos actuales según el plan de facturación |
+| Campo        | Tipo                 | Descripción                                                   |
+|--------------|----------------------|---------------------------------------------------------------|
+| `id`         | `OrganizationId`     | Identificador único de la organización                        |
+| `name`       | `String`             | Nombre visible de la organización                             |
+| `slug`       | `String`             | Identificador URL único (inmutable tras creación)             |
+| `ownerId`    | `UserId`             | Referencia al usuario propietario                             |
+| `status`     | `OrgStatus`          | Estado: `ACTIVE`, `INACTIVE`, `DELETED`                       |
+| `planLimits` | `PlanLimits`         | Límites operativos actuales según el plan de facturación      |
+| `settings`   | `GenerationSettings` | Preferencias de generación (idioma de reuniones, ej. `es-PE`) |
 
 | Método                         | Descripción                                             |
 |--------------------------------|---------------------------------------------------------|
@@ -3313,14 +3316,14 @@ Value Object inmutable que describe el contexto técnico de un proyecto. Utiliza
 
 **Enumeraciones**
 
-| Enumeración      | Valores                                                                                                                                                            |
-|------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `OrgStatus`      | `ACTIVE`, `INACTIVE`, `DELETED`                                                                                                                                    |
-| `MemberStatus`   | `ACTIVE`, `PENDING`, `INACTIVE`                                                                                                                                    |
-| `OrgRole`        | `OWNER`, `ADMIN`, `MEMBER`                                                                                                                                         |
-| `ProjectStatus`  | `ACTIVE`, `ARCHIVED`                                                                                                                                               |
-| `DocumentStatus` | `ACTIVE`, `ARCHIVED`                                                                                                                                               |
-| `Permission`     | `READ_PROJECT`, `WRITE_PROJECT`, `DELETE_PROJECT`, `MANAGE_MEMBERS`, `MANAGE_ROLES`, `UPLOAD_DOCUMENTS`, `MANAGE_GLOSSARY`, `RUN_DISCOVERY`, `MANAGE_INTEGRATIONS` |
+| Enumeración      | Valores                                                                                                                                                                                                                   |
+|------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `OrgStatus`      | `ACTIVE`, `INACTIVE`, `DELETED`                                                                                                                                                                                           |
+| `MemberStatus`   | `ACTIVE`, `PENDING`, `INACTIVE`                                                                                                                                                                                           |
+| `OrgRole`        | `OWNER`, `ADMIN`, `MEMBER`                                                                                                                                                                                                |
+| `ProjectStatus`  | `ACTIVE`, `ARCHIVED`                                                                                                                                                                                                      |
+| `DocumentStatus` | `ACTIVE`, `ARCHIVED`                                                                                                                                                                                                      |
+| `Permission`     | `READ_PROJECT`, `WRITE_PROJECT`, `DELETE_PROJECT`, `MANAGE_MEMBERS`, `MANAGE_ROLES`, `UPLOAD_DOCUMENTS`, `MANAGE_GLOSSARY`, `RUN_DISCOVERY`, `CONFIRM_SUGGESTION`, `APPROVE_STORY`, `EXPORT_STORY`, `MANAGE_INTEGRATIONS` |
 
 ---
 
@@ -3759,7 +3762,7 @@ En esta sección se presenta el diagrama de base de datos del BC Workspace Manag
 
 ### 5.4.1. Domain Layer
 
-El Bounded Context de Requirement Discovery es el núcleo de inteligencia de la plataforma. Gestiona las sesiones de elicitación (reuniones transcritas), el procesamiento con IA para extraer historias de usuario y criterios de aceptación, y el flujo de revisión por parte del equipo. Consume contexto de Workspace Management (perfil técnico, restricciones, glosario) para enriquecer la generación automática de artefactos.
+El Bounded Context de Requirement Discovery es el núcleo de inteligencia de la plataforma. Gestiona las sesiones de elicitación **en vivo** (captura de audio en tiempo real vía WebSocket y transcripción incremental mediante un servicio STT), el procesamiento con IA para **sugerir** historias de usuario nuevas, **proponer modificaciones** a historias existentes y **detectar casos borde** durante la reunión, además del flujo de revisión y confirmación por parte del Tech Lead. Consume contexto de Workspace Management (perfil técnico, restricciones, glosario) y aplica búsqueda semántica (embeddings) para enriquecer la generación y **prevenir historias duplicadas**.
 
 **Aggregate Roots**
 
@@ -3769,22 +3772,31 @@ El Bounded Context de Requirement Discovery es el núcleo de inteligencia de la 
 
 Representa una sesión de levantamiento de requisitos. Encapsula el ciclo de vida desde la creación de la sesión, la carga del transcript, el procesamiento con IA y la finalización.
 
-| Campo             | Tipo                  | Descripción                                                       |
-|-------------------|-----------------------|-------------------------------------------------------------------|
-| `id`              | `DiscoverySessionId`  | Identificador único de la sesión                                  |
-| `projectId`       | `ProjectId`           | Proyecto al que pertenece la sesión                               |
-| `title`           | `String`              | Título descriptivo de la sesión                                   |
-| `transcript`      | `String?`             | Texto transcrito de la reunión (`null` hasta que se cargue)       |
-| `status`          | `SessionStatus`       | Estado del ciclo de vida de la sesión                             |
-| `processingError` | `String?`             | Mensaje de error cuando `status = FAILED`                         |
+| Campo             | Tipo                 | Descripción                                                                |
+|-------------------|----------------------|----------------------------------------------------------------------------|
+| `id`              | `DiscoverySessionId` | Identificador único de la sesión                                           |
+| `projectId`       | `ProjectId`          | Proyecto al que pertenece la sesión                                        |
+| `title`           | `String`             | Título descriptivo de la sesión                                            |
+| `language`        | `LanguageCode`       | Idioma de la reunión (ej. `es-PE`) usado por STT y la generación           |
+| `transcript`      | `String?`            | Texto ensamblado a partir de los `TranscriptSegment` (`null` hasta grabar) |
+| `status`          | `SessionStatus`      | Estado del ciclo de vida de la sesión                                      |
+| `startedAt`       | `Instant?`           | Marca de inicio de la grabación                                            |
+| `endedAt`         | `Instant?`           | Marca de fin de la grabación                                               |
+| `audioDurationMs` | `long`               | Duración acumulada de audio procesado                                      |
+| `lastSequence`    | `int`                | Último `sequence` de segmento recibido (idempotencia y reconexión)         |
+| `processingError` | `String?`            | Mensaje de error cuando `status = FAILED`                                  |
 
-| Método                         | Descripción                                                     |
-|--------------------------------|-----------------------------------------------------------------|
-| `uploadTranscript(transcript)` | Carga el texto del transcript; solo permitido en estado `DRAFT` |
-| `startProcessing()`            | Cambia el estado a `PROCESSING`; requiere transcript no nulo    |
-| `complete()`                   | Cambia el estado a `COMPLETED` tras generación exitosa          |
-| `fail(error)`                  | Cambia el estado a `FAILED` y registra el mensaje de error      |
-| `reset()`                      | Regresa al estado `DRAFT` para reprocesar                       |
+| Método                         | Descripción                                                              |
+|--------------------------------|--------------------------------------------------------------------------|
+| `startRecording()`             | Cambia el estado a `RECORDING` e inicia la captura en vivo               |
+| `appendSegment(segment)`       | Agrega un `TranscriptSegment` ordenado; valida `sequence` (idempotencia) |
+| `pause()` / `resume()`         | Alterna entre `RECORDING` y `PAUSED`                                     |
+| `stopRecording()`              | Cambia el estado a `STOPPED` y ensambla el transcript final              |
+| `uploadTranscript(transcript)` | Carga un transcript pregrabado (Plan B del demo); solo en estado `DRAFT` |
+| `startProcessing()`            | Cambia el estado a `PROCESSING`; requiere transcript no vacío            |
+| `complete()`                   | Cambia el estado a `COMPLETED` tras generación exitosa                   |
+| `fail(error)`                  | Cambia el estado a `FAILED` y registra el mensaje de error               |
+| `reset()`                      | Regresa al estado `DRAFT` para reprocesar                                |
 
 | Excepción lanzada                    | Condición de disparo                                         |
 |--------------------------------------|--------------------------------------------------------------|
@@ -3797,19 +3809,21 @@ Representa una sesión de levantamiento de requisitos. Encapsula el ciclo de vid
 
 Historia de usuario generada por IA a partir de una sesión. El equipo la revisa y puede aprobarla, rechazarla o editar su prioridad y puntos de historia. Compone internamente los criterios de aceptación.
 
-| Campo                | Tipo                        | Descripción                                                     |
-|----------------------|-----------------------------|-----------------------------------------------------------------|
-| `id`                 | `UserStoryId`               | Identificador único de la historia                              |
-| `sessionId`          | `DiscoverySessionId`        | Sesión de origen                                                |
-| `projectId`          | `ProjectId`                 | Proyecto al que pertenece                                       |
-| `title`              | `String`                    | Título breve de la historia                                     |
-| `role`               | `String`                    | Actor beneficiado (ej. "desarrollador", "administrador")        |
-| `action`             | `String`                    | Acción que desea realizar el actor                              |
-| `benefit`            | `String`                    | Beneficio esperado de la acción                                 |
-| `priority`           | `Priority`                  | Prioridad: `LOW`, `MEDIUM`, `HIGH`, `CRITICAL`                  |
-| `storyPoints`        | `Int?`                      | Estimación de esfuerzo en puntos de historia                    |
-| `status`             | `StoryStatus`               | Estado: `DRAFT`, `APPROVED`, `REJECTED`                         |
-| `acceptanceCriteria` | `List<AcceptanceCriterion>` | Criterios de aceptación (entidades compuestas)                  |
+| Campo                | Tipo                        | Descripción                                                       |
+|----------------------|-----------------------------|-------------------------------------------------------------------|
+| `id`                 | `UserStoryId`               | Identificador único de la historia                                |
+| `sessionId`          | `DiscoverySessionId`        | Sesión de origen                                                  |
+| `projectId`          | `ProjectId`                 | Proyecto al que pertenece                                         |
+| `title`              | `String`                    | Título breve de la historia                                       |
+| `role`               | `String`                    | Actor beneficiado (ej. "desarrollador", "administrador")          |
+| `action`             | `String`                    | Acción que desea realizar el actor                                |
+| `benefit`            | `String`                    | Beneficio esperado de la acción                                   |
+| `priority`           | `Priority`                  | Prioridad: `LOW`, `MEDIUM`, `HIGH`, `CRITICAL`                    |
+| `storyPoints`        | `Int?`                      | Estimación de esfuerzo en puntos de historia                      |
+| `status`             | `StoryStatus`               | Estado: `DRAFT`, `APPROVED`, `REJECTED`, `MERGED`, `EXPORTED`     |
+| `acceptanceCriteria` | `List<AcceptanceCriterion>` | Criterios de aceptación (entidades compuestas)                    |
+| `embedding`          | `List<Float>?`              | Vector (768d) del contenido para búsqueda de similitud (pgvector) |
+| `externalRef`        | `JiraIssueRef?`             | Referencia externa tras exportar (idempotencia de export)         |
 
 | Método                             | Descripción                                                      |
 |------------------------------------|------------------------------------------------------------------|
@@ -3823,6 +3837,36 @@ Historia de usuario generada por IA a partir de una sesión. El equipo la revisa
 | Excepción lanzada                   | Condición de disparo                                             |
 |-------------------------------------|------------------------------------------------------------------|
 | `InvalidStoryTransitionException`   | Se intenta una transición de estado no válida                    |
+
+---
+
+**`Suggestion`** — tabla: `suggestions`
+
+Propuesta generada por la IA durante la reunión en vivo, pendiente de confirmación humana. Es el corazón del bucle de asistencia: puede proponer una **nueva** historia, **modificar** una existente, sugerir **casos borde** o plantear una **pregunta de aclaración**. Solo un usuario con el permiso `CONFIRM_SUGGESTION` puede aceptarla, editarla o descartarla.
+
+| Campo           | Tipo                 | Descripción                                                              |
+|-----------------|----------------------|--------------------------------------------------------------------------|
+| `id`            | `SuggestionId`       | Identificador único de la sugerencia                                     |
+| `sessionId`     | `DiscoverySessionId` | Sesión de origen                                                         |
+| `projectId`     | `ProjectId`          | Proyecto al que pertenece                                                |
+| `type`          | `SuggestionType`     | `NEW_STORY`, `UPDATE_STORY`, `EDGE_CASE`, `CLARIFYING_QUESTION`          |
+| `targetStoryId` | `UserStoryId?`       | Historia destino (solo para `UPDATE_STORY` / `EDGE_CASE`)                |
+| `payload`       | `SuggestionPayload`  | Contenido propuesto (borrador de historia o diff de modificación)        |
+| `confidence`    | `double`             | Confianza del modelo (0–1)                                               |
+| `status`        | `SuggestionStatus`   | `PENDING`, `ACCEPTED`, `REJECTED`, `SUPERSEDED`                          |
+| `triggerSource` | `TriggerSource`      | Disparador que la originó: `INTERVAL`, `SILENCE`, `MANUAL`               |
+| `segmentRange`  | `IntRange`           | Rango de segmentos del transcript de los que se derivó                   |
+
+| Método                   | Descripción                                                                                                |
+|--------------------------|------------------------------------------------------------------------------------------------------------|
+| `accept(editedPayload?)` | Acepta (con edición opcional); de `NEW_STORY` crea `UserStory`, de `UPDATE_STORY` muta la historia destino |
+| `reject()`               | Descarta la sugerencia (estado `REJECTED`)                                                                 |
+| `supersede()`            | Marca la sugerencia como obsoleta por una posterior                                                        |
+
+| Excepción lanzada                      | Condición de disparo                                       |
+|----------------------------------------|------------------------------------------------------------|
+| `SuggestionNotFoundException`          | No existe la sugerencia indicada                           |
+| `InvalidSuggestionTransitionException` | Se intenta confirmar/descartar una sugerencia no `PENDING` |
 
 ---
 
@@ -3845,14 +3889,40 @@ Criterio de aceptación asociado a una historia de usuario. Puede expresarse en 
 
 ---
 
+**`TranscriptSegment`** — tabla: `transcript_segments`
+
+Fragmento de transcripción recibido en streaming desde el servicio STT durante la grabación en vivo. El par `(sessionId, sequence)` es único para garantizar idempotencia ante reenvíos o reconexión.
+
+| Campo          | Tipo                  | Descripción                                                        |
+|----------------|-----------------------|--------------------------------------------------------------------|
+| `id`           | `TranscriptSegmentId` | Identificador único del segmento                                   |
+| `sessionId`    | `DiscoverySessionId`  | Sesión a la que pertenece                                          |
+| `sequence`     | `int`                 | Orden del segmento (idempotencia y reensamblado)                   |
+| `text`         | `String`              | Texto transcrito del fragmento                                     |
+| `startMs`      | `long`                | Offset temporal de inicio (ms)                                     |
+| `endMs`        | `long`                | Offset temporal de fin (ms)                                        |
+| `speakerLabel` | `String?`             | Etiqueta de hablante (diarization, opcional)                       |
+| `isFinal`      | `boolean`             | Indica si es transcripción definitiva (`true`) o parcial (`false`) |
+
+| Método                  | Descripción                                          |
+|-------------------------|------------------------------------------------------|
+| `finalize(text)`        | Reemplaza el texto parcial por el definitivo         |
+
+---
+
 **Value Objects & Enumeraciones**
 
-| Enumeración     | Valores                                      | Descripción                                     |
-|-----------------|----------------------------------------------|-------------------------------------------------|
-| `SessionStatus` | `DRAFT`, `PROCESSING`, `COMPLETED`, `FAILED` | Ciclo de vida de una sesión de descubrimiento   |
-| `StoryStatus`   | `DRAFT`, `APPROVED`, `REJECTED`              | Estado de revisión de una historia de usuario   |
-| `Priority`      | `LOW`, `MEDIUM`, `HIGH`, `CRITICAL`          | Prioridad de una historia en el backlog         |
-| `CriterionType` | `GIVEN_WHEN_THEN`, `CHECKLIST`               | Formato de expresión del criterio de aceptación |
+| Enumeración        | Valores                                                                        | Descripción                                     |
+|--------------------|--------------------------------------------------------------------------------|-------------------------------------------------|
+| `SessionStatus`    | `DRAFT`, `RECORDING`, `PAUSED`, `STOPPED`, `PROCESSING`, `COMPLETED`, `FAILED` | Ciclo de vida de una sesión en vivo             |
+| `StoryStatus`      | `DRAFT`, `APPROVED`, `REJECTED`, `MERGED`, `EXPORTED`                          | Estado de revisión de una historia de usuario   |
+| `Priority`         | `LOW`, `MEDIUM`, `HIGH`, `CRITICAL`                                            | Prioridad de una historia en el backlog         |
+| `CriterionType`    | `GIVEN_WHEN_THEN`, `CHECKLIST`                                                 | Formato de expresión del criterio de aceptación |
+| `SuggestionType`   | `NEW_STORY`, `UPDATE_STORY`, `EDGE_CASE`, `CLARIFYING_QUESTION`                | Tipo de propuesta del asistente de IA           |
+| `SuggestionStatus` | `PENDING`, `ACCEPTED`, `REJECTED`, `SUPERSEDED`                                | Estado de revisión de una sugerencia            |
+| `TriggerSource`    | `INTERVAL`, `SILENCE`, `MANUAL`                                                | Disparador que originó el análisis de IA        |
+
+Value Objects adicionales (no enumeraciones): `LanguageCode` (idioma BCP-47, ej. `es-PE`), `SuggestionPayload` (contenido propuesto), `IntRange` (rango de segmentos), `SimilarityScore` (puntaje de similitud coseno) y `JiraIssueRef` (referencia a issue externo).
 
 ---
 
@@ -3869,6 +3939,10 @@ Todas las excepciones se ubican en `com.kntrosoft.reqsai.discovery.domain.model.
 | `UserStoryNotFoundException`           | `"User story not found: {id}"`                                  |
 | `AcceptanceCriterionNotFoundException` | `"Acceptance criterion not found: {id}"`                        |
 | `InvalidStoryTransitionException`      | `"Cannot transition story from {current} to {target}"`          |
+| `SuggestionNotFoundException`          | `"Suggestion not found: {id}"`                                  |
+| `InvalidSuggestionTransitionException` | `"Suggestion is not pending and cannot be confirmed"`           |
+| `DuplicateStoryDetectedException`      | `"A similar user story already exists (score >= 0.85)"`         |
+| `OutOfOrderSegmentException`           | `"Transcript segment sequence is out of order or duplicated"`   |
 
 ---
 
@@ -3881,6 +3955,11 @@ Todos los eventos se ubican en `com.kntrosoft.reqsai.discovery.domain.events`.
 | `SessionProcessingStartedEvent` | `sessionId`, `projectId`               | Infraestructura → disparo asíncrono de la extracción       |
 | `UserStoriesGeneratedEvent`     | `sessionId`, `projectId`, `storyCount` | Infraestructura → notificación a los miembros del proyecto |
 | `AiTokensConsumedEvent`         | `organizationId`, `tokensConsumed`     | Billing BC → `IncrementTokenUsageCommand`                  |
+| `SegmentTranscribedEvent`       | `sessionId`, `sequence`, `text`        | Interface → push del segmento al cliente vía WebSocket     |
+| `SuggestionRaisedEvent`         | `sessionId`, `suggestionId`, `type`    | Interface → push de la sugerencia en vivo al Tech Lead     |
+| `SuggestionAcceptedEvent`       | `suggestionId`, `storyId`              | Infraestructura → indexa embedding de la historia (RAG)    |
+| `SuggestionRejectedEvent`       | `suggestionId`                         | Auditoría                                                  |
+| `UserStoryExportedEvent`        | `storyId`, `externalRef`               | Auditoría / Integration Gateway                            |
 
 ### 5.4.2. Interface Layer
 
@@ -3892,14 +3971,43 @@ El paquete raíz de la capa de interfaz es `com.kntrosoft.reqsai.discovery.inter
 
 **`DiscoverySessionController`** — `/api/v1/projects/{projectId}/sessions`
 
-| Método   | Ruta                          | Descripción                                                               |
-|----------|-------------------------------|---------------------------------------------------------------------------|
-| `POST`   | `/`                           | Crea una nueva sesión de descubrimiento en estado `DRAFT`                 |
-| `GET`    | `/`                           | Lista las sesiones del proyecto                                           |
-| `GET`    | `/{sessionId}`                | Obtiene los datos de una sesión                                           |
-| `POST`   | `/{sessionId}/transcript`     | Carga o reemplaza el transcript de la sesión                              |
-| `POST`   | `/{sessionId}/process`        | Inicia el procesamiento con IA para generar historias de usuario          |
-| `POST`   | `/{sessionId}/reset`          | Regresa la sesión a estado `DRAFT` para reprocesar                        |
+| Método | Ruta                      | Descripción                                                        |
+|--------|---------------------------|--------------------------------------------------------------------|
+| `POST` | `/`                       | Crea una nueva sesión de descubrimiento en estado `DRAFT`          |
+| `GET`  | `/`                       | Lista las sesiones del proyecto                                    |
+| `GET`  | `/{sessionId}`            | Obtiene los datos de una sesión                                    |
+| `POST` | `/{sessionId}/start`      | Inicia la grabación en vivo (estado `RECORDING`)                   |
+| `POST` | `/{sessionId}/pause`      | Pausa la grabación (estado `PAUSED`)                               |
+| `POST` | `/{sessionId}/resume`     | Reanuda la grabación (estado `RECORDING`)                          |
+| `POST` | `/{sessionId}/stop`       | Detiene la grabación y ensambla el transcript (estado `STOPPED`)   |
+| `POST` | `/{sessionId}/transcript` | Carga un transcript pregrabado (Plan B del demo)                   |
+| `POST` | `/{sessionId}/process`    | Inicia el procesamiento con IA para generar historias de usuario   |
+| `POST` | `/{sessionId}/reset`      | Regresa la sesión a estado `DRAFT` para reprocesar                 |
+| `GET`  | `/{sessionId}/stt-token`  | Emite un token efímero para el servicio STT (no expone la API key) |
+
+---
+
+**`SessionStreamHandler` (WebSocket)** — `/ws/sessions/{sessionId}/audio`
+
+Canal binario de baja latencia para la captura en vivo. Recibe *chunks* de audio (webm/opus) y emite los `TranscriptSegment` y las `Suggestion` en tiempo real.
+
+| Dirección        | Mensaje                | Descripción                                                    |
+|------------------|------------------------|----------------------------------------------------------------|
+| Cliente → Server | `binary` (audio chunk) | Fragmento de audio (~250 ms) reenviado al STT vía proxy        |
+| Server → Cliente | `SegmentMessage`       | Segmento transcrito (`sequence`, `text`, `isFinal`)            |
+| Server → Cliente | `SuggestionMessage`    | Sugerencia generada en vivo (`type`, `payload`, `confidence`)  |
+| Cliente → Server | `AnalyzeNowMessage`    | Disparo manual del análisis de IA (botón del Tech Lead)        |
+
+---
+
+**`SuggestionController`** — `/api/v1/sessions/{sessionId}/suggestions`
+
+| Método | Ruta                     | Descripción                                                          |
+|--------|--------------------------|----------------------------------------------------------------------|
+| `GET`  | `/`                      | Lista las sugerencias `PENDING` de la sesión                         |
+| `POST` | `/{suggestionId}/accept` | Acepta (con edición opcional); requiere permiso `CONFIRM_SUGGESTION` |
+| `POST` | `/{suggestionId}/reject` | Descarta la sugerencia; requiere permiso `CONFIRM_SUGGESTION`        |
+| `POST` | `/analyze`               | Dispara manualmente el análisis de IA sobre la ventana actual        |
 
 ---
 
@@ -3923,12 +4031,15 @@ Los DTOs se ubican en `com.kntrosoft.reqsai.discovery.interfaces.rest.dto`.
 
 | DTO                             | Tipo     | Campos principales                                                                                    |
 |---------------------------------|----------|-------------------------------------------------------------------------------------------------------|
-| `CreateSessionRequest`          | Request  | `title: String`                                                                                       |
+| `CreateSessionRequest`          | Request  | `title: String`, `language: LanguageCode`                                                             |
 | `UploadTranscriptRequest`       | Request  | `transcript: String`                                                                                  |
 | `UpdatePriorityRequest`         | Request  | `priority: Priority`                                                                                  |
 | `UpdateStoryPointsRequest`      | Request  | `storyPoints: Int`                                                                                    |
 | `AddAcceptanceCriterionRequest` | Request  | `description: String`, `type: CriterionType`                                                          |
-| `DiscoverySessionResponse`      | Response | `id`, `projectId`, `title`, `status`, `processingError`                                               |
+| `AcceptSuggestionRequest`       | Request  | `editedPayload: SuggestionPayload?`                                                                   |
+| `DiscoverySessionResponse`      | Response | `id`, `projectId`, `title`, `language`, `status`, `audioDurationMs`, `processingError`                |
+| `TranscriptSegmentResponse`     | Response | `sequence`, `text`, `startMs`, `endMs`, `speakerLabel`, `isFinal`                                     |
+| `SuggestionResponse`            | Response | `id`, `type`, `targetStoryId`, `payload`, `confidence`, `status`, `triggerSource`                     |
 | `UserStoryResponse`             | Response | `id`, `title`, `role`, `action`, `benefit`, `priority`, `storyPoints`, `status`, `acceptanceCriteria` |
 
 ### 5.4.3. Application Layer
@@ -3937,19 +4048,27 @@ Los DTOs se ubican en `com.kntrosoft.reqsai.discovery.interfaces.rest.dto`.
 
 Los comandos se ubican en `com.kntrosoft.reqsai.discovery.application.commands`.
 
-| Comando                              | Campos                                                |
-|--------------------------------------|-------------------------------------------------------|
-| `CreateDiscoverySessionCommand`      | `projectId`, `title`, `requestedBy`                   |
-| `UploadSessionTranscriptCommand`     | `sessionId`, `transcript`, `requestedBy`              |
-| `StartDiscoveryProcessingCommand`    | `sessionId`, `requestedBy`                            |
-| `ResetDiscoverySessionCommand`       | `sessionId`, `requestedBy`                            |
-| `ApproveUserStoryCommand`            | `storyId`, `requestedBy`                              |
-| `RejectUserStoryCommand`             | `storyId`, `requestedBy`                              |
-| `UpdateUserStoryPriorityCommand`     | `storyId`, `priority`, `requestedBy`                  |
-| `UpdateStoryPointsCommand`           | `storyId`, `storyPoints`, `requestedBy`               |
-| `AddAcceptanceCriterionCommand`      | `storyId`, `description`, `type`, `requestedBy`       |
-| `UpdateAcceptanceCriterionCommand`   | `criterionId`, `description`, `type`, `requestedBy`   |
-| `RemoveAcceptanceCriterionCommand`   | `criterionId`, `requestedBy`                          |
+| Comando                                            | Campos                                                          |
+|----------------------------------------------------|-----------------------------------------------------------------|
+| `CreateDiscoverySessionCommand`                    | `projectId`, `title`, `language`, `requestedBy`                 |
+| `StartRecordingCommand`                            | `sessionId`, `requestedBy`                                      |
+| `AppendTranscriptSegmentCommand`                   | `sessionId`, `sequence`, `text`, `startMs`, `endMs`, `isFinal`  |
+| `PauseRecordingCommand` / `ResumeRecordingCommand` | `sessionId`, `requestedBy`                                      |
+| `StopRecordingCommand`                             | `sessionId`, `requestedBy`                                      |
+| `RaiseSuggestionCommand`                           | `sessionId`, `type`, `payload`, `triggerSource`, `segmentRange` |
+| `AcceptSuggestionCommand`                          | `suggestionId`, `editedPayload?`, `requestedBy`                 |
+| `RejectSuggestionCommand`                          | `suggestionId`, `requestedBy`                                   |
+| `TriggerLiveAnalysisCommand`                       | `sessionId`, `triggerSource`, `requestedBy`                     |
+| `UploadSessionTranscriptCommand`                   | `sessionId`, `transcript`, `requestedBy`                        |
+| `StartDiscoveryProcessingCommand`                  | `sessionId`, `requestedBy`                                      |
+| `ResetDiscoverySessionCommand`                     | `sessionId`, `requestedBy`                                      |
+| `ApproveUserStoryCommand`                          | `storyId`, `requestedBy`                                        |
+| `RejectUserStoryCommand`                           | `storyId`, `requestedBy`                                        |
+| `UpdateUserStoryPriorityCommand`                   | `storyId`, `priority`, `requestedBy`                            |
+| `UpdateStoryPointsCommand`                         | `storyId`, `storyPoints`, `requestedBy`                         |
+| `AddAcceptanceCriterionCommand`                    | `storyId`, `description`, `type`, `requestedBy`                 |
+| `UpdateAcceptanceCriterionCommand`                 | `criterionId`, `description`, `type`, `requestedBy`             |
+| `RemoveAcceptanceCriterionCommand`                 | `criterionId`, `requestedBy`                                    |
 
 ---
 
@@ -3963,6 +4082,8 @@ Los queries se ubican en `com.kntrosoft.reqsai.discovery.application.queries`.
 | `GetDiscoverySessionQuery`    | `sessionId`     | Obtiene los datos completos de una sesión                           |
 | `ListUserStoriesQuery`        | `sessionId`     | Lista las historias de usuario generadas en una sesión              |
 | `GetUserStoryQuery`           | `storyId`       | Obtiene una historia con sus criterios de aceptación                |
+| `ListPendingSuggestionsQuery` | `sessionId`     | Lista las sugerencias `PENDING` de la sesión (panel en vivo)        |
+| `GetSessionTranscriptQuery`   | `sessionId`     | Obtiene los segmentos transcritos ordenados de la sesión            |
 
 ---
 
@@ -3976,18 +4097,18 @@ Los handlers se ubican en `com.kntrosoft.reqsai.discovery.application.handlers`.
 
 Orquesta el procesamiento con IA: válida el estado de la sesión, enriquece el prompt con contexto del proyecto, invoca la extracción y persiste las historias generadas.
 
-| Paso | Acción                                                                                                     |
-|------|------------------------------------------------------------------------------------------------------------|
-| 1    | Recupera la sesión; lanza `DiscoverySessionNotFoundException` si no existe                                 |
-| 2    | Verifica que `transcript != null`; lanza `TranscriptRequiredException` si está vacío                       |
-| 3    | Llama a `session.startProcessing()`; lanza `SessionAlreadyProcessingException` si aplica                   |
-| 4    | Persiste el estado `PROCESSING` con `DiscoverySessionRepository`                                           |
-| 5    | Recupera el contexto del proyecto vía `ProjectContextPort` (perfil técnico, restricciones, glosario)       |
-| 6    | Invoca `RequirementExtractionPort.extract(transcript, projectContext)`; obtiene `ExtractionResult`         |
-| 7    | Por cada historia en `ExtractionResult.stories`: crea `UserStory` con sus `AcceptanceCriterion` y persiste |
-| 8    | Publica `AiTokensConsumedEvent` con los tokens consumidos según `ExtractionResult.tokensUsed`              |
-| 9    | Llama a `session.complete()` y persiste el estado final                                                    |
-| 10   | Publica `UserStoriesGeneratedEvent`                                                                        |
+| Paso | Acción                                                                                                                                   |
+|------|------------------------------------------------------------------------------------------------------------------------------------------|
+| 1    | Recupera la sesión; lanza `DiscoverySessionNotFoundException` si no existe                                                               |
+| 2    | Verifica que `transcript != null`; lanza `TranscriptRequiredException` si está vacío                                                     |
+| 3    | Llama a `session.startProcessing()`; lanza `SessionAlreadyProcessingException` si aplica                                                 |
+| 4    | Persiste el estado `PROCESSING` con `DiscoverySessionRepository`                                                                         |
+| 5    | Recupera el contexto del proyecto vía `ProjectContextPort` (perfil técnico, restricciones, glosario)                                     |
+| 6    | Verifica cuota con `QuotaCheckPort`; invoca `RequirementGenerationPort.generate(transcript, projectContext)`; obtiene `GenerationResult` |
+| 7    | Por cada sugerencia en `GenerationResult.suggestions`: crea `UserStory` con sus `AcceptanceCriterion` y persiste                         |
+| 8    | Publica `AiTokensConsumedEvent` con los tokens consumidos según `GenerationResult.tokensUsed`                                            |
+| 9    | Llama a `session.complete()` y persiste el estado final                                                                                  |
+| 10   | Publica `UserStoriesGeneratedEvent`                                                                                                      |
 
 Si el paso 6 lanza `TokenQuotaExceededException`: llama a `session.fail("Token quota exceeded")`, persiste y propaga la excepción.
 
@@ -4012,6 +4133,31 @@ Si el paso 6 lanza `TokenQuotaExceededException`: llama a `session.fail("Token q
 
 ---
 
+**`TriggerLiveAnalysisCommandHandler`** (motor de sugerencias en vivo)
+
+| Paso | Acción                                                                                                                                                                 |
+|------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1    | Recupera la ventana reciente de `TranscriptSegment` de la sesión                                                                                                       |
+| 2    | Verifica cuota con `QuotaCheckPort`; si no hay, omite el análisis                                                                                                      |
+| 3    | Invoca `RequirementGenerationPort.generate(window, context)` para obtener sugerencias candidatas                                                                       |
+| 4    | Para `NEW_STORY`: vectoriza con `EmbeddingPort` y consulta `SimilaritySearchPort`; si hay match ≥ 0.85 la convierte en `UPDATE_STORY` o la descarta (evita duplicados) |
+| 5    | Crea las `Suggestion` en estado `PENDING` y publica `SuggestionRaisedEvent` (push WebSocket)                                                                           |
+
+> Se invoca desde las tres estrategias de disparo (`IntervalTrigger`, `SilenceTrigger`, `ManualTrigger`).
+
+---
+
+**`AcceptSuggestionCommandHandler`** (confirmación del Tech Lead)
+
+| Paso | Acción                                                                                                                          |
+|------|---------------------------------------------------------------------------------------------------------------------------------|
+| 1    | Valida que `requestedBy` tenga el permiso `CONFIRM_SUGGESTION` (vía `ProjectRole`); si no, lanza acceso denegado                |
+| 2    | Recupera la sugerencia; lanza `SuggestionNotFoundException` si no existe                                                        |
+| 3    | Llama a `suggestion.accept(editedPayload?)`; de `NEW_STORY` crea `UserStory(DRAFT)`, de `UPDATE_STORY` muta la historia destino |
+| 4    | Persiste y publica `SuggestionAcceptedEvent` (dispara el reindexado de embeddings)                                              |
+
+---
+
 **Query Handlers**
 
 Los query handlers son `@Transactional(readOnly = true)`.
@@ -4031,19 +4177,27 @@ Los puertos de salida se ubican en `com.kntrosoft.reqsai.discovery.application.p
 
 **Repository Ports:**
 
-| Puerto                       | Métodos principales                                                 |
-|------------------------------|---------------------------------------------------------------------|
-| `DiscoverySessionRepository` | `save`, `findById`, `findByProjectId`                               |
-| `UserStoryRepository`        | `save`, `findById`, `findBySessionId`, `saveAll`                    |
+| Puerto                        | Métodos principales                                                      |
+|-------------------------------|--------------------------------------------------------------------------|
+| `DiscoverySessionRepository`  | `save`, `findById`, `findByProjectId`                                    |
+| `UserStoryRepository`         | `save`, `findById`, `findBySessionId`, `saveAll`                         |
+| `SuggestionRepository`        | `save`, `findById`, `findBySessionIdAndStatus`                           |
+| `TranscriptSegmentRepository` | `save`, `findBySessionIdOrderBySequence`, `existsBySessionIdAndSequence` |
 
 **Service Ports:**
 
-| Puerto                      | Método                                           | Descripción                                                         |
-|-----------------------------|--------------------------------------------------|---------------------------------------------------------------------|
-| `RequirementExtractionPort` | `extract(transcript, context): ExtractionResult` | Envía el transcript y contexto a la IA y retorna historias + tokens |
-| `ProjectContextPort`        | `getContext(projectId): ProjectContext`          | Obtiene perfil técnico, restricciones y términos del glosario       |
+| Puerto                      | Método                                           | Descripción                                                                  |
+|-----------------------------|--------------------------------------------------|------------------------------------------------------------------------------|
+| `RequirementGenerationPort` | `generate(window, context): GenerationResult`    | Genera/ modifica historias y casos borde (provider-agnóstico: Gemini/OpenAI) |
+| `TranscriptionPort`         | `stream(audioChunk): SegmentStream`              | STT en streaming (provider-agnóstico: AssemblyAI/Deepgram)                   |
+| `EmbeddingPort`             | `embed(text): float[768]`                        | Vectoriza texto para búsqueda semántica (Gemini embeddings)                  |
+| `SimilaritySearchPort`      | `findSimilar(projectId, embedding): List<Match>` | Busca historias similares (pgvector, cosine ≥ 0.85)                          |
+| `QuotaCheckPort`            | `hasQuota(organizationId): boolean`              | Consulta a Billing si hay cuota de tokens ANTES de generar                   |
+| `ProjectContextPort`        | `getContext(projectId): ProjectContext`          | Obtiene perfil técnico, restricciones y términos del glosario                |
 
-`ExtractionResult` es un record con `stories: List<GeneratedStory>` y `tokensUsed: Long`. `GeneratedStory` contiene título, rol, acción, beneficio y criterios de aceptación en texto plano. `ProjectContext` es un record con `TechnicalProfile`, `List<String>` de restricciones y `Map<String, String>` de términos del glosario (término → definición).
+> Nota: `RequirementGenerationPort` reemplaza al antiguo `RequirementExtractionPort` y soporta tanto la generación incremental en vivo (ventana de transcript) como el procesamiento batch del transcript completo (Plan B).
+
+`GenerationResult` es un record con `suggestions: List<GeneratedSuggestion>` y `tokensUsed: Long`. `GeneratedSuggestion` contiene el tipo (`NEW_STORY`/`UPDATE_STORY`/`EDGE_CASE`), el contenido propuesto (título, rol, acción, beneficio, criterios) y, si aplica, la historia destino. `ProjectContext` es un record con `TechnicalProfile`, `List<String>` de restricciones y `Map<String, String>` de términos del glosario (término → definición).
 
 ### 5.4.4. Infrastructure Layer
 
@@ -4055,6 +4209,8 @@ Los repositorios JPA se ubican en `com.kntrosoft.reqsai.discovery.infrastructure
 |-----------------------------------|-----------------------------------|
 | `DiscoverySessionJpaRepository`   | `DiscoverySessionRepository`      |
 | `UserStoryJpaRepository`          | `UserStoryRepository`             |
+| `SuggestionJpaRepository`         | `SuggestionRepository`            |
+| `TranscriptSegmentJpaRepository`  | `TranscriptSegmentRepository`     |
 
 ---
 
@@ -4062,15 +4218,29 @@ Los repositorios JPA se ubican en `com.kntrosoft.reqsai.discovery.infrastructure
 
 Los adaptadores se ubican en `com.kntrosoft.reqsai.discovery.infrastructure.adapters`.
 
-**`OpenAiRequirementExtractionAdapter`** — implementa `RequirementExtractionPort`
+**`GeminiRequirementGenerationAdapter`** — implementa `RequirementGenerationPort`
 
-Invoca la API de OpenAI (modelo GPT-4o) con un prompt estructurado que incluye el transcript y el contexto del proyecto. El prompt instruye al modelo para que devuelva las historias en formato JSON estructurado con título, rol, acción, beneficio y criterios de aceptación.
+Invoca la API de Google Gemini (vía Spring AI, con Structured Output) usando un prompt que incluye la ventana de transcript y el contexto del proyecto. El modelo devuelve las sugerencias en JSON estructurado (tipo, contenido y, si aplica, historia destino). Es **intercambiable** mediante la propiedad `reqsai.llm.provider` (adaptador alternativo `OpenAiRequirementGenerationAdapter`).
 
-| Método                         | Descripción                                                                    |
-|--------------------------------|--------------------------------------------------------------------------------|
-| `extract(transcript, context)` | Construye el prompt, invoca OpenAI Chat Completions y parsea el JSON retornado |
+| Método                      | Descripción                                                                             |
+|-----------------------------|-----------------------------------------------------------------------------------------|
+| `generate(window, context)` | Construye el prompt, invoca Gemini y parsea la salida estructurada a `GenerationResult` |
 
-La respuesta JSON del modelo se parsea a `ExtractionResult`. Los tokens utilizados se extraen del campo `usage.total_tokens` de la respuesta de la API.
+**`AssemblyAiTranscriptionAdapter`** — implementa `TranscriptionPort`
+
+Proxy de streaming hacia AssemblyAI vía WebSocket; recibe los segmentos parciales/finales en español (`es-PE`) y los reenvía como `TranscriptSegment`. La autenticación usa un token efímero generado en el backend.
+
+**`GeminiEmbeddingAdapter`** — implementa `EmbeddingPort`
+
+Genera embeddings de 768 dimensiones del contenido de las historias para la búsqueda de similitud.
+
+**`PgVectorSimilarityAdapter`** — implementa `SimilaritySearchPort`
+
+Consulta la columna `vector(768)` en PostgreSQL (extensión pgvector, índice `hnsw`) y retorna las historias con similitud coseno ≥ 0.85.
+
+**`BillingQuotaAdapter`** — implementa `QuotaCheckPort`
+
+Consulta el módulo Billing (acceso directo entre módulos Spring Modulith) para verificar la cuota de tokens disponible antes de invocar al LLM.
 
 **`WorkspaceContextAdapter`** — implementa `ProjectContextPort`
 
@@ -4101,13 +4271,13 @@ En esta sección se presenta el diagrama de componentes C4 (Nivel 3) del BC Requ
 
 #### 5.4.7.1. Bounded Context Domain Layer Class Diagrams
 
-En esta sección se presenta el diagrama de clases UML del Domain Layer del BC Requirement Discovery. Incluye los dos Aggregate Roots (`DiscoverySession`, `UserStory`), la entidad `AcceptanceCriterion` (pertenece a `UserStory`), los Value Objects de identidad, las enumeraciones (`SessionStatus`, `StoryStatus`, `Priority`, `CriterionType`), los Domain Events internos y el evento `AiTokensConsumedEvent` publicado al Api package para que Billing BC actualice el consumo de tokens.
+En esta sección se presenta el diagrama de clases UML del Domain Layer del BC Requirement Discovery. Incluye los tres Aggregate Roots (`DiscoverySession`, `UserStory`, `Suggestion`), las entidades `AcceptanceCriterion` (pertenece a `UserStory`) y `TranscriptSegment` (pertenece a `DiscoverySession`), los Value Objects de identidad y de dominio (`LanguageCode`, `SuggestionPayload`, `JiraIssueRef`), las enumeraciones (`SessionStatus`, `StoryStatus`, `Priority`, `CriterionType`, `SuggestionType`, `SuggestionStatus`, `TriggerSource`), los Domain Events internos (incluidos `SegmentTranscribedEvent` y `SuggestionRaisedEvent`) y el evento `AiTokensConsumedEvent` publicado al Api package para que Billing BC actualice el consumo de tokens.
 
 ![Discovery Domain Class Diagram](assets/diagrams/discovery/discovery-class.png)
 
 #### 5.4.7.2. Bounded Context Database Design Diagram
 
-En esta sección se presenta el diagrama de base de datos del BC Requirement Discovery. Incluye tres tablas relacionadas: `discovery_sessions`, `user_stories` y `acceptance_criteria`. La tabla `project_id` en `discovery_sessions` es una referencia lógica al BC Workspace (sin FK física, BC aislados). Los criterios de aceptación se almacenan como filas en su propia tabla con su tipo (`GIVEN_WHEN_THEN` o `CHECKLIST`), en lugar de JSON embebido.
+En esta sección se presenta el diagrama de base de datos del BC Requirement Discovery. Incluye cinco tablas relacionadas: `discovery_sessions`, `transcript_segments`, `suggestions`, `user_stories` y `acceptance_criteria`. El `project_id` en `discovery_sessions` es una referencia lógica al BC Workspace (sin FK física, BC aislados). La tabla `transcript_segments` mantiene un índice único `(session_id, sequence)` para garantizar idempotencia ante reconexión. La tabla `suggestions` almacena las propuestas de IA pendientes de confirmación. La columna `embedding` de `user_stories` es de tipo `vector(768)` (extensión pgvector) con índice `hnsw` para la búsqueda de similitud. Los criterios de aceptación se almacenan como filas en su propia tabla con su tipo (`GIVEN_WHEN_THEN` o `CHECKLIST`), en lugar de JSON embebido.
 
 ![Discovery Database Diagram](assets/diagrams/discovery/discovery-database.png)
 
@@ -5503,7 +5673,7 @@ Cada user flow evidencia una ruta de uso concreta, mostrando cómo el usuario av
 
 #### Flujo de navegación principal y proyectos
 
-##### Home del workspace hacia proyectos
+##### Home del workspace hacía proyectos
 
 **Descripción:** Este user flow muestra la navegación desde el dashboard principal del workspace hacia el módulo de proyectos. Permite validar que el usuario puede revisar proyectos activos, acceder a métricas generales y administrar iniciativas asociadas a clientes o productos específicos.
 
@@ -5671,7 +5841,7 @@ El equipo concluye que el problema abordado es real, recurrente y de alto impact
 
 Sobre esta base, Reqs-AI se consolida como una propuesta de valor pertinente al combinar asistencia en tiempo real, generación estructurada de historias de usuario y criterios de aceptación, y mecanismos de integración con herramientas de gestión del backlog. El enfoque del producto no reemplaza el criterio profesional del analista o líder técnico, sino que lo potencia para reducir omisiones, acelerar la claridad funcional y mejorar la calidad de entrada hacia desarrollo y QA.
 
-Asimismo, el trabajo desarrollado en el informe demuestra coherencia metodológica entre descubrimiento, análisis y diseño de solución. Los artefactos de Lean UX, entrevistas, need finding, user stories, backlog e impact mapping se enlazan con decisiones arquitectónicas estratégicas (DDD, EventStorming, Bounded Contexts y lineamientos de seguridad multitenancy con RLS), aportando trazabilidad desde la necesidad del usuario hasta la estructura técnica propuesta.
+Asimismo, el trabajo desarrollado en el informe demuestra coherencia metodológica entre descubrimiento, análisis y diseño de solución. Los artefactos de Lean UX, entrevistas, need finding, user stories, backlog e impact mapping se enlazan con decisiones arquitectónicas estratégicas (DDD, EventStorming, Bounded Contexts y lineamientos de seguridad multitenancy con schema-per-tenant), aportando trazabilidad desde la necesidad del usuario hasta la estructura técnica propuesta.
 
 Respecto a las hipótesis planteadas, el equipo considera que cuentan con validación inicial de problema y de deseabilidad, debido a la convergencia de hallazgos cualitativos y cuantitativos en las entrevistas. Sin embargo, su validación de desempeño y negocio permanece parcial, ya que métricas objetivas como reducción de reuniones de aclaración, tiempo de edición manual por sesión, retención de uso y sincronización efectiva al backlog deben medirse con el producto en operación real.
 
