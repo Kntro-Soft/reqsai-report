@@ -44,6 +44,8 @@ package "Workspace" {
           ..Business Methods..
           + rename(name : String) : void
           + updateLimits(limits : PlanLimits) : void
+          + updateSettings(timezone : String, language : String) : void
+          + transferOwnership(newOwnerId : UserId) : void
           + deactivate() : void
           + reactivate() : void
           + delete() : void
@@ -281,6 +283,28 @@ package "Workspace" {
           --
           + {static} of(organizationId : String, newLimits : String) : PlanLimitsUpdatedEvent
         }
+        class InvitationAcceptedEvent <<Domain Event>> {
+          + memberId : String
+          + organizationId : String
+          + userId : String
+          + occurredAt : Instant
+          --
+          + {static} of(memberId : String, organizationId : String, userId : String) : InvitationAcceptedEvent
+        }
+        class MemberDeactivatedEvent <<Domain Event>> {
+          + memberId : String
+          + organizationId : String
+          + occurredAt : Instant
+          --
+          + {static} of(memberId : String, organizationId : String) : MemberDeactivatedEvent
+        }
+        class ProjectArchivedEvent <<Domain Event>> {
+          + projectId : String
+          + organizationId : String
+          + occurredAt : Instant
+          --
+          + {static} of(projectId : String, organizationId : String) : ProjectArchivedEvent
+        }
       }
     }
   }
@@ -341,6 +365,9 @@ Glossary        "1" o-- "1" ProjectId      : projectId (reference)
 Organization ..> OrganizationCreatedEvent : <<publishes>>
 Organization ..> PlanLimitsUpdatedEvent   : <<publishes>>
 Member       ..> MemberInvitedEvent       : <<publishes>>
+Member       ..> InvitationAcceptedEvent  : <<publishes>>
+Member       ..> MemberDeactivatedEvent   : <<publishes>>
 Project      ..> ProjectCreatedEvent      : <<publishes>>
+Project      ..> ProjectArchivedEvent     : <<publishes>>
 
 @enduml
