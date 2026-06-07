@@ -1348,7 +1348,7 @@ A continuación, se presenta la versión final de los escenarios refinados en or
   </tr>
   <tr>
     <td style="padding: 8px;"><strong>Artifact (if Known):</strong></td>
-    <td style="padding: 8px;">API Gateway, Spring Security y Base de Datos PostgreSQL (un esquema por organización, schema-per-tenant).</td>
+    <td style="padding: 8px;">API Gateway, Spring Security y Base de Datos Postgres SQL (un esquema por organización, schema-per-tenant).</td>
   </tr>
   <tr>
     <td style="padding: 8px;"><strong>Response:</strong></td>
@@ -3597,6 +3597,7 @@ El paquete raíz de la capa de interfaz es `com.kntrosoft.reqsai.workspace.inter
 | `PATCH` | `/{projectId}`         | Actualiza nombre, descripción y perfil técnico |
 | `POST`  | `/{projectId}/archive` | Archiva el proyecto                            |
 | `POST`  | `/{projectId}/restore` | Reactiva el proyecto archivado                 |
+| `POST`  | `/demo/restore`        | Recrea el proyecto de demostración sandbox     |
 
 ---
 
@@ -3633,6 +3634,18 @@ El paquete raíz de la capa de interfaz es `com.kntrosoft.reqsai.workspace.inter
 
 ---
 
+**`ProjectConstraintController`** — `/api/v1/projects/{projectId}/constraints`
+
+Gestiona las restricciones técnicas y de negocio del proyecto. Son consumidas por el RAG pipeline de Requirement Discovery para enriquecer el contexto del LLM.
+
+| Método   | Ruta                  | Descripción                                                              |
+|----------|-----------------------|--------------------------------------------------------------------------|
+| `POST`   | `/`                   | Agrega una restricción técnica al proyecto (201 + ID generado)           |
+| `GET`    | `/`                   | Lista todas las restricciones activas del proyecto                       |
+| `DELETE` | `/{constraintId}`     | Elimina una restricción del proyecto                                     |
+
+---
+
 **`GlossaryController`** — `/api/v1/projects/{projectId}/glossary`
 
 | Método   | Ruta              | Descripción                                               |
@@ -3658,6 +3671,8 @@ Los DTO se ubican en `com.kntrosoft.reqsai.workspace.interfaces.rest.dto`. Las a
 | `AddProjectMemberRequest`           | Request  | `memberId: String`, `roleId: String`                                              |
 | `UploadDocumentRequest`             | Request  | `name: String`, `url: String`, `mimeType: String`                                 |
 | `AddGlossaryTermRequest`            | Request  | `term: String`, `definition: String`, `synonyms: List<String>`                    |
+| `AddProjectConstraintRequest`       | Request  | `description: String` (restricción técnica o de negocio en lenguaje natural)      |
+| `ProjectConstraintResponse`         | Response | `id`, `projectId`, `description`, `embedding: float[768]?`                        |
 | `OrganizationResponse`              | Response | `id`, `name`, `slug`, `status`, `planLimits`                                      |
 | `ProjectResponse`                   | Response | `id`, `name`, `description`, `technicalProfile`, `status`, `constraints`          |
 | `GlossaryResponse`                  | Response | `id`, `projectId`, `terms: List<GlossaryTermResponse>`                            |
@@ -3679,6 +3694,8 @@ Los comandos se ubican en `com.kntrosoft.reqsai.workspace.application.commands`.
 | `DeactivateOrganizationCommand`     | `organizationId`, `requestedBy`                                          |
 | `DeleteOrganizationCommand`         | `organizationId`, `requestedBy`                                          |
 | `ApplyPlanLimitsCommand`            | `organizationId`, `planLimits`                                           |
+| `SeedDemoProjectCommand`            | `organizationId`, `ownerId`                                              |
+| `RestoreDemoProjectCommand`         | `organizationId`, `requestedBy`                                          |
 
 **Comandos de miembro:**
 
@@ -3732,22 +3749,31 @@ Los comandos se ubican en `com.kntrosoft.reqsai.workspace.application.commands`.
 | `RemoveGlossaryTermCommand`          | `termId`, `requestedBy`                                   |
 | `UpdateGlossaryTermEmbeddingCommand` | `termId`, `embedding`                                     |
 
+**Comandos de restricción técnica:**
+
+| Comando                              | Campos                                          |
+|--------------------------------------|-------------------------------------------------|
+| `AddProjectConstraintCommand`        | `projectId`, `description`, `requestedBy`       |
+| `RemoveProjectConstraintCommand`     | `constraintId`, `requestedBy`                   |
+| `UpdateConstraintEmbeddingCommand`   | `constraintId`, `embedding`                     |
+
 ---
 
 **Queries**
 
 Los queries se ubican en `com.kntrosoft.reqsai.workspace.application.queries`.
 
-| Query                          | Campos           | Descripción                                |
-|--------------------------------|------------------|--------------------------------------------|
-| `GetOrganizationQuery`         | `organizationId` | Obtiene los datos de una organización      |
-| `ListOrganizationMembersQuery` | `organizationId` | Lista los miembros de la organización      |
-| `GetProjectQuery`              | `projectId`      | Obtiene los datos completos de un proyecto |
-| `ListProjectsQuery`            | `organizationId` | Lista los proyectos de la organización     |
-| `GetProjectRolesQuery`         | `projectId`      | Lista los roles de un proyecto             |
-| `ListProjectMembersQuery`      | `projectId`      | Lista los miembros asignados al proyecto   |
-| `GetGlossaryQuery`             | `projectId`      | Obtiene el glosario con todos sus términos |
-| `ListProjectDocumentsQuery`    | `projectId`      | Lista los documentos de un proyecto        |
+| Query                          | Campos           | Descripción                                           |
+|--------------------------------|------------------|-------------------------------------------------------|
+| `GetOrganizationQuery`         | `organizationId` | Obtiene los datos de una organización                 |
+| `ListOrganizationMembersQuery` | `organizationId` | Lista los miembros de la organización                 |
+| `GetProjectQuery`              | `projectId`      | Obtiene los datos completos de un proyecto            |
+| `ListProjectsQuery`            | `organizationId` | Lista los proyectos de la organización                |
+| `GetProjectRolesQuery`         | `projectId`      | Lista los roles de un proyecto                        |
+| `ListProjectMembersQuery`      | `projectId`      | Lista los miembros asignados al proyecto              |
+| `GetGlossaryQuery`             | `projectId`      | Obtiene el glosario con todos sus términos            |
+| `ListProjectDocumentsQuery`    | `projectId`      | Lista los documentos de un proyecto                   |
+| `ListProjectConstraintsQuery`  | `projectId`      | Lista las restricciones técnicas activas del proyecto |
 
 ---
 
@@ -3759,7 +3785,7 @@ Los handlers se ubican en `com.kntrosoft.reqsai.workspace.application.handlers`.
 
 **`CreateOrganizationCommandHandler`**
 
-Crea la organización y el miembro fundador en una única transacción, luego publica el evento de creación para que Billing asigne el plan gratuito.
+Crea la organización y el miembro fundador en una única transacción, luego publica el evento de creación para que Billing asigne el plan gratuito. Al finalizar, despacha la creación del proyecto de demostración.
 
 | Paso | Acción                                                                                                |
 |------|-------------------------------------------------------------------------------------------------------|
@@ -3769,6 +3795,7 @@ Crea la organización y el miembro fundador en una única transacción, luego pu
 | 4    | Crea `Member` para el `ownerId` con `role=OWNER`, `status=ACTIVE`, `invitedBy=null`, `invitedAt=null` |
 | 5    | Persiste el miembro con `MemberRepository`                                                            |
 | 6    | Publica `OrganizationCreatedEvent`                                                                    |
+| 7    | Despacha (asíncrono) `SeedDemoProjectCommand(organizationId, ownerId)` para crear el proyecto sandbox |
 
 ---
 
@@ -3842,6 +3869,28 @@ Agrega un término al glosario verificando el límite del plan y generando el em
 
 ---
 
+**`AddProjectConstraintCommandHandler`**
+
+Agrega una restricción técnica o de negocio al proyecto. La restricción se vectoriza asíncronamente para que el RAG pipeline de Discovery pueda consultarla semánticamente.
+
+| Paso | Acción                                                                                                            | Excepción lanzada                  |
+|------|-------------------------------------------------------------------------------------------------------------------|------------------------------------|
+| 1    | Recupera el `Project` por `projectId`; lanza `ProjectNotFoundException` si no existe                              | `ProjectNotFoundException`         |
+| 2    | Verifica que `requestedBy` tenga permisos de escritura sobre el proyecto                                          | `InsufficientPermissionsException` |
+| 3    | Llama a `project.addConstraint(description)` y persiste con `ProjectRepository`                                   | —                                  |
+| 4    | Despacha `UpdateConstraintEmbeddingCommand` (asíncrono) para vectorizar la descripción con `EmbeddingServicePort` | —                                  |
+
+---
+
+**`RemoveProjectConstraintCommandHandler`**
+
+| Paso | Acción                                                                                    | Excepción lanzada               |
+|------|-------------------------------------------------------------------------------------------|---------------------------------|
+| 1    | Recupera el `Project` por `constraintId`                                                  | `ProjectNotFoundException`      |
+| 2    | Llama a `project.removeConstraint(constraintId)` y persiste                               | —                               |
+
+---
+
 **`UpdateOrganizationSettingsCommandHandler`**
 
 Actualiza las preferencias de generación de la organización (idioma de reuniones y política de retención de audios). Respalda US14 y US15.
@@ -3908,20 +3957,37 @@ Archiva el proyecto y notifica al BC Requirement Discovery para cancelar sesione
 
 ---
 
+**`SeedDemoProjectCommandHandler`**
+
+Crea un proyecto de demostración ("Sandbox Demo") con datos de muestra pre-cargados (transcripciones, historias de usuario y criterios de aceptación ficticios) para que el usuario entienda el valor de la plataforma al primer uso.
+
+| Paso | Acción                                                                                                     |
+|------|------------------------------------------------------------------------------------------------------------|
+| 1    | Verifica que la organización no tenga ya un proyecto marcado como `isDemoProject=true`                     |
+| 2    | Crea `Project` con `name="Proyecto Demo"`, `isDemoProject=true`, `status=ACTIVE` y persiste                |
+| 3    | Crea una `DiscoverySession` con transcript de muestra y `status=COMPLETED` vía `DiscoveryModuleApi`        |
+| 4    | Crea un conjunto de `UserStory` de muestra (3-5 historias) con criterios de aceptación y `status=APPROVED` |
+| 5    | Crea un `Glossary` con 2-3 términos de muestra asociados al proyecto                                       |
+
+> **Nota:** Este handler se invoca de forma asíncrona desde el paso 7 de `CreateOrganizationCommandHandler`. La clase `RestoreDemoProjectCommandHandler` reutiliza esta misma lógica (primero elimina el proyecto demo existente si hay uno, luego re-ejecuta el seed).
+
+---
+
 **Query Handlers**
 
 La query handlers son `@Transactional(readOnly = true)` y retornan respuestas DTO directamente desde los repositorios JPA.
 
-| Query Handler                         | Descripción                                                               |
-|---------------------------------------|---------------------------------------------------------------------------|
-| `GetOrganizationQueryHandler`         | Busca la organización y mapea a `OrganizationResponse`                    |
-| `ListOrganizationMembersQueryHandler` | Lista los miembros activos y mapea a `List<MemberResponse>`               |
-| `GetProjectQueryHandler`              | Busca el proyecto con sus restricciones y mapea a `ProjectResponse`       |
-| `ListProjectsQueryHandler`            | Lista los proyectos de la organización y mapea a `List<ProjectResponse>`  |
-| `GetProjectRolesQueryHandler`         | Lista los roles del proyecto y mapea a `List<ProjectRoleResponse>`        |
-| `ListProjectMembersQueryHandler`      | Lista los miembros del proyecto y mapea a `List<ProjectMemberResponse>`   |
-| `GetGlossaryQueryHandler`             | Obtiene el glosario con todos sus términos y mapea a `GlossaryResponse`   |
-| `ListProjectDocumentsQueryHandler`    | Lista los documentos activos del proyecto                                 |
+| Query Handler                         | Descripción                                                                              |
+|---------------------------------------|------------------------------------------------------------------------------------------|
+| `GetOrganizationQueryHandler`         | Busca la organización y mapea a `OrganizationResponse`                                   |
+| `ListOrganizationMembersQueryHandler` | Lista los miembros activos y mapea a `List<MemberResponse>`                              |
+| `GetProjectQueryHandler`              | Busca el proyecto con sus restricciones y mapea a `ProjectResponse`                      |
+| `ListProjectsQueryHandler`            | Lista los proyectos de la organización y mapea a `List<ProjectResponse>`                 |
+| `GetProjectRolesQueryHandler`         | Lista los roles del proyecto y mapea a `List<ProjectRoleResponse>`                       |
+| `ListProjectMembersQueryHandler`      | Lista los miembros del proyecto y mapea a `List<ProjectMemberResponse>`                  |
+| `GetGlossaryQueryHandler`             | Obtiene el glosario con todos sus términos y mapea a `GlossaryResponse`                  |
+| `ListProjectDocumentsQueryHandler`    | Lista los documentos activos del proyecto                                                |
+| `ListProjectConstraintsQueryHandler`  | Lista las restricciones activas del proyecto y mapea a `List<ProjectConstraintResponse>` |
 
 ---
 
@@ -3940,6 +4006,7 @@ Los puertos de salida se ubican en `com.kntrosoft.reqsai.workspace.application.p
 | `ProjectMemberRepository`    | `save`, `findById`, `findByProjectId`, `existsByProjectIdAndMemberId`    |
 | `ProjectDocumentRepository`  | `save`, `findById`, `findByProjectId`, `countActiveByProject`            |
 | `GlossaryRepository`         | `save`, `findById`, `findByProjectId`, `countTermsByGlossary`            |
+| `ConstraintRepository`       | `save`, `findById`, `findByProjectId`, `deleteById`                      |
 
 **Service Ports:**
 
@@ -3964,6 +4031,7 @@ Los repositorios JPA se ubican en `com.kntrosoft.reqsai.workspace.infrastructure
 | `ProjectMemberJpaRepository`       | `ProjectMemberRepository`           |
 | `ProjectDocumentJpaRepository`     | `ProjectDocumentRepository`         |
 | `GlossaryJpaRepository`            | `GlossaryRepository`                |
+| `ConstraintJpaRepository`          | `ConstraintRepository`              |
 
 ---
 
@@ -4257,14 +4325,19 @@ El paquete raíz de la capa de interfaz es `com.kntrosoft.reqsai.discovery.inter
 
 **`SessionStreamHandler` (WebSocket)** — `/ws/sessions/{sessionId}/audio`
 
-Canal binario de baja latencia para la captura en vivo. Recibe *chunks* de audio (webm/opus) y emite los `TranscriptSegment` y las `Suggestion` en tiempo real.
+Canal binario de baja latencia para la captura en vivo. Recibe *chunks* de audio (webm/opus) y emite los `TranscriptSegment` y las `Suggestion` en tiempo real. Implementa heartbeat, idempotencia de segmentos numerados y reconexión automática.
 
-| Dirección        | Mensaje                | Descripción                                                    |
-|------------------|------------------------|----------------------------------------------------------------|
-| Cliente → Server | `binary` (audio chunk) | Fragmento de audio (~250 ms) reenviado al STT vía proxy        |
-| Server → Cliente | `SegmentMessage`       | Segmento transcrito (`sequence`, `text`, `isFinal`)            |
-| Server → Cliente | `SuggestionMessage`    | Sugerencia generada en vivo (`type`, `payload`, `confidence`)  |
-| Cliente → Server | `AnalyzeNowMessage`    | Disparo manual del análisis de IA (botón del Tech Lead)        |
+| Dirección        | Mensaje                  | Descripción                                                                                |
+|------------------|--------------------------|--------------------------------------------------------------------------------------------|
+| Cliente → Server | `binary` (audio chunk)   | Fragmento de audio (~250 ms) reenviado al STT vía proxy                                    |
+| Server → Cliente | `SegmentMessage`         | Segmento transcrito (`sequence`, `text`, `speakerLabel`, `isFinal`)                        |
+| Server → Cliente | `SuggestionMessage`      | Sugerencia generada en vivo (`type`, `payload`, `confidence`)                              |
+| Cliente → Server | `AnalyzeNowMessage`      | Disparo manual del análisis de IA (botón del Tech Lead)                                    |
+| Server → Cliente | `PingMessage`            | Heartbeat cada 30 s para mantener la conexión abierta y detectar desconexiones silenciosas |
+| Cliente → Server | `PongMessage`            | Respuesta al heartbeat                                                                     |
+| Cliente → Server | `ReconnectMessage`       | Enviado al reconectar; incluye `lastSequence` para que el servidor descarte duplicados     |
+
+**Protocolo de idempotencia (TS36):** Cada `TranscriptSegment` lleva un `sequence` monotónico. Al reconectar, el cliente envía `ReconnectMessage(lastSequence=N)`. El servidor consulta `TranscriptSegmentRepository.existsBySessionIdAndSequence()` y descarta los segmentos con `sequence ≤ N`, procesando solo los nuevos (`> N`) sin duplicados.
 
 ---
 
@@ -4573,9 +4646,11 @@ Los adaptadores se ubican en `com.kntrosoft.reqsai.discovery.infrastructure.adap
 
 Invoca la API de Google Gemini (vía Spring AI, con Structured Output) usando un prompt que incluye la ventana de transcript y el contexto del proyecto. El modelo devuelve las sugerencias en JSON estructurado (tipo, contenido y, si aplica, historia destino). Es **intercambiable** mediante la propiedad `reqsai.llm.provider` (adaptador alternativo `OpenAiRequirementGenerationAdapter`).
 
-| Método                      | Descripción                                                                             |
-|-----------------------------|-----------------------------------------------------------------------------------------|
-| `generate(window, context)` | Construye el prompt, invoca Gemini y parsea la salida estructurada a `GenerationResult` |
+**Chunking de transcript largo:** Para el procesamiento batch (`StartDiscoveryProcessingCommand`), cuando el transcript supera el límite de tokens del contexto de Gemini (~30 000 tokens), el adapter divide el transcript en fragmentos semánticos solapados usando detección de silencios y límites de párrafo. Cada fragmento se procesa de forma independiente y los resultados se fusionan (deduplicación vía embeddings) antes de retornar el `GenerationResult` consolidado.
+
+| Método                      | Descripción                                                                                                                                                            |
+|-----------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `generate(window, context)` | Construye el prompt, invoca Gemini y parsea la salida estructurada a `GenerationResult`. Si el transcript supera el límite, aplica chunking semántico automáticamente. |
 
 **`AssemblyAiTranscriptionAdapter`** — implementa `TranscriptionPort`
 
