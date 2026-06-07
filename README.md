@@ -2069,13 +2069,14 @@ Esta capa contiene el núcleo del negocio del BC IAM: reglas de autenticación, 
 
 **Domain Events**
 
-| Clase                             | Paquete                    | Campos clave                                                   | Se publica cuando                                | Consumido por                                             |
-|-----------------------------------|----------------------------|----------------------------------------------------------------|--------------------------------------------------|-----------------------------------------------------------|
-| `AccountCreatedEvent`             | `iam/api/`                 | `accountId`, `userId`, `email`, `occurredAt`                   | Se completa `SignUpCommandHandler` exitosamente. | Interno.                                                  |
-| `EmailVerificationRequestedEvent` | `iam/api/`                 | `email`, `verificationCode`, `expirationMinutes`, `occurredAt` | Se crea una cuenta nueva o se reenvía el OTP.    | `EmailVerificationRequestedEventListener` (envía correo). |
-| `AccountVerifiedEvent`            | `iam/domain/model/events/` | `accountId`, `occurredAt`                                      | La cuenta transiciona a estado `ACTIVE`.         | Interno.                                                  |
-| `PasswordResetRequestedEvent`     | `iam/api/`                 | `email`, `resetToken`, `expirationMinutes`, `occurredAt`       | Se ejecuta `ForgotPasswordCommandHandler`.       | `PasswordResetRequestedEventListener` (envía correo).     |
-| `TermsAcceptedEvent`              | `iam/domain/model/events/` | `accountId`, `termsVersion`, `occurredAt`                      | Se completa `AcceptTermsCommandHandler`.         | Interno (auditoría legal).                                |
+| Clase                             | Paquete                    | Campos clave                                                   | Se publica cuando                                | Consumido por                                                            |
+|-----------------------------------|----------------------------|----------------------------------------------------------------|--------------------------------------------------|--------------------------------------------------------------------------|
+| `AccountCreatedEvent`             | `iam/api/`                 | `accountId`, `userId`, `email`, `occurredAt`                   | Se completa `SignUpCommandHandler` exitosamente. | Interno.                                                                 |
+| `EmailVerificationRequestedEvent` | `iam/api/`                 | `email`, `verificationCode`, `expirationMinutes`, `occurredAt` | Se crea una cuenta nueva o se reenvía el OTP.    | `EmailVerificationRequestedEventListener` (envía correo).                |
+| `AccountVerifiedEvent`            | `iam/domain/model/events/` | `accountId`, `occurredAt`                                      | La cuenta transiciona a estado `ACTIVE`.         | Interno.                                                                 |
+| `PasswordResetRequestedEvent`     | `iam/api/`                 | `email`, `resetToken`, `expirationMinutes`, `occurredAt`       | Se ejecuta `ForgotPasswordCommandHandler`.       | `PasswordResetRequestedEventListener` (envía correo).                    |
+| `TermsAcceptedEvent`              | `iam/domain/model/events/` | `accountId`, `termsVersion`, `occurredAt`                      | Se completa `AcceptTermsCommandHandler`.         | Interno (auditoría legal).                                               |
+| `SessionRevokedEvent`             | `iam/domain/model/events/` | `userId`, `refreshTokenHash`, `occurredAt`                     | Se ejecuta `RevokeRefreshTokenCommandHandler`.   | Interno (auditoría de seguridad; futura invalidación multi-dispositivo). |
 
 ---
 
@@ -2095,6 +2096,7 @@ Esta capa contiene el núcleo del negocio del BC IAM: reglas de autenticación, 
 | `ForgotPasswordCommand`         | `domain/model/commands/` | `email: String`                                                                 | `ForgotPasswordCommandHandler`         |
 | `ResetPasswordCommand`          | `domain/model/commands/` | `token: String`, `newPassword: String`                                          | `ResetPasswordCommandHandler`          |
 | `AcceptTermsCommand`            | `domain/model/commands/` | `accountId: String`, `termsVersion: String`                                     | `AcceptTermsCommandHandler`            |
+| `SwitchOrganizationCommand`     | `domain/model/commands/` | `userId: String`, `targetOrganizationId: String`                                | `SwitchOrganizationCommandHandler`     |
 
 **Queries**
 
@@ -2121,17 +2123,18 @@ Esta capa es la puerta de entrada HTTP al BC IAM. Expone los endpoints de autent
 | **Tag OpenAPI** | `"Authentication"`                                                               |
 | **Propósito**   | Contrato OpenAPI para registro, autenticación y gestión de sesiones. Sin lógica. |
 
-| Método HTTP | Path               | Nombre del método        | Request DTO                     | Response DTO                | Códigos HTTP       |
-|-------------|--------------------|--------------------------|---------------------------------|-----------------------------|--------------------|
-| `POST`      | `/sign-up`         | `signUp`                 | `SignUpRequest`                 | `AuthenticatedUserResponse` | 201, 400, 409      |
-| `POST`      | `/sign-in`         | `signIn`                 | `SignInRequest`                 | `AuthenticatedUserResponse` | 200, 400, 401, 409 |
-| `POST`      | `/verify`          | `verifyEmail`            | `VerifyEmailRequest`            | `void`                      | 200, 400, 409      |
-| `POST`      | `/resend-code`     | `resendVerificationCode` | `ResendVerificationCodeRequest` | `void`                      | 200, 400, 404      |
-| `POST`      | `/refresh`         | `refreshSession`         | `RefreshSessionRequest`         | `AuthenticatedUserResponse` | 200, 401           |
-| `POST`      | `/sign-out`        | `signOut`                | `RevokeRefreshTokenRequest`     | `void`                      | 204, 401           |
-| `POST`      | `/forgot-password` | `forgotPassword`         | `ForgotPasswordRequest`         | `void`                      | 200, 404           |
-| `POST`      | `/reset-password`  | `resetPassword`          | `ResetPasswordRequest`          | `void`                      | 200, 400, 401      |
-| `POST`      | `/accept-terms`    | `acceptTerms`            | `AcceptTermsRequest`            | `void`                      | 200, 400, 401      |
+| Método HTTP | Path                   | Nombre del método        | Request DTO                     | Response DTO                | Códigos HTTP       |
+|-------------|------------------------|--------------------------|---------------------------------|-----------------------------|--------------------|
+| `POST`      | `/sign-up`             | `signUp`                 | `SignUpRequest`                 | `AuthenticatedUserResponse` | 201, 400, 409      |
+| `POST`      | `/sign-in`             | `signIn`                 | `SignInRequest`                 | `AuthenticatedUserResponse` | 200, 400, 401, 409 |
+| `POST`      | `/verify`              | `verifyEmail`            | `VerifyEmailRequest`            | `void`                      | 200, 400, 409      |
+| `POST`      | `/resend-code`         | `resendVerificationCode` | `ResendVerificationCodeRequest` | `void`                      | 200, 400, 404      |
+| `POST`      | `/refresh`             | `refreshSession`         | `RefreshSessionRequest`         | `AuthenticatedUserResponse` | 200, 401           |
+| `POST`      | `/sign-out`            | `signOut`                | `RevokeRefreshTokenRequest`     | `void`                      | 204, 401           |
+| `POST`      | `/forgot-password`     | `forgotPassword`         | `ForgotPasswordRequest`         | `void`                      | 200, 404           |
+| `POST`      | `/reset-password`      | `resetPassword`          | `ResetPasswordRequest`          | `void`                      | 200, 400, 401      |
+| `POST`      | `/accept-terms`        | `acceptTerms`            | `AcceptTermsRequest`            | `void`                      | 200, 400, 401      |
+| `POST`      | `/switch-organization` | `switchOrganization`     | `SwitchOrganizationRequest`     | `AuthenticatedUserResponse` | 200, 400, 401, 403 |
 
 **`AuthenticationControllerImpl` (Implementation)**
 
@@ -2141,17 +2144,18 @@ Esta capa es la puerta de entrada HTTP al BC IAM. Expone los endpoints de autent
 | **Anotaciones** | `@Slf4j`, `@RestController`, `@RequiredArgsConstructor` |
 | **Implementa**  | `AuthenticationController`                              |
 
-| Handler                                | Para qué endpoint       |
-|----------------------------------------|-------------------------|
-| `SignUpCommandHandler`                 | `POST /sign-up`         |
-| `SignInCommandHandler`                 | `POST /sign-in`         |
-| `VerifyEmailCommandHandler`            | `POST /verify`          |
-| `ResendVerificationCodeCommandHandler` | `POST /resend-code`     |
-| `RefreshSessionCommandHandler`         | `POST /refresh`         |
-| `RevokeRefreshTokenCommandHandler`     | `POST /sign-out`        |
-| `ForgotPasswordCommandHandler`         | `POST /forgot-password` |
-| `ResetPasswordCommandHandler`          | `POST /reset-password`  |
-| `AcceptTermsCommandHandler`            | `POST /accept-terms`    |
+| Handler                                | Para qué endpoint           |
+|----------------------------------------|-----------------------------|
+| `SignUpCommandHandler`                 | `POST /sign-up`             |
+| `SignInCommandHandler`                 | `POST /sign-in`             |
+| `VerifyEmailCommandHandler`            | `POST /verify`              |
+| `ResendVerificationCodeCommandHandler` | `POST /resend-code`         |
+| `RefreshSessionCommandHandler`         | `POST /refresh`             |
+| `RevokeRefreshTokenCommandHandler`     | `POST /sign-out`            |
+| `ForgotPasswordCommandHandler`         | `POST /forgot-password`     |
+| `ResetPasswordCommandHandler`          | `POST /reset-password`      |
+| `AcceptTermsCommandHandler`            | `POST /accept-terms`        |
+| `SwitchOrganizationCommandHandler`     | `POST /switch-organization` |
 
 ---
 
@@ -2385,10 +2389,37 @@ Esta capa orquesta los casos de uso del BC IAM. No contiene lógica de negocio; 
 
 **Flujo:**
 
-| Paso | Acción                                                   | Excepción lanzada              |
-|------|----------------------------------------------------------|--------------------------------|
-| 1    | Cargar `RefreshToken` por hash del token.                | `InvalidRefreshTokenException` |
-| 2    | Llamar `refreshToken.revoke(Instant.now())` y persistir. | —                              |
+| Paso | Acción                                                                     | Excepción lanzada              |
+|------|----------------------------------------------------------------------------|--------------------------------|
+| 1    | Cargar `RefreshToken` por hash del token.                                  | `InvalidRefreshTokenException` |
+| 2    | Llamar `refreshToken.revoke(Instant.now())` y persistir.                   | —                              |
+| 3    | Publicar `SessionRevokedEvent(userId, tokenHash)` para auditoría.          | —                              |
+
+---
+
+**`SwitchOrganizationCommandHandler`**
+
+| Campo                  | Detalle                                                                                           |
+|------------------------|---------------------------------------------------------------------------------------------------|
+| **Paquete**            | `com.kntrosoft.reqsai.iam.application.authentication.switchorganization`                          |
+| **Anotaciones**        | `@Slf4j`, `@Service`, `@RequiredArgsConstructor`, `@Transactional`                                |
+| **Command que recibe** | `SwitchOrganizationCommand`                                                                       |
+| **Retorna**            | `AuthenticatedUserResponse` (con nuevos tokens JWT con el tenant actualizado)                     |
+| **Propósito**          | Cambia la organización activa del usuario re-emitiendo un JWT con el nuevo `tenant`.              |
+| **Dependencias**       | `UserRepositoryPort`, `WorkspaceMembershipPort`, `TokenServicePort`, `RefreshTokenRepositoryPort` |
+
+**Flujo:**
+
+| Paso | Acción                                                                            | Excepción lanzada                        |
+|------|-----------------------------------------------------------------------------------|------------------------------------------|
+| 1    | Cargar `User` por `userId`.                                                       | `UserNotFoundException`                  |
+| 2    | Llamar `WorkspaceMembershipPort.isMember(userId, targetOrganizationId)`.          | `AccessDeniedException` si no es miembro |
+| 3    | Actualizar `UserPreferences.lastVisitedOrgId = targetOrganizationId` y persistir. | —                                        |
+| 4    | Revocar el refresh token anterior.                                                | —                                        |
+| 5    | Emitir nuevos JWT (access + refresh) con `tenantId = targetOrganizationId`.       | —                                        |
+| 6    | Retornar `AuthenticatedUserResponse` con los nuevos tokens.                       | —                                        |
+
+> **Nota:** `WorkspaceMembershipPort` es un Service Port en IAM que delega a la API pública del BC Workspace (`WorkspaceModuleApi`) para verificar membresía sin crear dependencia circular.
 
 ---
 
@@ -2532,27 +2563,29 @@ Esta capa orquesta los casos de uso del BC IAM. No contiene lógica de negocio; 
 
 **Repository Ports** — `application/ports/repositories/`:
 
-| Interfaz                     | Método              | Firma                                                 | Descripción                                |
-|------------------------------|---------------------|-------------------------------------------------------|--------------------------------------------|
-| `AccountRepositoryPort`      | `save`              | `Account save(Account account)`                       | Persiste o actualiza.                      |
-|                              | `findById`          | `Optional<Account> findById(String id)`               | Busca por ID.                              |
-|                              | `findByEmail`       | `Optional<Account> findByEmail(Email email)`          | Busca por email.                           |
-|                              | `existsByEmail`     | `boolean existsByEmail(Email email)`                  | Verifica unicidad de email.                |
-| `UserRepositoryPort`         | `save`              | `User save(User user)`                                | Persiste o actualiza.                      |
-|                              | `findById`          | `Optional<User> findById(String id)`                  | Busca por ID.                              |
-|                              | `findByAccountId`   | `Optional<User> findByAccountId(AccountId accountId)` | Busca por cuenta.                          |
-| `RefreshTokenRepositoryPort` | `save`              | `RefreshToken save(RefreshToken token)`               | Persiste o actualiza.                      |
-|                              | `findByTokenHash`   | `Optional<RefreshToken> findByTokenHash(String hash)` | Busca por hash SHA-256.                    |
-|                              | `deleteAllByUserId` | `void deleteAllByUserId(String userId)`               | Limpieza de tokens al eliminar un usuario. |
+| Interfaz                     | Método                     | Firma                                                          | Descripción                                                                    |
+|------------------------------|----------------------------|----------------------------------------------------------------|--------------------------------------------------------------------------------|
+| `AccountRepositoryPort`      | `save`                     | `Account save(Account account)`                                | Persiste o actualiza.                                                          |
+|                              | `findById`                 | `Optional<Account> findById(String id)`                        | Busca por ID.                                                                  |
+|                              | `findByEmail`              | `Optional<Account> findByEmail(Email email)`                   | Busca por email.                                                               |
+|                              | `existsByEmail`            | `boolean existsByEmail(Email email)`                           | Verifica unicidad de email.                                                    |
+|                              | `findByPasswordResetToken` | `Optional<Account> findByPasswordResetToken(String tokenHash)` | Busca por hash del token de reset. Necesario en `ResetPasswordCommandHandler`. |
+| `UserRepositoryPort`         | `save`                     | `User save(User user)`                                         | Persiste o actualiza.                                                          |
+|                              | `findById`                 | `Optional<User> findById(String id)`                           | Busca por ID.                                                                  |
+|                              | `findByAccountId`          | `Optional<User> findByAccountId(AccountId accountId)`          | Busca por cuenta.                                                              |
+| `RefreshTokenRepositoryPort` | `save`                     | `RefreshToken save(RefreshToken token)`                        | Persiste o actualiza.                                                          |
+|                              | `findByTokenHash`          | `Optional<RefreshToken> findByTokenHash(String hash)`          | Busca por hash SHA-256.                                                        |
+|                              | `deleteAllByUserId`        | `void deleteAllByUserId(String userId)`                        | Limpieza de tokens al eliminar un usuario.                                     |
 
 **Service Ports** — `application/ports/`:
 
-| Interfaz                       | Paquete               | Métodos clave                                                                                                                                                     | Implementación en infra         |
-|--------------------------------|-----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
-| `TokenServicePort`             | `ports/token/`        | `generateToken(String userId): String`, `validateToken(String token): boolean`, `getUserIdFromToken(String token): String`                                        | `JwtTokenServiceAdapter`        |
-| `HashingServicePort`           | `ports/hashing/`      | `encode(String raw): String`, `matches(String raw, String hash): boolean`                                                                                         | `BCryptHashingServiceAdapter`   |
-| `VerificationServicePort`      | `ports/verification/` | `generateCode(): String`, `generateExpirationMinutes(): int`                                                                                                      | `OtpVerificationServiceAdapter` |
-| `EmailNotificationServicePort` | `ports/email/`        | `sendVerificationEmail(String to, String code, int expirationMinutes): void`; `sendPasswordResetEmail(String to, String resetToken, int expirationMinutes): void` | `SmtpEmailNotificationAdapter`  |
+| Interfaz                       | Paquete               | Métodos clave                                                                                                                                                     | Implementación en infra                                      |
+|--------------------------------|-----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------|
+| `TokenServicePort`             | `ports/token/`        | `generateToken(String userId): String`, `validateToken(String token): boolean`, `getUserIdFromToken(String token): String`                                        | `JwtTokenServiceAdapter`                                     |
+| `HashingServicePort`           | `ports/hashing/`      | `encode(String raw): String`, `matches(String raw, String hash): boolean`                                                                                         | `BCryptHashingServiceAdapter`                                |
+| `VerificationServicePort`      | `ports/verification/` | `generateCode(): String`, `generateExpirationMinutes(): int`                                                                                                      | `OtpVerificationServiceAdapter`                              |
+| `EmailNotificationServicePort` | `ports/email/`        | `sendVerificationEmail(String to, String code, int expirationMinutes): void`; `sendPasswordResetEmail(String to, String resetToken, int expirationMinutes): void` | `SmtpEmailNotificationAdapter`                               |
+| `WorkspaceMembershipPort`      | `ports/workspace/`    | `isMember(String userId, String organizationId): boolean`                                                                                                         | `WorkspaceMembershipAdapter` (delega a `WorkspaceModuleApi`) |
 
 ---
 
@@ -2570,24 +2603,26 @@ Esta capa contiene las implementaciones técnicas de los puertos definidos en la
 
 **Métodos derivados (Spring Data):**
 
-| Repositorio              | Firma                                                      | Descripción                                 |
-|--------------------------|------------------------------------------------------------|---------------------------------------------|
-| `AccountRepository`      | `Optional<Account> findByEmail(Email email)`               | Búsqueda por VO embebido.                   |
-| `AccountRepository`      | `boolean existsByEmail(Email email)`                       | Verificación de unicidad de email.          |
-| `UserRepository`         | `Optional<User> findByAccountId(AccountId accountId)`      | Búsqueda de perfil por referencia a cuenta. |
-| `RefreshTokenRepository` | `Optional<RefreshToken> findByTokenHash(String tokenHash)` | Búsqueda de token por hash SHA-256.         |
-| `RefreshTokenRepository` | `void deleteAllByUserId(String userId)`                    | Limpieza de tokens al eliminar un usuario.  |
+| Repositorio              | Firma                                                                   | Descripción                                                             |
+|--------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------|
+| `AccountRepository`      | `Optional<Account> findByEmail(Email email)`                            | Búsqueda por VO embebido.                                               |
+| `AccountRepository`      | `boolean existsByEmail(Email email)`                                    | Verificación de unicidad de email.                                      |
+| `AccountRepository`      | `Optional<Account> findByPasswordResetToken(String passwordResetToken)` | Búsqueda por token de reset en texto plano (hash comparado en dominio). |
+| `UserRepository`         | `Optional<User> findByAccountId(AccountId accountId)`                   | Búsqueda de perfil por referencia a cuenta.                             |
+| `RefreshTokenRepository` | `Optional<RefreshToken> findByTokenHash(String tokenHash)`              | Búsqueda de token por hash SHA-256.                                     |
+| `RefreshTokenRepository` | `void deleteAllByUserId(String userId)`                                 | Limpieza de tokens al eliminar un usuario.                              |
 
 ---
 
 **Adapters Externos**
 
-| Clase                           | Implementa                     | Servicio externo        | Tecnología                                                    | Propósito                                                       |
-|---------------------------------|--------------------------------|-------------------------|---------------------------------------------------------------|-----------------------------------------------------------------|
-| `JwtTokenServiceAdapter`        | `TokenServicePort`             | —                       | JJWT (HS256, clave y expiración configurables por properties) | Emite y valida JWT. Claims: `sub`, `userId`.                    |
-| `BCryptHashingServiceAdapter`   | `HashingServicePort`           | —                       | Spring Security `BCryptPasswordEncoder`                       | Hashea y verifica contraseñas con BCrypt.                       |
-| `OtpVerificationServiceAdapter` | `VerificationServicePort`      | —                       | `SecureRandom`                                                | Genera códigos OTP numéricos de 6 dígitos con TTL configurable. |
-| `SmtpEmailNotificationAdapter`  | `EmailNotificationServicePort` | SMTP (SendGrid / Gmail) | Spring Mail                                                   | Envía correo de verificación con plantilla HTML.                |
+| Clase                           | Implementa                     | Servicio externo        | Tecnología                                                    | Propósito                                                                                                  |
+|---------------------------------|--------------------------------|-------------------------|---------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
+| `JwtTokenServiceAdapter`        | `TokenServicePort`             | —                       | JJWT (HS256, clave y expiración configurables por properties) | Emite y valida JWT. Claims: `sub`, `userId`.                                                               |
+| `BCryptHashingServiceAdapter`   | `HashingServicePort`           | —                       | Spring Security `BCryptPasswordEncoder`                       | Hashea y verifica contraseñas con BCrypt.                                                                  |
+| `OtpVerificationServiceAdapter` | `VerificationServicePort`      | —                       | `SecureRandom`                                                | Genera códigos OTP numéricos de 6 dígitos con TTL configurable.                                            |
+| `SmtpEmailNotificationAdapter`  | `EmailNotificationServicePort` | SMTP (SendGrid / Gmail) | Spring Mail                                                   | Envía correo de verificación OTP y correo de reset de contraseña, ambos con plantilla HTML.                |
+| `WorkspaceMembershipAdapter`    | `WorkspaceMembershipPort`      | —                       | Spring Modulith (in-process)                                  | Delega a `WorkspaceModuleApi.isMember()` para verificar si el usuario pertenece a la organización destino. |
 
 ---
 
@@ -2792,12 +2827,14 @@ Esta capa contiene las reglas de negocio de suscripciones, cuotas de uso y ciclo
 
 **Domain Events**
 
-| Clase                        | Paquete                        | Campos clave                                                           | Se publica cuando                                | Consumido por                                                |
-|------------------------------|--------------------------------|------------------------------------------------------------------------|--------------------------------------------------|--------------------------------------------------------------|
-| `SubscriptionAssignedEvent`  | `billing/api/`                 | `subscriptionId`, `organizationId`, `planType`, `occurredAt`           | Se asigna el plan FREE a una organización nueva. | BC Workspace (aplica `PlanLimits` a la organización).        |
-| `SubscriptionUpgradedEvent`  | `billing/api/`                 | `subscriptionId`, `organizationId`, `oldPlan`, `newPlan`, `occurredAt` | Se completa `UpgradeSubscriptionCommandHandler`. | BC Workspace (actualiza `PlanLimits`).                       |
-| `SubscriptionCancelledEvent` | `billing/domain/model/events/` | `subscriptionId`, `organizationId`, `occurredAt`                       | La suscripción pasa a estado `CANCELLED`.        | Interno.                                                     |
-| `TokenQuotaExceededEvent`    | `billing/api/`                 | `subscriptionId`, `organizationId`, `quotaUsed`, `occurredAt`          | `tokenQuotaUsed` alcanza el máximo del plan.     | BC Req Discovery (bloquea procesamiento de nuevas sesiones). |
+| Clase                          | Paquete                        | Campos clave                                                           | Se publica cuando                                                    | Consumido por                                                                              |
+|--------------------------------|--------------------------------|------------------------------------------------------------------------|----------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
+| `SubscriptionAssignedEvent`    | `billing/api/`                 | `subscriptionId`, `organizationId`, `planType`, `occurredAt`           | Se asigna el plan FREE a una organización nueva.                     | BC Workspace (aplica `PlanLimits` a la organización).                                      |
+| `SubscriptionUpgradedEvent`    | `billing/api/`                 | `subscriptionId`, `organizationId`, `oldPlan`, `newPlan`, `occurredAt` | Se completa `UpgradeSubscriptionCommandHandler`.                     | BC Workspace (actualiza `PlanLimits`).                                                     |
+| `SubscriptionCancelledEvent`   | `billing/domain/model/events/` | `subscriptionId`, `organizationId`, `occurredAt`                       | La suscripción pasa a estado `CANCELLED`.                            | Interno (auditoría).                                                                       |
+| `SubscriptionReactivatedEvent` | `billing/api/`                 | `subscriptionId`, `organizationId`, `planType`, `occurredAt`           | Se completa `ReactivateSubscriptionCommandHandler`.                  | BC Workspace (restaura `PlanLimits` al plan correspondiente via `ApplyPlanLimitsCommand`). |
+| `TokenQuotaExceededEvent`      | `billing/api/`                 | `subscriptionId`, `organizationId`, `quotaUsed`, `occurredAt`          | `tokenQuotaUsed` alcanza el máximo del plan.                         | BC Req Discovery (bloquea procesamiento de nuevas sesiones).                               |
+| `QuotaResetEvent`              | `billing/api/`                 | `subscriptionId`, `organizationId`, `occurredAt`                       | Se ejecuta `ResetQuotaCommandHandler` (scheduler mensual o webhook). | BC Req Discovery (desbloquea sesiones que estaban pausadas por cuota excedida).            |
 
 ---
 
@@ -2818,6 +2855,7 @@ Esta capa contiene las reglas de negocio de suscripciones, cuotas de uso y ciclo
 |--------------------------------------|-------------------------|--------------------------|---------------------------------------------|
 | `GetSubscriptionByOrganizationQuery` | `domain/model/queries/` | `organizationId: String` | `GetSubscriptionByOrganizationQueryHandler` |
 | `GetSubscriptionByIdQuery`           | `domain/model/queries/` | `subscriptionId: String` | `GetSubscriptionByIdQueryHandler`           |
+| `GetCurrentUsageQuery`               | `domain/model/queries/` | `organizationId: String` | `GetCurrentUsageQueryHandler`               |
 
 ---
 
@@ -2836,13 +2874,14 @@ Esta capa expone los endpoints REST del BC Billing para consulta y gestión de s
 | **Tag OpenAPI** | `"Subscriptions"`                                                            |
 | **Propósito**   | Contrato OpenAPI para consulta y gestión del ciclo de vida de suscripciones. |
 
-| Método HTTP | Path                             | Nombre del método               | Request DTO                     | Response DTO           | Códigos HTTP            |
-|-------------|----------------------------------|---------------------------------|---------------------------------|------------------------|-------------------------|
-| `GET`       | `/organization/{organizationId}` | `getSubscriptionByOrganization` | — (path variable)               | `SubscriptionResponse` | 200, 401, 404           |
-| `POST`      | `/`                              | `assignFreeSubscription`        | `AssignFreeSubscriptionRequest` | `SubscriptionResponse` | 201, 400, 401, 409      |
-| `PUT`       | `/{id}/upgrade`                  | `upgradeSubscription`           | `UpgradeSubscriptionRequest`    | `SubscriptionResponse` | 200, 400, 401, 404, 409 |
-| `PUT`       | `/{id}/cancel`                   | `cancelSubscription`            | —                               | `SubscriptionResponse` | 200, 401, 404, 409      |
-| `PUT`       | `/{id}/reactivate`               | `reactivateSubscription`        | —                               | `SubscriptionResponse` | 200, 401, 404, 409      |
+| Método HTTP | Path                                   | Nombre del método               | Request DTO                     | Response DTO           | Códigos HTTP            |
+|-------------|----------------------------------------|---------------------------------|---------------------------------|------------------------|-------------------------|
+| `GET`       | `/organization/{organizationId}`       | `getSubscriptionByOrganization` | — (path variable)               | `SubscriptionResponse` | 200, 401, 404           |
+| `GET`       | `/organization/{organizationId}/usage` | `getCurrentUsage`               | — (path variable)               | `UsageSummaryResponse` | 200, 401, 404           |
+| `POST`      | `/`                                    | `assignFreeSubscription`        | `AssignFreeSubscriptionRequest` | `SubscriptionResponse` | 201, 400, 401, 409      |
+| `PUT`       | `/{id}/upgrade`                        | `upgradeSubscription`           | `UpgradeSubscriptionRequest`    | `SubscriptionResponse` | 200, 400, 401, 404, 409 |
+| `PUT`       | `/{id}/cancel`                         | `cancelSubscription`            | —                               | `SubscriptionResponse` | 200, 401, 404, 409      |
+| `PUT`       | `/{id}/reactivate`                     | `reactivateSubscription`        | —                               | `SubscriptionResponse` | 200, 401, 404, 409      |
 
 **`SubscriptionControllerImpl` (Implementation)**
 
@@ -2852,13 +2891,14 @@ Esta capa expone los endpoints REST del BC Billing para consulta y gestión de s
 | **Anotaciones** | `@Slf4j`, `@RestController`, `@RequiredArgsConstructor`    |
 | **Implementa**  | `SubscriptionController`                                   |
 
-| Handler                                     | Para qué endpoint                    |
-|---------------------------------------------|--------------------------------------|
-| `GetSubscriptionByOrganizationQueryHandler` | `GET /organization/{organizationId}` |
-| `AssignFreeSubscriptionCommandHandler`      | `POST /`                             |
-| `UpgradeSubscriptionCommandHandler`         | `PUT /{id}/upgrade`                  |
-| `CancelSubscriptionCommandHandler`          | `PUT /{id}/cancel`                   |
-| `ReactivateSubscriptionCommandHandler`      | `PUT /{id}/reactivate`               |
+| Handler                                     | Para qué endpoint                          |
+|---------------------------------------------|--------------------------------------------|
+| `GetSubscriptionByOrganizationQueryHandler` | `GET /organization/{organizationId}`       |
+| `GetCurrentUsageQueryHandler`               | `GET /organization/{organizationId}/usage` |
+| `AssignFreeSubscriptionCommandHandler`      | `POST /`                                   |
+| `UpgradeSubscriptionCommandHandler`         | `PUT /{id}/upgrade`                        |
+| `CancelSubscriptionCommandHandler`          | `PUT /{id}/cancel`                         |
+| `ReactivateSubscriptionCommandHandler`      | `PUT /{id}/reactivate`                     |
 
 ---
 
@@ -3017,11 +3057,32 @@ Esta capa orquesta los casos de uso de Billing. Coordina la validación de negoc
 
 **Flujo:**
 
-| Paso | Acción                                                    | Excepción lanzada                       |
-|------|-----------------------------------------------------------|-----------------------------------------|
-| 1    | Cargar `Subscription` por ID.                             | `SubscriptionNotFoundException`         |
-| 2    | Llamar `subscription.reactivate(periodStart, periodEnd)`. | `CannotReactivateSubscriptionException` |
-| 3    | Persistir `Subscription` actualizado.                     | —                                       |
+| Paso | Acción                                                                                | Excepción lanzada                       |
+|------|---------------------------------------------------------------------------------------|-----------------------------------------|
+| 1    | Cargar `Subscription` por ID.                                                         | `SubscriptionNotFoundException`         |
+| 2    | Llamar `subscription.reactivate(periodStart, periodEnd)`.                             | `CannotReactivateSubscriptionException` |
+| 3    | Persistir `Subscription` actualizado.                                                 | —                                       |
+| 4    | Publicar `SubscriptionReactivatedEvent(subscriptionId, organizationId, planType)`.    | —                                       |
+
+---
+
+**`GetCurrentUsageQueryHandler`**
+
+| Campo                | Detalle                                                                                                                                |
+|----------------------|----------------------------------------------------------------------------------------------------------------------------------------|
+| **Paquete**          | `com.kntrosoft.reqsai.billing.application.subscription.queries`                                                                        |
+| **Anotaciones**      | `@Slf4j`, `@Service`, `@RequiredArgsConstructor`, `@Transactional(readOnly = true)`                                                    |
+| **Query que recibe** | `GetCurrentUsageQuery`                                                                                                                 |
+| **Retorna**          | `UsageSummaryResponse`                                                                                                                 |
+| **Propósito**        | Retorna el resumen de consumo del período actual: tokens usados/disponibles, porcentaje de cuota y fecha de próxima renovación (US20). |
+
+**Flujo:**
+
+| Paso | Acción                                                                                                  | Excepción lanzada               |
+|------|---------------------------------------------------------------------------------------------------------|---------------------------------|
+| 1    | Cargar `Subscription` por `organizationId`.                                                             | `SubscriptionNotFoundException` |
+| 2    | Calcular porcentaje: `(tokenQuotaUsed / maxTokens) * 100`.                                              | —                               |
+| 3    | Mapear a `UsageSummaryResponse(tokensUsed, tokensMax, usagePercent, renewalDate, planType)` y retornar. | —                               |
 
 ---
 
@@ -3058,28 +3119,31 @@ Esta capa orquesta los casos de uso de Billing. Coordina la validación de negoc
 
 **Flujo:**
 
-| Paso | Acción                                          | Excepción lanzada               |
-|------|-------------------------------------------------|---------------------------------|
-| 1    | Cargar `Subscription` por ID.                   | `SubscriptionNotFoundException` |
-| 2    | Llamar `subscription.resetQuota()` y persistir. | —                               |
+| Paso | Acción                                                              | Excepción lanzada               |
+|------|---------------------------------------------------------------------|---------------------------------|
+| 1    | Cargar `Subscription` por ID.                                       | `SubscriptionNotFoundException` |
+| 2    | Llamar `subscription.resetQuota()` y persistir.                     | —                               |
+| 3    | Publicar `QuotaResetEvent(subscriptionId, organizationId)`.         | —                               |
 
 ---
 
 **Query Handlers**
 
-| Clase                                       | Paquete                             | Query que recibe                     | Retorna        | Notas                                               |
-|---------------------------------------------|-------------------------------------|--------------------------------------|----------------|-----------------------------------------------------|
-| `GetSubscriptionByOrganizationQueryHandler` | `application/subscription/queries/` | `GetSubscriptionByOrganizationQuery` | `Subscription` | Lanza `SubscriptionNotFoundException` si no existe. |
-| `GetSubscriptionByIdQueryHandler`           | `application/subscription/queries/` | `GetSubscriptionByIdQuery`           | `Subscription` | Lanza `SubscriptionNotFoundException` si no existe. |
+| Clase                                       | Paquete                             | Query que recibe                     | Retorna                | Notas                                                                     |
+|---------------------------------------------|-------------------------------------|--------------------------------------|------------------------|---------------------------------------------------------------------------|
+| `GetSubscriptionByOrganizationQueryHandler` | `application/subscription/queries/` | `GetSubscriptionByOrganizationQuery` | `Subscription`         | Lanza `SubscriptionNotFoundException` si no existe.                       |
+| `GetSubscriptionByIdQueryHandler`           | `application/subscription/queries/` | `GetSubscriptionByIdQuery`           | `Subscription`         | Lanza `SubscriptionNotFoundException` si no existe.                       |
+| `GetCurrentUsageQueryHandler`               | `application/subscription/queries/` | `GetCurrentUsageQuery`               | `UsageSummaryResponse` | Calcula porcentaje de cuota y fecha de renovación para el dashboard US20. |
 
 ---
 
 **Event Listeners**
 
-| Clase                               | Evento que escucha          | Qué hace                                                                              | Puertos que usa                    |
-|-------------------------------------|-----------------------------|---------------------------------------------------------------------------------------|------------------------------------|
-| `SubscriptionAssignedEventListener` | `SubscriptionAssignedEvent` | Notifica al BC Workspace para aplicar los `PlanLimits` correspondientes al plan FREE. | `WorkspaceModuleApi` (in-process). |
-| `SubscriptionUpgradedEventListener` | `SubscriptionUpgradedEvent` | Notifica al BC Workspace para actualizar los `PlanLimits` al nuevo plan.              | `WorkspaceModuleApi` (in-process). |
+| Clase                                  | Evento que escucha             | Qué hace                                                                              | Puertos que usa                    |
+|----------------------------------------|--------------------------------|---------------------------------------------------------------------------------------|------------------------------------|
+| `SubscriptionAssignedEventListener`    | `SubscriptionAssignedEvent`    | Notifica al BC Workspace para aplicar los `PlanLimits` correspondientes al plan FREE. | `WorkspaceModuleApi` (in-process). |
+| `SubscriptionUpgradedEventListener`    | `SubscriptionUpgradedEvent`    | Notifica al BC Workspace para actualizar los `PlanLimits` al nuevo plan.              | `WorkspaceModuleApi` (in-process). |
+| `SubscriptionReactivatedEventListener` | `SubscriptionReactivatedEvent` | Notifica al BC Workspace para restaurar los `PlanLimits` tras la reactivación.        | `WorkspaceModuleApi` (in-process). |
 
 ---
 
@@ -3480,13 +3544,16 @@ Todas las excepciones se ubican en `com.kntrosoft.reqsai.workspace.domain.model.
 
 Todos los eventos se ubican en `com.kntrosoft.reqsai.workspace.domain.events`.
 
-| Evento                      | Campos principales                                              | Consumidor                                                                          |
-|-----------------------------|-----------------------------------------------------------------|-------------------------------------------------------------------------------------|
-| `OrganizationCreatedEvent`  | `organizationId`, `ownerId`, `planLimits`                       | Billing BC → `AssignFreeSubscriptionCommand`                                        |
-| `MemberInvitedEvent`        | `memberId`, `organizationId`, `email`, `role`                   | Infraestructura → envío de email de invitación                                      |
-| `ProjectCreatedEvent`       | `projectId`, `organizationId`, `createdBy`                      | Interno → creación automática de `Glossary`                                         |
-| `PlanLimitsUpdatedEvent`    | `organizationId`, `newLimits`                                   | Interno → refresco de límites en Organization                                       |
-| `OwnershipTransferredEvent` | `organizationId`, `previousOwnerId`, `newOwnerId`, `occurredAt` | Auditoría. Infraestructura → notificación email al nuevo y al anterior Propietario. |
+| Evento                      | Campos principales                                              | Consumidor                                                                                       |
+|-----------------------------|-----------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
+| `OrganizationCreatedEvent`  | `organizationId`, `ownerId`, `planLimits`                       | Billing BC → `AssignFreeSubscriptionCommand`                                                     |
+| `MemberInvitedEvent`        | `memberId`, `organizationId`, `email`, `role`                   | Infraestructura → envío de email de invitación                                                   |
+| `ProjectCreatedEvent`       | `projectId`, `organizationId`, `createdBy`                      | Interno → creación automática de `Glossary`                                                      |
+| `PlanLimitsUpdatedEvent`    | `organizationId`, `newLimits`                                   | Interno → refresco de límites en Organization                                                    |
+| `OwnershipTransferredEvent` | `organizationId`, `previousOwnerId`, `newOwnerId`, `occurredAt` | Auditoría. Infraestructura → notificación email al nuevo y al anterior Propietario.              |
+| `InvitationAcceptedEvent`   | `memberId`, `organizationId`, `userId`, `occurredAt`            | Infraestructura → notificación al Propietario de que un nuevo miembro se unió activamente.       |
+| `MemberDeactivatedEvent`    | `memberId`, `organizationId`, `deactivatedBy`, `occurredAt`     | Auditoría. Infraestructura → signal para invalidar sesiones activas del miembro en Discovery BC. |
+| `ProjectArchivedEvent`      | `projectId`, `organizationId`, `archivedBy`, `occurredAt`       | BC Req Discovery → cancela sesiones en estado `RECORDING` o `PROCESSING` del proyecto archivado. |
 
 ### 5.3.2. Interface Layer
 
@@ -3498,12 +3565,14 @@ El paquete raíz de la capa de interfaz es `com.kntrosoft.reqsai.workspace.inter
 
 **`OrganizationController`** — `/api/v1/organizations`
 
-| Método   | Ruta       | Descripción                                                 |
-|----------|------------|-------------------------------------------------------------|
-| `POST`   | `/`        | Crea una nueva organización y el miembro fundador (`OWNER`) |
-| `GET`    | `/{orgId}` | Obtiene los datos de una organización                       |
-| `PATCH`  | `/{orgId}` | Renombra la organización                                    |
-| `DELETE` | `/{orgId}` | Elimina lógicamente la organización (estado `DELETED`)      |
+| Método   | Ruta                          | Descripción                                                                            |
+|----------|-------------------------------|----------------------------------------------------------------------------------------|
+| `POST`   | `/`                           | Crea una nueva organización y el miembro fundador (`OWNER`)                            |
+| `GET`    | `/{orgId}`                    | Obtiene los datos de una organización                                                  |
+| `PATCH`  | `/{orgId}`                    | Renombra la organización (`RenameOrganizationCommand`)                                 |
+| `PATCH`  | `/{orgId}/settings`           | Actualiza `GenerationSettings` (idioma de reuniones + retención de audio) — US14, US15 |
+| `POST`   | `/{orgId}/transfer-ownership` | Transfiere la propiedad a otro miembro ACTIVE — US36                                   |
+| `DELETE` | `/{orgId}`                    | Elimina lógicamente la organización (estado `DELETED`)                                 |
 
 ---
 
@@ -3578,19 +3647,21 @@ El paquete raíz de la capa de interfaz es `com.kntrosoft.reqsai.workspace.inter
 
 Los DTO se ubican en `com.kntrosoft.reqsai.workspace.interfaces.rest.dto`. Las anotaciones de validación Jakarta (`@NotBlank`, `@Size`, `@Valid`) se aplican únicamente sobre los request DTO. Las respuestas DTO proyectan los datos necesarios para cada caso de uso.
 
-| DTO                         | Tipo     | Campos principales                                                                |
-|-----------------------------|----------|-----------------------------------------------------------------------------------|
-| `CreateOrganizationRequest` | Request  | `name: String`, `slug: String`                                                    |
-| `InviteMemberRequest`       | Request  | `email: String`, `role: OrgRole`                                                  |
-| `CreateProjectRequest`      | Request  | `name: String`, `description: String`, `technicalProfile: TechnicalProfileDto`    |
-| `UpdateProjectRequest`      | Request  | `name: String?`, `description: String?`, `technicalProfile: TechnicalProfileDto?` |
-| `CreateProjectRoleRequest`  | Request  | `name: String`, `permissions: Set<Permission>`                                    |
-| `AddProjectMemberRequest`   | Request  | `memberId: String`, `roleId: String`                                              |
-| `UploadDocumentRequest`     | Request  | `name: String`, `url: String`, `mimeType: String`                                 |
-| `AddGlossaryTermRequest`    | Request  | `term: String`, `definition: String`, `synonyms: List<String>`                    |
-| `OrganizationResponse`      | Response | `id`, `name`, `slug`, `status`, `planLimits`                                      |
-| `ProjectResponse`           | Response | `id`, `name`, `description`, `technicalProfile`, `status`, `constraints`          |
-| `GlossaryResponse`          | Response | `id`, `projectId`, `terms: List<GlossaryTermResponse>`                            |
+| DTO                                 | Tipo     | Campos principales                                                                |
+|-------------------------------------|----------|-----------------------------------------------------------------------------------|
+| `CreateOrganizationRequest`         | Request  | `name: String`, `slug: String`                                                    |
+| `UpdateOrganizationSettingsRequest` | Request  | `meetingLanguage: String` (BCP-47), `audioRetentionDays: Int`                     |
+| `TransferOwnershipRequest`          | Request  | `newOwnerMemberId: String`                                                        |
+| `InviteMemberRequest`               | Request  | `email: String`, `role: OrgRole`                                                  |
+| `CreateProjectRequest`              | Request  | `name: String`, `description: String`, `technicalProfile: TechnicalProfileDto`    |
+| `UpdateProjectRequest`              | Request  | `name: String?`, `description: String?`, `technicalProfile: TechnicalProfileDto?` |
+| `CreateProjectRoleRequest`          | Request  | `name: String`, `permissions: Set<Permission>`                                    |
+| `AddProjectMemberRequest`           | Request  | `memberId: String`, `roleId: String`                                              |
+| `UploadDocumentRequest`             | Request  | `name: String`, `url: String`, `mimeType: String`                                 |
+| `AddGlossaryTermRequest`            | Request  | `term: String`, `definition: String`, `synonyms: List<String>`                    |
+| `OrganizationResponse`              | Response | `id`, `name`, `slug`, `status`, `planLimits`                                      |
+| `ProjectResponse`                   | Response | `id`, `name`, `description`, `technicalProfile`, `status`, `constraints`          |
+| `GlossaryResponse`                  | Response | `id`, `projectId`, `terms: List<GlossaryTermResponse>`                            |
 
 ### 5.3.3. Application Layer
 
@@ -3800,6 +3871,44 @@ Transfiere la propiedad de la organización al miembro destino, garantizando la 
 
 ---
 
+**`AcceptInvitationCommandHandler`**
+
+Activa al miembro pendiente y notifica al propietario de la organización.
+
+| Paso | Acción                                                                     | Excepción lanzada                                         |
+|------|----------------------------------------------------------------------------|-----------------------------------------------------------|
+| 1    | Recuperar `Member` por `memberId`; verificar que esté en estado `PENDING`. | `MemberNotFoundException`, `InvalidMemberStatusException` |
+| 2    | Llamar `member.activate(now())` y persistir.                               | —                                                         |
+| 3    | Publicar `InvitationAcceptedEvent(memberId, organizationId, userId)`.      | —                                                         |
+
+---
+
+**`DeactivateMemberCommandHandler`**
+
+Desactiva un miembro activo de la organización. El `requestedBy` debe ser `OWNER` o `ADMIN`.
+
+| Paso | Acción                                                                      | Excepción lanzada                  |
+|------|-----------------------------------------------------------------------------|------------------------------------|
+| 1    | Recuperar `Member` por `memberId`.                                          | `MemberNotFoundException`          |
+| 2    | Verificar que `requestedBy` tenga rol `OWNER` o `ADMIN`.                    | `InsufficientPermissionsException` |
+| 3    | Llamar `member.deactivate()` y persistir.                                   | `InvalidMemberStatusException`     |
+| 4    | Publicar `MemberDeactivatedEvent(memberId, organizationId, deactivatedBy)`. | —                                  |
+
+---
+
+**`ArchiveProjectCommandHandler`**
+
+Archiva el proyecto y notifica al BC Requirement Discovery para cancelar sesiones activas.
+
+| Paso | Acción                                                                     | Excepción lanzada                  |
+|------|----------------------------------------------------------------------------|------------------------------------|
+| 1    | Recuperar `Project` por `projectId`.                                       | `ProjectNotFoundException`         |
+| 2    | Verificar que `requestedBy` tenga permisos de escritura sobre el proyecto. | `InsufficientPermissionsException` |
+| 3    | Llamar `project.archive()` y persistir.                                    | —                                  |
+| 4    | Publicar `ProjectArchivedEvent(projectId, organizationId, archivedBy)`.    | —                                  |
+
+---
+
 **Query Handlers**
 
 La query handlers son `@Transactional(readOnly = true)` y retornan respuestas DTO directamente desde los repositorios JPA.
@@ -3835,10 +3944,11 @@ Los puertos de salida se ubican en `com.kntrosoft.reqsai.workspace.application.p
 
 **Service Ports:**
 
-| Puerto                         | Método                                      | Descripción                                      |
-|--------------------------------|---------------------------------------------|--------------------------------------------------|
-| `EmbeddingServicePort`         | `generateEmbedding(text): List<Float>`      | Genera el vector embedding de un texto usando IA |
-| `EmailNotificationServicePort` | `sendInvitationEmail(email, orgName, role)` | Envía el email de invitación a un miembro        |
+| Puerto                         | Método                                                            | Descripción                                                                     |
+|--------------------------------|-------------------------------------------------------------------|---------------------------------------------------------------------------------|
+| `EmbeddingServicePort`         | `generateEmbedding(text): List<Float>`                            | Genera el vector embedding de un texto usando IA                                |
+| `EmailNotificationServicePort` | `sendInvitationEmail(email, orgName, role)`                       | Envía el email de invitación a un miembro                                       |
+|                                | `sendOwnershipTransferEmail(email, orgName, role, newOwnerEmail)` | Notifica al propietario anterior y al nuevo sobre la transferencia de propiedad |
 
 ### 5.3.4. Infrastructure Layer
 
@@ -3874,9 +3984,10 @@ Genera vectores de embedding usando el modelo `text-embedding-3-small` de OpenAI
 
 Envía correos de invitación usando JavaMailSender de Spring. Reutiliza la misma interfaz de puerto definida en IAM BC.
 
-| Método                                      | Descripción                                                    |
-|---------------------------------------------|----------------------------------------------------------------|
-| `sendInvitationEmail(email, orgName, role)` | Construye y envía el correo de invitación a la organización    |
+| Método                                                            | Descripción                                                                                  |
+|-------------------------------------------------------------------|----------------------------------------------------------------------------------------------|
+| `sendInvitationEmail(email, orgName, role)`                       | Construye y envía el correo de invitación a la organización                                  |
+| `sendOwnershipTransferEmail(email, orgName, role, newOwnerEmail)` | Construye y envía el correo de notificación de transferencia al propietario anterior y nuevo |
 
 ---
 
@@ -3884,12 +3995,14 @@ Envía correos de invitación usando JavaMailSender de Spring. Reutiliza la mism
 
 Los listeners se ubican en `com.kntrosoft.reqsai.workspace.infrastructure.events` y están anotados con `@ApplicationModuleListener` para procesamiento asíncrono intermódulo.
 
-| Listener                              | Evento escuchado             | Acción despachada                  |
-|---------------------------------------|------------------------------|------------------------------------|
-| `SubscriptionAssignedEventListener`   | `SubscriptionAssignedEvent`  | `ApplyPlanLimitsCommand`           |
-| `SubscriptionUpgradedEventListener`   | `SubscriptionUpgradedEvent`  | `ApplyPlanLimitsCommand`           |
+| Listener                               | Evento escuchado               | Acción despachada                                                                   |
+|----------------------------------------|--------------------------------|-------------------------------------------------------------------------------------|
+| `SubscriptionAssignedEventListener`    | `SubscriptionAssignedEvent`    | `ApplyPlanLimitsCommand`                                                            |
+| `SubscriptionUpgradedEventListener`    | `SubscriptionUpgradedEvent`    | `ApplyPlanLimitsCommand`                                                            |
+| `SubscriptionReactivatedEventListener` | `SubscriptionReactivatedEvent` | `ApplyPlanLimitsCommand`                                                            |
+| `ProjectArchivedEventListener`         | `ProjectArchivedEvent`         | Notifica al BC Req Discovery para cancelar sesiones activas del proyecto archivado. |
 
-Ambos listeners extraen el `organizationId` y los nuevos `PlanLimits` del evento de Billing y los despachan al `ApplyPlanLimitsCommandHandler` para actualizar la organización correspondiente.
+Los tres primeros listeners extraen el `organizationId` y los `PlanLimits` del evento de Billing y los despachan al `ApplyPlanLimitsCommandHandler`. El `ProjectArchivedEventListener` notifica al módulo Discovery vía `DiscoveryModuleApi.cancelActiveSessions(projectId)`.
 
 ### 5.3.6. Bounded Context Software Architecture Component Level Diagrams
 
@@ -4103,16 +4216,19 @@ Todas las excepciones se ubican en `com.kntrosoft.reqsai.discovery.domain.model.
 
 Todos los eventos se ubican en `com.kntrosoft.reqsai.discovery.domain.events`.
 
-| Evento                          | Campos principales                     | Consumidor                                                 |
-|---------------------------------|----------------------------------------|------------------------------------------------------------|
-| `SessionProcessingStartedEvent` | `sessionId`, `projectId`               | Infraestructura → disparo asíncrono de la extracción       |
-| `UserStoriesGeneratedEvent`     | `sessionId`, `projectId`, `storyCount` | Infraestructura → notificación a los miembros del proyecto |
-| `AiTokensConsumedEvent`         | `organizationId`, `tokensConsumed`     | Billing BC → `IncrementTokenUsageCommand`                  |
-| `SegmentTranscribedEvent`       | `sessionId`, `sequence`, `text`        | Interface → push del segmento al cliente vía WebSocket     |
-| `SuggestionRaisedEvent`         | `sessionId`, `suggestionId`, `type`    | Interface → push de la sugerencia en vivo al Tech Lead     |
-| `SuggestionAcceptedEvent`       | `suggestionId`, `storyId`              | Infraestructura → indexa embedding de la historia (RAG)    |
-| `SuggestionRejectedEvent`       | `suggestionId`                         | Auditoría                                                  |
-| `UserStoryExportedEvent`        | `storyId`, `externalRef`               | Auditoría / Integration Gateway                            |
+| Evento                          | Campos principales                     | Consumidor                                                                                                                      |
+|---------------------------------|----------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
+| `SessionProcessingStartedEvent` | `sessionId`, `projectId`               | Infraestructura → disparo asíncrono de la extracción                                                                            |
+| `UserStoriesGeneratedEvent`     | `sessionId`, `projectId`, `storyCount` | Infraestructura → notificación a los miembros del proyecto                                                                      |
+| `AiTokensConsumedEvent`         | `organizationId`, `tokensConsumed`     | Billing BC → `IncrementTokenUsageCommand`                                                                                       |
+| `SegmentTranscribedEvent`       | `sessionId`, `sequence`, `text`        | Interface → push del segmento al cliente vía WebSocket                                                                          |
+| `SuggestionRaisedEvent`         | `sessionId`, `suggestionId`, `type`    | Interface → push de la sugerencia en vivo al Tech Lead                                                                          |
+| `SuggestionAcceptedEvent`       | `suggestionId`, `storyId`              | Infraestructura → indexa embedding de la historia (RAG)                                                                         |
+| `SuggestionRejectedEvent`       | `suggestionId`                         | Auditoría                                                                                                                       |
+| `UserStoryExportedEvent`        | `storyId`, `externalRef`               | Auditoría / Integration Gateway                                                                                                 |
+| `UserStoryApprovedEvent`        | `storyId`, `sessionId`, `projectId`    | Infraestructura → notificación push a los miembros del proyecto; Integration Gateway puede escuchar para habilitar exportación. |
+| `ShareLinkCreatedEvent`         | `shareLinkToken`, `projectId`          | Interno (auditoría).                                                                                                            |
+| `SpeakerLabelUpdatedEvent`      | `segmentId`, `sessionId`, `label`      | Interno (auditoría de diarización).                                                                                             |
 
 ### 5.4.2. Interface Layer
 
@@ -4166,34 +4282,67 @@ Canal binario de baja latencia para la captura en vivo. Recibe *chunks* de audio
 
 **`UserStoryController`** — `/api/v1/sessions/{sessionId}/stories`
 
-| Método   | Ruta                         | Descripción                                                              |
-|----------|------------------------------|--------------------------------------------------------------------------|
-| `GET`    | `/`                          | Lista las historias de usuario de la sesión                              |
-| `GET`    | `/{storyId}`                 | Obtiene una historia de usuario con sus criterios de aceptación          |
-| `POST`   | `/{storyId}/approve`         | Aprueba una historia de usuario                                          |
-| `POST`   | `/{storyId}/reject`          | Rechaza una historia de usuario                                          |
-| `PATCH`  | `/{storyId}/priority`        | Actualiza la prioridad de la historia                                    |
-| `PATCH`  | `/{storyId}/story-points`    | Actualiza los puntos de historia estimados                               |
-| `POST`   | `/{storyId}/criteria`        | Agrega un criterio de aceptación a la historia                           |
-| `PATCH`  | `/{storyId}/criteria/{id}`   | Actualiza un criterio de aceptación                                      |
-| `DELETE` | `/{storyId}/criteria/{id}`   | Elimina un criterio de aceptación                                        |
+| Método   | Ruta                       | Descripción                                                        |
+|----------|----------------------------|--------------------------------------------------------------------|
+| `GET`    | `/`                        | Lista las historias de usuario de la sesión                        |
+| `GET`    | `/{storyId}`               | Obtiene una historia de usuario con sus criterios de aceptación    |
+| `POST`   | `/{storyId}/approve`       | Aprueba una historia de usuario                                    |
+| `POST`   | `/{storyId}/reject`        | Rechaza una historia de usuario                                    |
+| `PATCH`  | `/{storyId}`               | Edita el contenido de la historia (título, rol, acción, beneficio) |
+| `PATCH`  | `/{storyId}/priority`      | Actualiza la prioridad de la historia                              |
+| `PATCH`  | `/{storyId}/story-points`  | Actualiza los puntos de historia estimados                         |
+| `POST`   | `/{storyId}/criteria`      | Agrega un criterio de aceptación a la historia                     |
+| `PATCH`  | `/{storyId}/criteria/{id}` | Actualiza un criterio de aceptación                                |
+| `DELETE` | `/{storyId}/criteria/{id}` | Elimina un criterio de aceptación                                  |
+
+---
+
+**`ProjectBacklogController`** — `/api/v1/projects/{projectId}/stories`
+
+Vista de backlog consolidado a nivel proyecto, independiente de la sesión de origen.
+
+| Método | Ruta | Descripción                                                                                                                                     |
+|--------|------|-------------------------------------------------------------------------------------------------------------------------------------------------|
+| `GET`  | `/`  | Lista todas las historias del proyecto con filtros opcionales: `status`, `epicId`, `q` (búsqueda texto libre en título, rol, acción, beneficio) |
+
+---
+
+**`SessionSpeakerController`** — `/api/v1/sessions/{sessionId}/transcript-segments`
+
+| Método  | Ruta                   | Descripción                                                                     |
+|---------|------------------------|---------------------------------------------------------------------------------|
+| `PATCH` | `/{segmentId}/speaker` | Asigna o edita la etiqueta de hablante del segmento (ej. "Cliente", "Analista") |
+
+---
+
+**`ShareLinkController`** — rutas mixtas
+
+| Método | Ruta                                       | Auth    | Descripción                                                           |
+|--------|--------------------------------------------|---------|-----------------------------------------------------------------------|
+| `POST` | `/api/v1/projects/{projectId}/share-links` | Bearer  | Genera un enlace de solo lectura con token único                      |
+| `GET`  | `/api/v1/share/{token}`                    | Ninguna | Acceso público de solo lectura a las historias aprobadas del proyecto |
 
 **Request/Response DTOs**
 
 Los DTOs se ubican en `com.kntrosoft.reqsai.discovery.interfaces.rest.dto`.
 
-| DTO                             | Tipo     | Campos principales                                                                                    |
-|---------------------------------|----------|-------------------------------------------------------------------------------------------------------|
-| `CreateSessionRequest`          | Request  | `title: String`, `language: LanguageCode`                                                             |
-| `UploadTranscriptRequest`       | Request  | `transcript: String`                                                                                  |
-| `UpdatePriorityRequest`         | Request  | `priority: Priority`                                                                                  |
-| `UpdateStoryPointsRequest`      | Request  | `storyPoints: Int`                                                                                    |
-| `AddAcceptanceCriterionRequest` | Request  | `description: String`, `type: CriterionType`                                                          |
-| `AcceptSuggestionRequest`       | Request  | `editedPayload: SuggestionPayload?`                                                                   |
-| `DiscoverySessionResponse`      | Response | `id`, `projectId`, `title`, `language`, `status`, `audioDurationMs`, `processingError`                |
-| `TranscriptSegmentResponse`     | Response | `sequence`, `text`, `startMs`, `endMs`, `speakerLabel`, `isFinal`                                     |
-| `SuggestionResponse`            | Response | `id`, `type`, `targetStoryId`, `payload`, `confidence`, `status`, `triggerSource`                     |
-| `UserStoryResponse`             | Response | `id`, `title`, `role`, `action`, `benefit`, `priority`, `storyPoints`, `status`, `acceptanceCriteria` |
+| DTO                             | Tipo                   | Campos principales                                                                                    |
+|---------------------------------|------------------------|-------------------------------------------------------------------------------------------------------|
+| `CreateSessionRequest`          | Request                | `title: String`, `language: LanguageCode`                                                             |
+| `UploadTranscriptRequest`       | Request                | `transcript: String`                                                                                  |
+| `UpdatePriorityRequest`         | Request                | `priority: Priority`                                                                                  |
+| `UpdateStoryPointsRequest`      | Request                | `storyPoints: Int`                                                                                    |
+| `AddAcceptanceCriterionRequest` | Request                | `description: String`, `type: CriterionType`                                                          |
+| `AcceptSuggestionRequest`       | Request                | `editedPayload: SuggestionPayload?`                                                                   |
+| `UpdateUserStoryContentRequest` | Request                | `title: String?`, `role: String?`, `action: String?`, `benefit: String?`                              |
+| `UpdateSpeakerLabelRequest`     | Request                | `speakerLabel: String` (ej. "Cliente", "Analista")                                                    |
+| `CreateShareLinkRequest`        | Request                | `expiresInDays: Int?` (nulo = sin expiración)                                                         |
+| `SearchStoriesRequest`          | Request (query params) | `status: StoryStatus?`, `q: String?` (texto libre), `page`, `size`                                    |
+| `DiscoverySessionResponse`      | Response               | `id`, `projectId`, `title`, `language`, `status`, `audioDurationMs`, `processingError`                |
+| `TranscriptSegmentResponse`     | Response               | `sequence`, `text`, `startMs`, `endMs`, `speakerLabel`, `isFinal`                                     |
+| `SuggestionResponse`            | Response               | `id`, `type`, `targetStoryId`, `payload`, `confidence`, `status`, `triggerSource`                     |
+| `UserStoryResponse`             | Response               | `id`, `title`, `role`, `action`, `benefit`, `priority`, `storyPoints`, `status`, `acceptanceCriteria` |
+| `ShareLinkResponse`             | Response               | `token`, `shareUrl`, `projectId`, `expiresAt`                                                         |
 
 ### 5.4.3. Application Layer
 
@@ -4201,27 +4350,30 @@ Los DTOs se ubican en `com.kntrosoft.reqsai.discovery.interfaces.rest.dto`.
 
 Los comandos se ubican en `com.kntrosoft.reqsai.discovery.application.commands`.
 
-| Comando                                            | Campos                                                          |
-|----------------------------------------------------|-----------------------------------------------------------------|
-| `CreateDiscoverySessionCommand`                    | `projectId`, `title`, `language`, `requestedBy`                 |
-| `StartRecordingCommand`                            | `sessionId`, `requestedBy`                                      |
-| `AppendTranscriptSegmentCommand`                   | `sessionId`, `sequence`, `text`, `startMs`, `endMs`, `isFinal`  |
-| `PauseRecordingCommand` / `ResumeRecordingCommand` | `sessionId`, `requestedBy`                                      |
-| `StopRecordingCommand`                             | `sessionId`, `requestedBy`                                      |
-| `RaiseSuggestionCommand`                           | `sessionId`, `type`, `payload`, `triggerSource`, `segmentRange` |
-| `AcceptSuggestionCommand`                          | `suggestionId`, `editedPayload?`, `requestedBy`                 |
-| `RejectSuggestionCommand`                          | `suggestionId`, `requestedBy`                                   |
-| `TriggerLiveAnalysisCommand`                       | `sessionId`, `triggerSource`, `requestedBy`                     |
-| `UploadSessionTranscriptCommand`                   | `sessionId`, `transcript`, `requestedBy`                        |
-| `StartDiscoveryProcessingCommand`                  | `sessionId`, `requestedBy`                                      |
-| `ResetDiscoverySessionCommand`                     | `sessionId`, `requestedBy`                                      |
-| `ApproveUserStoryCommand`                          | `storyId`, `requestedBy`                                        |
-| `RejectUserStoryCommand`                           | `storyId`, `requestedBy`                                        |
-| `UpdateUserStoryPriorityCommand`                   | `storyId`, `priority`, `requestedBy`                            |
-| `UpdateStoryPointsCommand`                         | `storyId`, `storyPoints`, `requestedBy`                         |
-| `AddAcceptanceCriterionCommand`                    | `storyId`, `description`, `type`, `requestedBy`                 |
-| `UpdateAcceptanceCriterionCommand`                 | `criterionId`, `description`, `type`, `requestedBy`             |
-| `RemoveAcceptanceCriterionCommand`                 | `criterionId`, `requestedBy`                                    |
+| Comando                                            | Campos                                                                                             |
+|----------------------------------------------------|----------------------------------------------------------------------------------------------------|
+| `CreateDiscoverySessionCommand`                    | `projectId`, `title`, `language`, `requestedBy`                                                    |
+| `StartRecordingCommand`                            | `sessionId`, `requestedBy`                                                                         |
+| `AppendTranscriptSegmentCommand`                   | `sessionId`, `sequence`, `text`, `startMs`, `endMs`, `isFinal`                                     |
+| `PauseRecordingCommand` / `ResumeRecordingCommand` | `sessionId`, `requestedBy`                                                                         |
+| `StopRecordingCommand`                             | `sessionId`, `requestedBy`                                                                         |
+| `RaiseSuggestionCommand`                           | `sessionId`, `type`, `payload`, `triggerSource`, `segmentRange`                                    |
+| `AcceptSuggestionCommand`                          | `suggestionId`, `editedPayload?`, `requestedBy`                                                    |
+| `RejectSuggestionCommand`                          | `suggestionId`, `requestedBy`                                                                      |
+| `TriggerLiveAnalysisCommand`                       | `sessionId`, `triggerSource`, `requestedBy`                                                        |
+| `UploadSessionTranscriptCommand`                   | `sessionId`, `transcript`, `requestedBy`                                                           |
+| `StartDiscoveryProcessingCommand`                  | `sessionId`, `requestedBy`                                                                         |
+| `ResetDiscoverySessionCommand`                     | `sessionId`, `requestedBy`                                                                         |
+| `ApproveUserStoryCommand`                          | `storyId`, `requestedBy`                                                                           |
+| `RejectUserStoryCommand`                           | `storyId`, `requestedBy`                                                                           |
+| `UpdateUserStoryPriorityCommand`                   | `storyId`, `priority`, `requestedBy`                                                               |
+| `UpdateStoryPointsCommand`                         | `storyId`, `storyPoints`, `requestedBy`                                                            |
+| `AddAcceptanceCriterionCommand`                    | `storyId`, `description`, `type`, `requestedBy`                                                    |
+| `UpdateAcceptanceCriterionCommand`                 | `criterionId`, `description`, `type`, `requestedBy`                                                |
+| `RemoveAcceptanceCriterionCommand`                 | `criterionId`, `requestedBy`                                                                       |
+| `UpdateUserStoryContentCommand`                    | `storyId`, `title: String?`, `role: String?`, `action: String?`, `benefit: String?`, `requestedBy` |
+| `UpdateSpeakerLabelCommand`                        | `segmentId`, `sessionId`, `speakerLabel: String`, `requestedBy`                                    |
+| `CreateShareLinkCommand`                           | `projectId`, `requestedBy`, `expiresInDays: Int?`                                                  |
 
 ---
 
@@ -4229,14 +4381,16 @@ Los comandos se ubican en `com.kntrosoft.reqsai.discovery.application.commands`.
 
 Los queries se ubican en `com.kntrosoft.reqsai.discovery.application.queries`.
 
-| Query                         | Campos          | Descripción                                                         |
-|-------------------------------|-----------------|---------------------------------------------------------------------|
-| `ListDiscoverySessionsQuery`  | `projectId`     | Lista todas las sesiones de un proyecto                             |
-| `GetDiscoverySessionQuery`    | `sessionId`     | Obtiene los datos completos de una sesión                           |
-| `ListUserStoriesQuery`        | `sessionId`     | Lista las historias de usuario generadas en una sesión              |
-| `GetUserStoryQuery`           | `storyId`       | Obtiene una historia con sus criterios de aceptación                |
-| `ListPendingSuggestionsQuery` | `sessionId`     | Lista las sugerencias `PENDING` de la sesión (panel en vivo)        |
-| `GetSessionTranscriptQuery`   | `sessionId`     | Obtiene los segmentos transcritos ordenados de la sesión            |
+| Query                         | Campos                                                            | Descripción                                                                   |
+|-------------------------------|-------------------------------------------------------------------|-------------------------------------------------------------------------------|
+| `ListDiscoverySessionsQuery`  | `projectId`                                                       | Lista todas las sesiones de un proyecto                                       |
+| `GetDiscoverySessionQuery`    | `sessionId`                                                       | Obtiene los datos completos de una sesión                                     |
+| `ListUserStoriesQuery`        | `sessionId`                                                       | Lista las historias de usuario generadas en una sesión                        |
+| `GetUserStoryQuery`           | `storyId`                                                         | Obtiene una historia con sus criterios de aceptación                          |
+| `ListPendingSuggestionsQuery` | `sessionId`                                                       | Lista las sugerencias `PENDING` de la sesión (panel en vivo)                  |
+| `GetSessionTranscriptQuery`   | `sessionId`                                                       | Obtiene los segmentos transcritos ordenados de la sesión                      |
+| `SearchProjectStoriesQuery`   | `projectId`, `status: StoryStatus?`, `q: String?`, `page`, `size` | Búsqueda y filtrado de historias a nivel proyecto para el backlog             |
+| `GetShareLinkByTokenQuery`    | `token: String`                                                   | Obtiene el contexto público de un share link (proyecto + historias aprobadas) |
 
 ---
 
@@ -4300,6 +4454,45 @@ Si el paso 6 lanza `TokenQuotaExceededException`: llama a `session.fail("Token q
 
 ---
 
+**`UpdateUserStoryContentCommandHandler`**
+
+Edita el contenido de texto de una historia generada (título, rol, acción, beneficio).
+
+| Paso | Acción                                                                             |
+|------|------------------------------------------------------------------------------------|
+| 1    | Recupera la historia; lanza `UserStoryNotFoundException` si no existe              |
+| 2    | Verifica que `requestedBy` tenga permiso de escritura sobre el proyecto            |
+| 3    | Llama a `story.updateContent(title?, role?, action?, benefit?)` y persiste         |
+| 4    | Despacha (asíncrono) regeneración del embedding de la historia con `EmbeddingPort` |
+
+---
+
+**`UpdateSpeakerLabelCommandHandler`**
+
+Asigna o corrige la etiqueta de hablante en un segmento de transcript.
+
+| Paso | Acción                                                                                                       |
+|------|--------------------------------------------------------------------------------------------------------------|
+| 1    | Recupera el `TranscriptSegment` por `segmentId` y `sessionId`; lanza `SegmentNotFoundException` si no existe |
+| 2    | Actualiza `segment.speakerLabel = speakerLabel` y persiste con `TranscriptSegmentRepository`                 |
+| 3    | Publica `SpeakerLabelUpdatedEvent(segmentId, sessionId, label)` para auditoría                               |
+
+---
+
+**`CreateShareLinkCommandHandler`**
+
+Genera un enlace de solo lectura para compartir las historias aprobadas de un proyecto.
+
+| Paso | Acción                                                                                  |
+|------|-----------------------------------------------------------------------------------------|
+| 1    | Verifica que `requestedBy` tenga acceso al proyecto                                     |
+| 2    | Genera un `token` único criptográficamente seguro (UUID v4 o random 32 bytes en Base64) |
+| 3    | Persiste `ShareLink(token, projectId, createdBy, expiresAt)` con `ShareLinkRepository`  |
+| 4    | Publica `ShareLinkCreatedEvent(token, projectId)` para auditoría                        |
+| 5    | Retorna `ShareLinkResponse(token, shareUrl, expiresAt)`                                 |
+
+---
+
 **`AcceptSuggestionCommandHandler`** (confirmación del Tech Lead)
 
 | Paso | Acción                                                                                                                          |
@@ -4315,12 +4508,16 @@ Si el paso 6 lanza `TokenQuotaExceededException`: llama a `session.fail("Token q
 
 Los query handlers son `@Transactional(readOnly = true)`.
 
-| Query Handler                       | Descripción                                                                  |
-|-------------------------------------|------------------------------------------------------------------------------|
-| `ListDiscoverySessionsQueryHandler` | Lista las sesiones de un proyecto y mapea a `List<DiscoverySessionResponse>` |
-| `GetDiscoverySessionQueryHandler`   | Obtiene una sesión y mapea a `DiscoverySessionResponse`                      |
-| `ListUserStoriesQueryHandler`       | Lista las historias de una sesión y mapea a `List<UserStoryResponse>`        |
-| `GetUserStoryQueryHandler`          | Obtiene una historia con sus criterios y mapea a `UserStoryResponse`         |
+| Query Handler                        | Descripción                                                                                         |
+|--------------------------------------|-----------------------------------------------------------------------------------------------------|
+| `ListDiscoverySessionsQueryHandler`  | Lista las sesiones de un proyecto y mapea a `List<DiscoverySessionResponse>`                        |
+| `GetDiscoverySessionQueryHandler`    | Obtiene una sesión y mapea a `DiscoverySessionResponse`                                             |
+| `ListUserStoriesQueryHandler`        | Lista las historias de una sesión y mapea a `List<UserStoryResponse>`                               |
+| `GetUserStoryQueryHandler`           | Obtiene una historia con sus criterios y mapea a `UserStoryResponse`                                |
+| `ListPendingSuggestionsQueryHandler` | Lista las sugerencias `PENDING` de la sesión y mapea a `List<SuggestionResponse>`                   |
+| `GetSessionTranscriptQueryHandler`   | Obtiene los segmentos transcritos ordenados y mapea a `List<TranscriptSegmentResponse>`             |
+| `SearchProjectStoriesQueryHandler`   | Ejecuta búsqueda full-text + filtros de estado sobre `UserStoryRepository.searchByProject()` — US51 |
+| `GetShareLinkByTokenQueryHandler`    | Valida que el token exista y no esté expirado; retorna las historias `APPROVED` del proyecto        |
 
 ---
 
@@ -4330,12 +4527,13 @@ Los puertos de salida se ubican en `com.kntrosoft.reqsai.discovery.application.p
 
 **Repository Ports:**
 
-| Puerto                        | Métodos principales                                                      |
-|-------------------------------|--------------------------------------------------------------------------|
-| `DiscoverySessionRepository`  | `save`, `findById`, `findByProjectId`                                    |
-| `UserStoryRepository`         | `save`, `findById`, `findBySessionId`, `saveAll`                         |
-| `SuggestionRepository`        | `save`, `findById`, `findBySessionIdAndStatus`                           |
-| `TranscriptSegmentRepository` | `save`, `findBySessionIdOrderBySequence`, `existsBySessionIdAndSequence` |
+| Puerto                        | Métodos principales                                                                                            |
+|-------------------------------|----------------------------------------------------------------------------------------------------------------|
+| `DiscoverySessionRepository`  | `save`, `findById`, `findByProjectId`                                                                          |
+| `UserStoryRepository`         | `save`, `findById`, `findBySessionId`, `saveAll`, `findByProjectId`, `searchByProject(projectId, status?, q?)` |
+| `SuggestionRepository`        | `save`, `findById`, `findBySessionIdAndStatus`                                                                 |
+| `TranscriptSegmentRepository` | `save`, `findBySessionIdOrderBySequence`, `existsBySessionIdAndSequence`, `findByIdAndSessionId`               |
+| `ShareLinkRepository`         | `save`, `findByToken`, `existsByToken`                                                                         |
 
 **Service Ports:**
 
@@ -4364,6 +4562,7 @@ Los repositorios JPA se ubican en `com.kntrosoft.reqsai.discovery.infrastructure
 | `UserStoryJpaRepository`          | `UserStoryRepository`             |
 | `SuggestionJpaRepository`         | `SuggestionRepository`            |
 | `TranscriptSegmentJpaRepository`  | `TranscriptSegmentRepository`     |
+| `ShareLinkJpaRepository`          | `ShareLinkRepository`             |
 
 ---
 
@@ -4403,16 +4602,28 @@ Consulta directamente los repositorios JPA de Workspace Management para obtener 
 |-------------------------|------------------------------------------------------------------------------------|
 | `getContext(projectId)` | Obtiene `TechnicalProfile` del proyecto, sus restricciones y términos del glosario |
 
+**`WebSocketNotificationAdapter`** — implementa `NotificationServicePort`
+
+Envía notificaciones push a los clientes conectados mediante el canal WebSocket existente o SSE. Utilizado por `UserStoriesGeneratedEventListener` para avisar a los miembros del proyecto cuando el procesamiento finaliza.
+
+| Método                                     | Descripción                                                           |
+|--------------------------------------------|-----------------------------------------------------------------------|
+| `notifyProjectMembers(projectId, message)` | Envía el mensaje a todos los clientes WebSocket suscritos al proyecto |
+
+> **Nota:** Se define el Service Port `NotificationServicePort` en `discovery/application/ports/notifications/` con el método `notifyProjectMembers(projectId: String, message: NotificationMessage): void`.
+
 ---
 
 **Event Listeners**
 
 Los listeners se ubican en `com.kntrosoft.reqsai.discovery.infrastructure.events` y están anotados con `@ApplicationModuleListener`.
 
-| Listener                          | Evento escuchado          | Acción                                                                                                  |
-|-----------------------------------|---------------------------|---------------------------------------------------------------------------------------------------------|
-| `TokenQuotaExceededEventListener` | `TokenQuotaExceededEvent` | Falla todas las sesiones en estado `PROCESSING` de la organización con mensaje `"Token quota exceeded"` |
-| `AiTokensConsumedEventListener`   | `AiTokensConsumedEvent`   | Despacha `IncrementTokenUsageCommand` al handler de Billing BC                                          |
+| Listener                            | Evento escuchado            | Acción                                                                                                             |
+|-------------------------------------|-----------------------------|--------------------------------------------------------------------------------------------------------------------|
+| `TokenQuotaExceededEventListener`   | `TokenQuotaExceededEvent`   | Falla todas las sesiones en estado `PROCESSING` de la organización con mensaje `"Token quota exceeded"`            |
+| `AiTokensConsumedEventListener`     | `AiTokensConsumedEvent`     | Despacha `IncrementTokenUsageCommand` al handler de Billing BC                                                     |
+| `QuotaResetEventListener`           | `QuotaResetEvent`           | Limpia el estado de bloqueo en sesiones pausadas por cuota; permite reintentar el procesamiento                    |
+| `UserStoriesGeneratedEventListener` | `UserStoriesGeneratedEvent` | Envía notificación push (WebSocket/SSE) a los miembros del proyecto informando que las historias están disponibles |
 
 ### 5.4.6. Bounded Context Software Architecture Component Level Diagrams
 
@@ -4537,10 +4748,11 @@ Todas las excepciones se ubican en `com.kntrosoft.reqsai.gateway.domain.model.ex
 
 Todos los eventos se ubican en `com.kntrosoft.reqsai.gateway.domain.events`.
 
-| Evento                      | Campos principales                               | Consumidor                                         |
-|-----------------------------|--------------------------------------------------|----------------------------------------------------|
-| `StoryExportedEvent`        | `exportRecordId`, `storyId`, `externalIssueId`   | Infraestructura → notificación al usuario          |
-| `ExportFailedEvent`         | `exportRecordId`, `storyId`, `reason`            | Infraestructura → alerta al usuario del fallo      |
+| Evento                            | Campos principales                                     | Consumidor                                                                           |
+|-----------------------------------|--------------------------------------------------------|--------------------------------------------------------------------------------------|
+| `StoryExportedEvent`              | `exportRecordId`, `storyId`, `externalIssueId`         | Infraestructura → notificación al usuario del éxito de la exportación                |
+| `ExportFailedEvent`               | `exportRecordId`, `storyId`, `reason`                  | Infraestructura → alerta al usuario del fallo de exportación                         |
+| `OAuthConnectionEstablishedEvent` | `integrationId`, `projectId`, `provider`, `occurredAt` | Auditoría. Infraestructura → notificación al usuario de que la conexión fue exitosa. |
 
 ### 5.5.2. Interface Layer
 
@@ -4564,14 +4776,26 @@ El paquete raíz de la capa de interfaz es `com.kntrosoft.reqsai.gateway.interfa
 
 ---
 
+**`JiraOAuthController`** — `/api/v1/integrations/jira/oauth`
+
+Maneja el flujo OAuth 2.0 con Atlassian para conectar Jira.
+
+| Método | Ruta        | Auth    | Descripción                                                                                 |
+|--------|-------------|---------|---------------------------------------------------------------------------------------------|
+| `GET`  | `/initiate` | Bearer  | Genera la URL de autorización de Atlassian con `state` firmado y redirige al usuario        |
+| `GET`  | `/callback` | Ninguna | Recibe `code` + `state` del proveedor OAuth2; intercambia por token y activa la integración |
+
+---
+
 **`ExportController`** — `/api/v1/integrations/{integrationId}/exports`
 
-| Método   | Ruta                   | Descripción                                                              |
-|----------|------------------------|--------------------------------------------------------------------------|
-| `POST`   | `/`                    | Exporta una o varias historias aprobadas al proveedor externo            |
-| `GET`    | `/`                    | Lista los registros de exportación de la integración                     |
-| `GET`    | `/{exportId}`          | Obtiene los detalles de un registro de exportación                       |
-| `POST`   | `/{exportId}/sync`     | Sincroniza el estado del issue externo con el registro local             |
+| Método | Ruta                  | Descripción                                                           |
+|--------|-----------------------|-----------------------------------------------------------------------|
+| `POST` | `/`                   | Exporta una o varias historias aprobadas al proveedor externo         |
+| `GET`  | `/`                   | Lista los registros de exportación de la integración                  |
+| `GET`  | `/{exportId}`         | Obtiene los detalles de un registro de exportación                    |
+| `POST` | `/{exportId}/sync`    | Sincroniza el estado del issue externo con el registro local          |
+| `GET`  | `/exportable-stories` | Lista las historias `APPROVED` del proyecto disponibles para exportar |
 
 ---
 
@@ -4592,6 +4816,7 @@ Los DTOs se ubican en `com.kntrosoft.reqsai.gateway.interfaces.rest.dto`.
 | `CreateIntegrationRequest` | Request  | `provider: IntegrationProvider`, `config: IntegrationConfigDto`, `token: String` |
 | `UpdateIntegrationRequest` | Request  | `config: IntegrationConfigDto?`, `token: String?`                                |
 | `ExportStoriesRequest`     | Request  | `storyIds: List<String>`                                                         |
+| `OAuthInitiateResponse`    | Response | `authorizationUrl: String`, `state: String`                                      |
 | `IntegrationResponse`      | Response | `id`, `projectId`, `provider`, `status`, `config`                                |
 | `ExportRecordResponse`     | Response | `id`, `storyId`, `externalIssueId`, `externalUrl`, `status`                      |
 
@@ -4610,6 +4835,8 @@ Los comandos se ubican en `com.kntrosoft.reqsai.gateway.application.commands`.
 | `DeleteIntegrationCommand`       | `integrationId`, `requestedBy`                                     |
 | `ExportStoriesToProviderCommand` | `integrationId`, `storyIds`, `requestedBy`                         |
 | `SyncExportRecordCommand`        | `exportRecordId`                                                   |
+| `InitiateJiraOAuthCommand`       | `projectId`, `requestedBy`                                         |
+| `HandleOAuthCallbackCommand`     | `code: String`, `state: String`                                    |
 
 ---
 
@@ -4617,12 +4844,13 @@ Los comandos se ubican en `com.kntrosoft.reqsai.gateway.application.commands`.
 
 Los queries se ubican en `com.kntrosoft.reqsai.gateway.application.queries`.
 
-| Query                    | Campos           | Descripción                                           |
-|--------------------------|------------------|-------------------------------------------------------|
-| `ListIntegrationsQuery`  | `projectId`      | Lista las integraciones de un proyecto                |
-| `GetIntegrationQuery`    | `integrationId`  | Obtiene los datos de una integración                  |
-| `ListExportRecordsQuery` | `integrationId`  | Lista los registros de exportación de una integración |
-| `GetExportRecordQuery`   | `exportRecordId` | Obtiene los detalles de un registro de exportación    |
+| Query                        | Campos                       | Descripción                                                         |
+|------------------------------|------------------------------|---------------------------------------------------------------------|
+| `ListIntegrationsQuery`      | `projectId`                  | Lista las integraciones de un proyecto                              |
+| `GetIntegrationQuery`        | `integrationId`              | Obtiene los datos de una integración                                |
+| `ListExportRecordsQuery`     | `integrationId`              | Lista los registros de exportación de una integración               |
+| `GetExportRecordQuery`       | `exportRecordId`             | Obtiene los detalles de un registro de exportación                  |
+| `ListExportableStoriesQuery` | `projectId`, `integrationId` | Lista las historias con `status=APPROVED` disponibles para exportar |
 
 ---
 
@@ -4657,7 +4885,33 @@ Orquesta la exportación de un conjunto de historias aprobadas al proveedor exte
 | 7    | Crea y persiste `ExportRecord` con `status=EXPORTED` y el `externalIssueId` retornado                              |
 | 8    | Publica `StoryExportedEvent`                                                                                       |
 
-Si el paso 6 lanza error: persiste `ExportRecord` con `status=FAILED` y pública `ExportFailedEvent`.
+Si el paso 6 lanza error: persiste `ExportRecord` con `status=FAILED` y publica `ExportFailedEvent`.
+
+---
+
+**`InitiateJiraOAuthCommandHandler`**
+
+Inicia el flujo OAuth 2.0 con Atlassian generando la URL de autorización.
+
+| Paso | Acción                                                                                     |
+|------|--------------------------------------------------------------------------------------------|
+| 1    | Genera un `state` aleatorio seguro (PKCE) y lo almacena con TTL en `OAuthStateRepository`. |
+| 2    | Invoca `OAuthProviderPort.getAuthorizationUrl(state)` para obtener la URL de Atlassian.    |
+| 3    | Retorna `OAuthInitiateResponse(authorizationUrl, state)`.                                  |
+
+---
+
+**`HandleOAuthCallbackCommandHandler`**
+
+Completa el flujo OAuth 2.0: intercambia el código por token y activa la integración.
+
+| Paso | Acción                                                                                       | Excepción lanzada              |
+|------|----------------------------------------------------------------------------------------------|--------------------------------|
+| 1    | Valida el `state` contra `OAuthStateRepository`; lanza error si es inválido/expirado.        | `InvalidOAuthStateException`   |
+| 2    | Invoca `OAuthProviderPort.exchangeCode(code)` para obtener `access_token` + `refresh_token`. | `OAuthExchangeFailedException` |
+| 3    | Encripta los tokens con `TokenEncryptionPort`.                                               | —                              |
+| 4    | Crea o actualiza `Integration` con `status=ACTIVE` y los tokens encriptados.                 | —                              |
+| 5    | Publica `OAuthConnectionEstablishedEvent(integrationId, projectId, provider)`.               | —                              |
 
 ---
 
@@ -4675,12 +4929,13 @@ Si el paso 6 lanza error: persiste `ExportRecord` con `status=FAILED` y pública
 
 Los query handlers son `@Transactional(readOnly = true)`.
 
-| Query Handler                   | Descripción                                                                |
-|---------------------------------|----------------------------------------------------------------------------|
-| `ListIntegrationsQueryHandler`  | Lista las integraciones del proyecto y mapea a `List<IntegrationResponse>` |
-| `GetIntegrationQueryHandler`    | Obtiene una integración y mapea a `IntegrationResponse`                    |
-| `ListExportRecordsQueryHandler` | Lista los registros de exportación y mapea a `List<ExportRecordResponse>`  |
-| `GetExportRecordQueryHandler`   | Obtiene un registro y mapea a `ExportRecordResponse`                       |
+| Query Handler                       | Descripción                                                                                                                          |
+|-------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| `ListIntegrationsQueryHandler`      | Lista las integraciones del proyecto y mapea a `List<IntegrationResponse>`                                                           |
+| `GetIntegrationQueryHandler`        | Obtiene una integración y mapea a `IntegrationResponse`                                                                              |
+| `ListExportRecordsQueryHandler`     | Lista los registros de exportación y mapea a `List<ExportRecordResponse>`                                                            |
+| `GetExportRecordQueryHandler`       | Obtiene un registro y mapea a `ExportRecordResponse`                                                                                 |
+| `ListExportableStoriesQueryHandler` | Consulta `UserStoryPort.getApprovedStories(projectId)` y filtra las que no tienen `ExportRecord` exitoso previo para la integración. |
 
 ---
 
@@ -4694,16 +4949,21 @@ Los puertos de salida se ubican en `com.kntrosoft.reqsai.gateway.application.por
 |--------------------------|------------------------------------------------------------------------|
 | `IntegrationRepository`  | `save`, `findById`, `findByProjectId`, `existsByProjectAndProvider`    |
 | `ExportRecordRepository` | `save`, `findById`, `findByIntegrationId`, `existsByStoryIdAndSuccess` |
+| `OAuthStateRepository`   | `save(state, projectId, ttl)`, `findByState(state)`, `deleteByState`   |
 
 **Service Ports:**
 
-| Puerto                 | Método                                         | Descripción                                                     |
-|------------------------|------------------------------------------------|-----------------------------------------------------------------|
-| `ExternalProviderPort` | `createIssue(story, integration): String`      | Crea un issue en el proveedor externo y retorna el ID externo   |
-| `ExternalProviderPort` | `getIssueStatus(issueId, integration): String` | Consulta el estado actual de un issue en el proveedor           |
-| `TokenEncryptionPort`  | `encrypt(token): String`                       | Encripta el token de acceso con AES antes de persistir          |
-| `TokenEncryptionPort`  | `decrypt(encryptedToken): String`              | Desencripta el token para usarlo en llamadas al proveedor       |
-| `UserStoryPort`        | `getStory(storyId): StoryDto`                  | Obtiene los datos de una historia de usuario desde Discovery BC |
+| Puerto                 | Método                                                  | Descripción                                                                  |
+|------------------------|---------------------------------------------------------|------------------------------------------------------------------------------|
+| `ExternalProviderPort` | `createIssue(story, integration): String`               | Crea un issue en el proveedor externo y retorna el ID externo                |
+| `ExternalProviderPort` | `getIssueStatus(issueId, integration): String`          | Consulta el estado actual de un issue en el proveedor                        |
+| `TokenEncryptionPort`  | `encrypt(token): String`                                | Encripta el token de acceso con AES antes de persistir                       |
+| `TokenEncryptionPort`  | `decrypt(encryptedToken): String`                       | Desencripta el token para usarlo en llamadas al proveedor                    |
+| `UserStoryPort`        | `getStory(storyId): StoryDto`                           | Obtiene los datos de una historia de usuario desde Discovery BC              |
+|                        | `getApprovedStories(projectId): List<StoryDto>`         | Obtiene todas las historias con `status=APPROVED` de un proyecto (para US55) |
+| `OAuthProviderPort`    | `getAuthorizationUrl(state: String): String`            | Genera la URL de autorización del proveedor OAuth2 (Atlassian)               |
+|                        | `exchangeCode(code: String): OAuthTokens`               | Intercambia el código por `access_token` + `refresh_token`                   |
+|                        | `refreshAccessToken(refreshToken: String): OAuthTokens` | Renueva el token de acceso cuando expira                                     |
 
 ### 5.5.4. Infrastructure Layer
 
@@ -4715,6 +4975,7 @@ Los repositorios JPA se ubican en `com.kntrosoft.reqsai.gateway.infrastructure.p
 |--------------------------------|----------------------------------|
 | `IntegrationJpaRepository`     | `IntegrationRepository`          |
 | `ExportRecordJpaRepository`    | `ExportRecordRepository`         |
+| `OAuthStateJpaRepository`      | `OAuthStateRepository`           |
 
 ---
 
@@ -4730,6 +4991,18 @@ Utiliza la API REST de Jira Cloud para crear issues y consultar su estado. El an
 |----------------------------------------|-----------------------------------------------------------------------------|
 | `createIssue(story, integration)`      | Mapea la historia al formato de Jira y llama a `POST /rest/api/3/issue`     |
 | `getIssueStatus(issueId, integration)` | Consulta `GET /rest/api/3/issue/{issueId}` y retorna el campo `status.name` |
+
+**`JiraOAuthAdapter`** — implementa `OAuthProviderPort` para `provider=JIRA`
+
+Gestiona el flujo OAuth 2.0 con Atlassian: genera la URL de autorización, intercambia el código de autorización por tokens de acceso, y renueva el access token usando el refresh token. Utiliza la Atlassian OAuth 2.0 API.
+
+| Método                       | Descripción                                                                              |
+|------------------------------|------------------------------------------------------------------------------------------|
+| `getAuthorizationUrl(state)` | Construye la URL de Atlassian con `client_id`, `redirect_uri`, `scope` y `state` firmado |
+| `exchangeCode(code)`         | POST a `oauth/token` de Atlassian con `grant_type=authorization_code`                    |
+| `refreshAccessToken(token)`  | POST a `oauth/token` con `grant_type=refresh_token` para renovar el access token         |
+
+---
 
 **`AesTokenEncryptionAdapter`** — implementa `TokenEncryptionPort`
 
