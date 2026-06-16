@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ---
 
+## [Unreleased]
+
+### Changed
+
+- Workspace `Organization`: `OrgStatus` now documents the `PENDING` state (the window between persisting the organization and finishing tenant-schema provisioning; the `TenantSchemaResolver` excludes it until it becomes `ACTIVE`)
+- Workspace `GenerationSettings.meetingLanguage` retyped from `String` to the `LanguageCode` value object, now documented as part of the **Shared Kernel** (reused by the Discovery context's `DiscoverySession.language`)
+
+**Author:** Gutiérrez Soto, Jhosepmyr Orlando
+
+---
+
 ## [2.2] - 2026-05-09
 
 ### Added
