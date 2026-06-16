@@ -3237,7 +3237,7 @@ Representa la unidad raíz de tenencia multi-organizacional. Contiene los límit
 | `name`       | `String`             | Nombre visible de la organización                             |
 | `slug`       | `String`             | Identificador URL único (inmutable tras creación)             |
 | `ownerId`    | `UserId`             | Referencia al usuario propietario                             |
-| `status`     | `OrgStatus`          | Estado: `ACTIVE`, `INACTIVE`, `DELETED`                       |
+| `status`     | `OrgStatus`          | Estado: `PENDING`, `ACTIVE`, `INACTIVE`, `DELETED`            |
 | `planLimits` | `PlanLimits`         | Límites operativos actuales según el plan de facturación      |
 | `settings`   | `GenerationSettings` | Preferencias de generación (idioma de reuniones, ej. `es-PE`) |
 
@@ -3484,10 +3484,10 @@ Value Object inmutable que describe el contexto técnico de un proyecto. Utiliza
 
 Value Object inmutable que encapsula las preferencias de generación de la organización. Respalda US14 (idioma de reuniones) y US15 (política de retención de audios). Definido como `record` de Java.
 
-| Campo                | Tipo     | Descripción                                                                                                          |
-|----------------------|----------|----------------------------------------------------------------------------------------------------------------------|
-| `meetingLanguage`    | `String` | Código BCP-47 del idioma principal de las reuniones (ej. `"es-PE"`). Usado por STT y el LLM.                         |
-| `audioRetentionDays` | `Int`    | Días de retención de los archivos de audio tras ser transcritos. `0` = eliminación inmediata; `-1` = nunca eliminar. |
+| Campo                | Tipo           | Descripción                                                                                                                                                                                     |
+|----------------------|----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `meetingLanguage`    | `LanguageCode` | Código BCP-47 del idioma principal de las reuniones (ej. `es-PE`). **Value Object del Shared Kernel** (reutilizado por el BC Discovery en `DiscoverySession.language`). Usado por STT y el LLM. |
+| `audioRetentionDays` | `Int`          | Días de retención de los archivos de audio tras ser transcritos. `0` = eliminación inmediata; `-1` = nunca eliminar.                                                                            |
 
 **Validaciones en compact constructor:**
 
@@ -3500,14 +3500,14 @@ Value Object inmutable que encapsula las preferencias de generación de la organ
 
 **Enumeraciones**
 
-| Enumeración      | Valores                                                                                                                                                                                                                   |
-|------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `OrgStatus`      | `ACTIVE`, `INACTIVE`, `DELETED`                                                                                                                                                                                           |
-| `MemberStatus`   | `ACTIVE`, `PENDING`, `INACTIVE`                                                                                                                                                                                           |
-| `OrgRole`        | `OWNER`, `ADMIN`, `MEMBER`                                                                                                                                                                                                |
-| `ProjectStatus`  | `ACTIVE`, `ARCHIVED`                                                                                                                                                                                                      |
-| `DocumentStatus` | `ACTIVE`, `ARCHIVED`                                                                                                                                                                                                      |
-| `Permission`     | `READ_PROJECT`, `WRITE_PROJECT`, `DELETE_PROJECT`, `MANAGE_MEMBERS`, `MANAGE_ROLES`, `UPLOAD_DOCUMENTS`, `MANAGE_GLOSSARY`, `RUN_DISCOVERY`, `CONFIRM_SUGGESTION`, `APPROVE_STORY`, `EXPORT_STORY`, `MANAGE_INTEGRATIONS` |
+| Enumeración      | Valores                                                                                                                                                                                                                         |
+|------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `OrgStatus`      | `PENDING`, `ACTIVE`, `INACTIVE`, `DELETED` (`PENDING` cubre la ventana entre persistir la organización y completar el aprovisionamiento del esquema del tenant; el `TenantSchemaResolver` la excluye hasta que pasa a `ACTIVE`) |
+| `MemberStatus`   | `ACTIVE`, `PENDING`, `INACTIVE`                                                                                                                                                                                                 |
+| `OrgRole`        | `OWNER`, `ADMIN`, `MEMBER`                                                                                                                                                                                                      |
+| `ProjectStatus`  | `ACTIVE`, `ARCHIVED`                                                                                                                                                                                                            |
+| `DocumentStatus` | `ACTIVE`, `ARCHIVED`                                                                                                                                                                                                            |
+| `Permission`     | `READ_PROJECT`, `WRITE_PROJECT`, `DELETE_PROJECT`, `MANAGE_MEMBERS`, `MANAGE_ROLES`, `UPLOAD_DOCUMENTS`, `MANAGE_GLOSSARY`, `RUN_DISCOVERY`, `CONFIRM_SUGGESTION`, `APPROVE_STORY`, `EXPORT_STORY`, `MANAGE_INTEGRATIONS`       |
 
 ---
 
@@ -4255,7 +4255,7 @@ Fragmento de transcripción recibido en streaming desde el servicio STT durante 
 | `SuggestionStatus` | `PENDING`, `ACCEPTED`, `REJECTED`, `SUPERSEDED`                                | Estado de revisión de una sugerencia            |
 | `TriggerSource`    | `INTERVAL`, `SILENCE`, `MANUAL`                                                | Disparador que originó el análisis de IA        |
 
-Value Objects adicionales (no enumeraciones): `LanguageCode` (idioma BCP-47, ej. `es-PE`), `SuggestionPayload` (contenido propuesto), `IntRange` (rango de segmentos), `SimilarityScore` (puntaje de similitud coseno) y `JiraIssueRef` (referencia a issue externo).
+Value Objects adicionales (no enumeraciones): `LanguageCode` (idioma BCP-47, ej. `es-PE`; **Value Object del Shared Kernel** compartido con el BC Workspace, donde respalda `GenerationSettings.meetingLanguage`), `SuggestionPayload` (contenido propuesto), `IntRange` (rango de segmentos), `SimilarityScore` (puntaje de similitud coseno) y `JiraIssueRef` (referencia a issue externo).
 
 ---
 
