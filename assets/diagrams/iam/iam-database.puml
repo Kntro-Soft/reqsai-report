@@ -35,6 +35,10 @@ CORE(accounts) {
   status                         : VARCHAR(30)   <<NN>>
     verification_code            : VARCHAR(10)
     verification_code_expires_at : TIMESTAMP
+    password_reset_token         : VARCHAR(255)
+    password_reset_token_expires_at : TIMESTAMP
+    terms_accepted_at            : TIMESTAMP
+    terms_version                : VARCHAR(50)
   --
 }
 

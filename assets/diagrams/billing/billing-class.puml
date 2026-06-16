@@ -93,8 +93,6 @@ package "Billing" {
         enum PaymentProvider <<Enum>> {
           STRIPE
           CULQI
-          PAYPAL
-          MERCADO_PAGO
         }
       }
 
@@ -135,6 +133,21 @@ package "Billing" {
       --
       + {static} of(subscriptionId : String, organizationId : String, quotaUsed : Long) : TokenQuotaExceededEvent
     }
+    class SubscriptionReactivatedEvent <<Domain Event>> {
+      + subscriptionId : String
+      + organizationId : String
+      + planType : String
+      + occurredAt : Instant
+      --
+      + {static} of(subscriptionId : String, organizationId : String, planType : String) : SubscriptionReactivatedEvent
+    }
+    class QuotaResetEvent <<Domain Event>> {
+      + subscriptionId : String
+      + organizationId : String
+      + occurredAt : Instant
+      --
+      + {static} of(subscriptionId : String, organizationId : String) : QuotaResetEvent
+    }
   }
 
   package "Domain" {
@@ -172,9 +185,11 @@ PaymentProviderRef ..> PaymentProvider : uses
 Subscription "1" o-- "1" OrganizationId : organizationId (reference)
 
 ' ── Domain Events published ───────────────────────────────────────────
-Subscription ..> SubscriptionAssignedEvent   : <<publishes>>
-Subscription ..> SubscriptionUpgradedEvent   : <<publishes>>
-Subscription ..> SubscriptionCancelledEvent  : <<publishes>>
-Subscription ..> TokenQuotaExceededEvent     : <<publishes>>
+Subscription ..> SubscriptionAssignedEvent      : <<publishes>>
+Subscription ..> SubscriptionUpgradedEvent      : <<publishes>>
+Subscription ..> SubscriptionCancelledEvent     : <<publishes>>
+Subscription ..> TokenQuotaExceededEvent        : <<publishes>>
+Subscription ..> SubscriptionReactivatedEvent   : <<publishes>>
+Subscription ..> QuotaResetEvent                : <<publishes>>
 
 @enduml

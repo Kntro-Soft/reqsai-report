@@ -71,6 +71,7 @@ package "Req Discovery" {
           ..Business Methods..
           + approve() : void
           + reject() : void
+          + updateContent(title : String, role : String, action : String, benefit : String) : void
           + updatePriority(priority : Priority) : void
           + updateStoryPoints(points : Integer) : void
           + addCriterion(description : String, type : CriterionType) : void
@@ -92,12 +93,43 @@ package "Req Discovery" {
           + AcceptanceCriterion(storyId : UserStoryId, description : String, type : CriterionType)
           + update(description : String, type : CriterionType) : void
         }
+
+        class TranscriptSegment {
+          - id : TranscriptSegmentId
+          - sessionId : DiscoverySessionId
+          - speaker : String
+          - text : String
+          - startTime : Float
+          - endTime : Float
+          - sequence : Integer
+          --
+          + TranscriptSegment(sessionId : DiscoverySessionId, speaker : String, text : String, startTime : Float, endTime : Float, sequence : Integer)
+          + updateSpeaker(speaker : String) : void
+        }
+      }
+
+      package "Aggregates (2)" as DiscAggregates2 {
+        class ShareLink <<Aggregate Root>> {
+          - id : ShareLinkId
+          - projectId : ProjectId
+          - token : String
+          - expiresAt : Instant
+          - createdBy : UserId
+          --
+          # ShareLink()
+          + ShareLink(projectId : ProjectId, token : String, expiresAt : Instant, createdBy : UserId)
+          ..Query Methods..
+          + isExpired(now : Instant) : boolean
+        }
       }
 
       package "Value Objects" as DiscValueObjects {
         class DiscoverySessionId <<Value Object>>
         class UserStoryId <<Value Object>>
         class AcceptanceCriterionId <<Value Object>>
+        class TranscriptSegmentId <<Value Object>>
+        class ShareLinkId <<Value Object>>
+        class UserId <<Value Object>>
         class ProjectId <<Value Object>>
 
         enum SessionStatus <<Enum>> {
@@ -166,6 +198,29 @@ package "Req Discovery" {
           --
           + {static} of(sessionId : String, projectId : String, storyCount : int) : UserStoriesGeneratedEvent
         }
+        class UserStoryApprovedEvent <<Domain Event>> {
+          + storyId : String
+          + projectId : String
+          + occurredAt : Instant
+          --
+          + {static} of(storyId : String, projectId : String) : UserStoryApprovedEvent
+        }
+        class ShareLinkCreatedEvent <<Domain Event>> {
+          + shareLinkId : String
+          + projectId : String
+          + token : String
+          + occurredAt : Instant
+          --
+          + {static} of(shareLinkId : String, projectId : String, token : String) : ShareLinkCreatedEvent
+        }
+        class SpeakerLabelUpdatedEvent <<Domain Event>> {
+          + segmentId : String
+          + sessionId : String
+          + newSpeaker : String
+          + occurredAt : Instant
+          --
+          + {static} of(segmentId : String, sessionId : String, newSpeaker : String) : SpeakerLabelUpdatedEvent
+        }
       }
     }
   }
@@ -174,6 +229,7 @@ package "Req Discovery" {
 ' ── Inheritance ──────────────────────────────────────────────────────
 DiscoverySession --|> AbstractAggregateRoot : extends
 UserStory        --|> AbstractAggregateRoot : extends
+ShareLink        --|> AbstractAggregateRoot : extends
 
 DiscoverySessionNotFoundException  --|> EntityNotFoundException
 UserStoryNotFoundException         --|> EntityNotFoundException
@@ -191,13 +247,19 @@ UserStory        ..> Priority      : uses
 AcceptanceCriterion ..> CriterionType : uses
 
 ' ── Cross-aggregate ID references ────────────────────────────────────
-DiscoverySession "1" o-- "1" ProjectId          : projectId (reference)
-UserStory        "1" o-- "1" DiscoverySessionId : sessionId (reference)
-UserStory        "1" o-- "1" ProjectId          : projectId (reference)
+DiscoverySession  "1" o-- "1" ProjectId           : projectId (reference)
+UserStory         "1" o-- "1" DiscoverySessionId  : sessionId (reference)
+UserStory         "1" o-- "1" ProjectId           : projectId (reference)
+TranscriptSegment "1" o-- "1" DiscoverySessionId  : sessionId (reference)
+ShareLink         "1" o-- "1" ProjectId           : projectId (reference)
+ShareLink         "1" o-- "1" UserId              : createdBy (reference)
 
 ' ── Domain Events published ───────────────────────────────────────────
-DiscoverySession ..> SessionProcessingStartedEvent : <<publishes>>
-DiscoverySession ..> UserStoriesGeneratedEvent     : <<publishes>>
-DiscoverySession ..> AiTokensConsumedEvent         : <<publishes>>
+DiscoverySession  ..> SessionProcessingStartedEvent : <<publishes>>
+DiscoverySession  ..> UserStoriesGeneratedEvent     : <<publishes>>
+DiscoverySession  ..> AiTokensConsumedEvent         : <<publishes>>
+UserStory         ..> UserStoryApprovedEvent        : <<publishes>>
+ShareLink         ..> ShareLinkCreatedEvent         : <<publishes>>
+TranscriptSegment ..> SpeakerLabelUpdatedEvent      : <<publishes>>
 
 @enduml

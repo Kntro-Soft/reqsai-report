@@ -23,6 +23,31 @@ note as auditNote
   - updated_by   VARCHAR(36)
 end note
 
+' ── Table: oauth_states ──────────────────────────────────────────────
+CORE(oauth_states) {
+  id              : VARCHAR(36)  <<PK>>
+  --
+  state           : VARCHAR(255) <<NN, UQ, IDX>>
+  project_id      : VARCHAR(36)  <<NN, IDX>>
+  organization_id : VARCHAR(36)  <<NN, IDX>>
+  expires_at      : TIMESTAMP    <<NN>>
+  --
+}
+
+note right of oauth_states
+  <b>state</b>
+  - Valor aleatorio CSRF para flujo OAuth2
+  - Usado para validar el callback de Jira
+
+  <b>project_id / organization_id</b>
+  - Ref logicas a Workspace BC
+  - Sin FK fisica (BCs aislados)
+
+  <b>expires_at</b>
+  - Registro se invalida tras timeout
+  - Limpiado por job periodico
+end note
+
 ' ── Table: integrations ──────────────────────────────────────────────
 CORE(integrations) {
   id                : VARCHAR(36)  <<PK>>
@@ -98,6 +123,7 @@ end note
 ' ── Relationships ────────────────────────────────────────────────────
 integrations ||--o{ export_records : "1 integracion -> 0..* exportaciones"
 
+auditNote .. oauth_states
 auditNote .. integrations
 auditNote .. export_records
 
