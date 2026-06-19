@@ -31,6 +31,20 @@ package "Gateway" {
     package "Model" {
       package "Aggregates" as GwAggregates {
 
+        class OAuthState <<Aggregate Root>> {
+          - id : OAuthStateId
+          - state : String
+          - projectId : ProjectId
+          - organizationId : OrganizationId
+          - createdAt : Instant
+          - expiresAt : Instant
+          --
+          # OAuthState()
+          + OAuthState(state : String, projectId : ProjectId, organizationId : OrganizationId, expiresAt : Instant)
+          ..Query Methods..
+          + isExpired(now : Instant) : boolean
+        }
+
         class Integration <<Aggregate Root>> {
           - id : IntegrationId
           - projectId : ProjectId
@@ -78,6 +92,8 @@ package "Gateway" {
       package "Value Objects" as GwValueObjects {
         class IntegrationId <<Value Object>>
         class ExportRecordId <<Value Object>>
+        class OAuthStateId <<Value Object>>
+        class OrganizationId <<Value Object>>
         class ProjectId <<Value Object>>
         class UserStoryId <<Value Object>>
 
@@ -124,6 +140,14 @@ package "Gateway" {
   }
 
   package "Api" as GwApi {
+    class OAuthConnectionEstablishedEvent <<Domain Event>> {
+      + integrationId : String
+      + projectId : String
+      + provider : String
+      + occurredAt : Instant
+      --
+      + {static} of(integrationId : String, projectId : String, provider : String) : OAuthConnectionEstablishedEvent
+    }
     class StoryExportedEvent <<Domain Event>> {
       + exportRecordId : String
       + storyId : String
@@ -161,6 +185,7 @@ package "Gateway" {
 }
 
 ' ── Inheritance ──────────────────────────────────────────────────────
+OAuthState    --|> AbstractAggregateRoot : extends
 Integration   --|> AbstractAggregateRoot : extends
 ExportRecord  --|> AbstractAggregateRoot : extends
 
@@ -179,13 +204,16 @@ Integration  ..> IntegrationConfig   : uses
 ExportRecord ..> ExportStatus        : uses
 
 ' ── Cross-aggregate ID references ────────────────────────────────────
+OAuthState   "1" o-- "1" ProjectId      : projectId (reference)
+OAuthState   "1" o-- "1" OrganizationId : organizationId (reference)
 Integration  "1" o-- "1" ProjectId      : projectId (reference)
 ExportRecord "1" o-- "1" IntegrationId  : integrationId (reference)
 ExportRecord "1" o-- "1" UserStoryId    : storyId (reference)
 
 ' ── Domain Events published ───────────────────────────────────────────
-Integration  ..> IntegrationActivatedEvent : <<publishes>>
-ExportRecord ..> StoryExportedEvent        : <<publishes>>
-ExportRecord ..> ExportFailedEvent         : <<publishes>>
+Integration  ..> IntegrationActivatedEvent        : <<publishes>>
+Integration  ..> OAuthConnectionEstablishedEvent  : <<publishes>>
+ExportRecord ..> StoryExportedEvent               : <<publishes>>
+ExportRecord ..> ExportFailedEvent                : <<publishes>>
 
 @enduml
