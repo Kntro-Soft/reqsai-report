@@ -4161,14 +4161,15 @@ Historia de usuario generada por IA a partir de una sesión. El equipo la revisa
 | `embedding`          | `List<Float>?`              | Vector (768d) del contenido para búsqueda de similitud (pgvector) |
 | `externalRef`        | `JiraIssueRef?`             | Referencia externa tras exportar (idempotencia de export)         |
 
-| Método                             | Descripción                                                      |
-|------------------------------------|------------------------------------------------------------------|
-| `approve()`                        | Cambia el estado a `APPROVED`; solo desde `DRAFT`                |
-| `reject()`                         | Cambia el estado a `REJECTED`; solo desde `DRAFT`                |
-| `updatePriority(priority)`         | Actualiza la prioridad de la historia                            |
-| `updateStoryPoints(points)`        | Actualiza los puntos de historia estimados                       |
-| `addCriterion(description, type)`  | Agrega un criterio de aceptación                                 |
-| `removeCriterion(criterionId)`     | Elimina un criterio de aceptación existente                      |
+| Método                                                                 | Descripción                                                            |
+|------------------------------------------------------------------------|------------------------------------------------------------------------|
+| `approve()`                                                            | Cambia el estado a `APPROVED`; solo desde `DRAFT`                      |
+| `reject()`                                                             | Cambia el estado a `REJECTED`; solo desde `DRAFT`                      |
+| `updatePriority(priority)`                                             | Actualiza la prioridad de la historia                                  |
+| `updateStoryPoints(points)`                                            | Actualiza los puntos de historia estimados                             |
+| `addAcceptanceCriterion(scenario?, given, when, then)`                 | Agrega un criterio Given/When/Then a la historia                       |
+| `updateAcceptanceCriterion(criterionId, scenario?, given, when, then)` | Actualiza un criterio existente                                        |
+| `removeAcceptanceCriterion(criterionId)`                               | Elimina un criterio; `orphanRemoval` emite el `DELETE` automáticamente |
 
 | Excepción lanzada                   | Condición de disparo                                             |
 |-------------------------------------|------------------------------------------------------------------|
@@ -4210,18 +4211,20 @@ Propuesta generada por la IA durante la reunión en vivo, pendiente de confirmac
 
 **`AcceptanceCriterion`** — tabla: `acceptance_criteria`
 
-Criterio de aceptación asociado a una historia de usuario. Puede expresarse en formato Gherkin (`GIVEN_WHEN_THEN`) o como ítem de checklist (`CHECKLIST`).
+Criterio de aceptación asociado a una historia de usuario. Siempre expresado en formato Gherkin (Given / When / Then). El campo `scenario` es una etiqueta opcional; los criterios generados por IA lo dejan en `null`.
 
-| Campo         | Tipo                    | Descripción                             |
-|---------------|-------------------------|-----------------------------------------|
-| `id`          | `AcceptanceCriterionId` | Identificador único del criterio        |
-| `storyId`     | `UserStoryId`           | Historia de usuario a la que pertenece  |
-| `description` | `String`                | Descripción del criterio de aceptación  |
-| `type`        | `CriterionType`         | Formato: `GIVEN_WHEN_THEN`, `CHECKLIST` |
+| Campo      | Tipo                    | Descripción                                              |
+|------------|-------------------------|----------------------------------------------------------|
+| `id`       | `AcceptanceCriterionId` | Identificador único del criterio                         |
+| `story`    | `UserStory`             | Historia de usuario a la que pertenece (aggregate root)  |
+| `scenario` | `String?`               | Etiqueta opcional del escenario (ej. "Happy path")       |
+| `given`    | `String`                | Precondición o contexto del criterio                     |
+| `when`     | `String`                | Acción o evento que desencadena el comportamiento        |
+| `then`     | `String`                | Resultado esperado tras la acción                        |
 
-| Método                      | Descripción                        |
-|-----------------------------|------------------------------------|
-| `update(description, type)` | Actualiza la descripción y el tipo |
+| Método                                | Descripción                                       |
+|---------------------------------------|---------------------------------------------------|
+| `update(scenario, given, when, then)` | Reemplaza todos los campos del criterio existente |
 
 ---
 
@@ -4253,7 +4256,6 @@ Fragmento de transcripción recibido en streaming desde el servicio STT durante 
 | `SessionStatus`    | `DRAFT`, `RECORDING`, `PAUSED`, `STOPPED`, `PROCESSING`, `COMPLETED`, `FAILED` | Ciclo de vida de una sesión en vivo             |
 | `StoryStatus`      | `DRAFT`, `APPROVED`, `REJECTED`, `MERGED`, `EXPORTED`                          | Estado de revisión de una historia de usuario   |
 | `Priority`         | `LOW`, `MEDIUM`, `HIGH`, `CRITICAL`                                            | Prioridad de una historia en el backlog         |
-| `CriterionType`    | `GIVEN_WHEN_THEN`, `CHECKLIST`                                                 | Formato de expresión del criterio de aceptación |
 | `SuggestionType`   | `NEW_STORY`, `UPDATE_STORY`, `EDGE_CASE`, `CLARIFYING_QUESTION`                | Tipo de propuesta del asistente de IA           |
 | `SuggestionStatus` | `PENDING`, `ACCEPTED`, `REJECTED`, `SUPERSEDED`                                | Estado de revisión de una sugerencia            |
 | `TriggerSource`    | `INTERVAL`, `SILENCE`, `MANUAL`                                                | Disparador que originó el análisis de IA        |
@@ -4407,7 +4409,7 @@ Los DTOs se ubican en `com.kntrosoft.reqsai.discovery.interfaces.rest.dto`.
 | `UploadTranscriptRequest`       | Request                | `transcript: String`                                                                                  |
 | `UpdatePriorityRequest`         | Request                | `priority: Priority`                                                                                  |
 | `UpdateStoryPointsRequest`      | Request                | `storyPoints: Int`                                                                                    |
-| `AddAcceptanceCriterionRequest` | Request                | `description: String`, `type: CriterionType`                                                          |
+| `AddAcceptanceCriterionRequest` | Request                | `scenario: String?`, `given: String`, `when: String`, `then: String`                                  |
 | `AcceptSuggestionRequest`       | Request                | `editedPayload: SuggestionPayload?`                                                                   |
 | `UpdateUserStoryContentRequest` | Request                | `title: String?`, `role: String?`, `action: String?`, `benefit: String?`                              |
 | `UpdateSpeakerLabelRequest`     | Request                | `speakerLabel: String` (ej. "Cliente", "Analista")                                                    |
@@ -4443,9 +4445,9 @@ Los comandos se ubican en `com.kntrosoft.reqsai.discovery.application.commands`.
 | `RejectUserStoryCommand`                           | `storyId`, `requestedBy`                                                                           |
 | `UpdateUserStoryPriorityCommand`                   | `storyId`, `priority`, `requestedBy`                                                               |
 | `UpdateStoryPointsCommand`                         | `storyId`, `storyPoints`, `requestedBy`                                                            |
-| `AddAcceptanceCriterionCommand`                    | `storyId`, `description`, `type`, `requestedBy`                                                    |
-| `UpdateAcceptanceCriterionCommand`                 | `criterionId`, `description`, `type`, `requestedBy`                                                |
-| `RemoveAcceptanceCriterionCommand`                 | `criterionId`, `requestedBy`                                                                       |
+| `AddAcceptanceCriterionCommand`                    | `projectId`, `storyId`, `scenario?`, `given`, `when`, `then`                                       |
+| `UpdateAcceptanceCriterionCommand`                 | `projectId`, `storyId`, `criterionId`, `scenario?`, `given`, `when`, `then`                        |
+| `DeleteAcceptanceCriterionCommand`                 | `projectId`, `storyId`, `criterionId`                                                              |
 | `UpdateUserStoryContentCommand`                    | `storyId`, `title: String?`, `role: String?`, `action: String?`, `benefit: String?`, `requestedBy` |
 | `UpdateSpeakerLabelCommand`                        | `segmentId`, `sessionId`, `speakerLabel: String`, `requestedBy`                                    |
 | `CreateShareLinkCommand`                           | `projectId`, `requestedBy`, `expiresInDays: Int?`                                                  |
@@ -4712,7 +4714,7 @@ En esta sección se presenta el diagrama de componentes C4 (Nivel 3) del BC Requ
 
 #### 5.4.7.1. Bounded Context Domain Layer Class Diagrams
 
-En esta sección se presenta el diagrama de clases UML del Domain Layer del BC Requirement Discovery. Incluye los tres Aggregate Roots (`DiscoverySession`, `UserStory`, `Suggestion`), las entidades `AcceptanceCriterion` (pertenece a `UserStory`) y `TranscriptSegment` (pertenece a `DiscoverySession`), los Value Objects de identidad y de dominio (`LanguageCode`, `SuggestionPayload`, `JiraIssueRef`), las enumeraciones (`SessionStatus`, `StoryStatus`, `Priority`, `CriterionType`, `SuggestionType`, `SuggestionStatus`, `TriggerSource`), los Domain Events internos (incluidos `SegmentTranscribedEvent` y `SuggestionRaisedEvent`) y el evento `AiTokensConsumedEvent` publicado al Api package para que Billing BC actualice el consumo de tokens.
+En esta sección se presenta el diagrama de clases UML del Domain Layer del BC Requirement Discovery. Incluye los tres Aggregate Roots (`DiscoverySession`, `UserStory`, `Suggestion`), las entidades `AcceptanceCriterion` (pertenece a `UserStory`) y `TranscriptSegment` (pertenece a `DiscoverySession`), los Value Objects de identidad y de dominio (`LanguageCode`, `SuggestionPayload`, `JiraIssueRef`), las enumeraciones (`SessionStatus`, `StoryStatus`, `Priority`, `SuggestionType`, `SuggestionStatus`, `TriggerSource`), los Domain Events internos (incluidos `SegmentTranscribedEvent` y `SuggestionRaisedEvent`) y el evento `AiTokensConsumedEvent` publicado al Api package para que Billing BC actualice el consumo de tokens.
 
 ![Discovery Domain Class Diagram](assets/diagrams/discovery/discovery-class.png)
 
