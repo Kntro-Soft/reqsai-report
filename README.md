@@ -1,4 +1,4 @@
-<body>
+﻿<body>
     <div style="text-align: center; font-weight: bolder">
         <p>Universidad Peruana de Ciencias Aplicadas - Ingeniería de Software - 8 Ciclo</p>
         <img src="assets/brand/logo-upc.png" alt="logo of UPC"/>
@@ -6409,9 +6409,9 @@ El equipo utilizará **GitHub** como plataforma de alojamiento centralizado y **
 | **Repositorio** | **Descripción** |
 |:---|:---|
 | [https://github.com/Kntro-Soft/ReqsAI-Report](https://github.com/Kntro-Soft/ReqsAI-Report) | Documentación técnica exhaustiva e informe técnico del proyecto en Markdown. |
-| [https://github.com/Kntro-Soft/reqsai-landing-page](https://github.com/Kntro-Soft/reqsai-landing-page) | Código fuente de la Landing Page pública optimizada para captación de leads. |
-| [https://github.com/Kntro-Soft/reqsai-web-app](https://github.com/Kntro-Soft/reqsai-web-app) | Aplicación Web (Single Page Application) en Angular para analistas y líderes técnicos. |
-| [https://github.com/Kntro-Soft/reqsai-backend](https://github.com/Kntro-Soft/reqsai-backend) | API Backend monolítica modular en Java con Spring Boot 4 y especificaciones de pruebas (.feature). |
+| [https://github.com/Kntro-Soft/reqsai-landing](https://github.com/Kntro-Soft/reqsai-landing) | Código fuente de la Landing Page pública optimizada para captación de leads. |
+| [https://github.com/Kntro-Soft/reqsai-web](https://github.com/Kntro-Soft/reqsai-web) | Aplicación Web (Single Page Application) en Angular para analistas y líderes técnicos. |
+| [https://github.com/Kntro-Soft/reqsai-api](https://github.com/Kntro-Soft/reqsai-api) | API Backend monolítica modular en Java con Spring Boot 4 y especificaciones de pruebas (.feature). |
 
 <br>
 
