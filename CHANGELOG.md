@@ -8,12 +8,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ## [Unreleased]
 
+### Added
+
+- Section 7.1 (Software Configuration Management) covering development environment configuration, source code management (GitFlow and Conventional Commits), style guides (Angular/Service-as-a-Store and Spring Modulith conventions), and AWS deployment configuration with C4 Model diagram
+
 ### Changed
 
 - Workspace `Organization`: `OrgStatus` now documents the `PENDING` state (the window between persisting the organization and finishing tenant-schema provisioning; the `TenantSchemaResolver` excludes it until it becomes `ACTIVE`)
 - Workspace `GenerationSettings.meetingLanguage` retyped from `String` to the `LanguageCode` value object, now documented as part of the **Shared Kernel** (reused by the Discovery context's `DiscoverySession.language`)
 
-**Author:** Gutiérrez Soto, Jhosepmyr Orlando
+**Authors:** Gutiérrez Soto, Jhosepmyr Orlando — Sulca Gonzales, Paul
 
 ---
 
