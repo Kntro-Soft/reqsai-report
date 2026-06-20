@@ -1,4 +1,4 @@
-﻿<body>
+<body>
     <div style="text-align: center; font-weight: bolder">
         <p>Universidad Peruana de Ciencias Aplicadas - Ingeniería de Software - 8 Ciclo</p>
         <img src="assets/brand/logo-upc.png" alt="logo of UPC"/>
@@ -6552,23 +6552,595 @@ A continuación se presenta el Diagrama de Despliegue de Reqs-AI, correspondient
 
 ## 7.2. Solution Implementation
 
-### 7.2.X. Sprint n
+### 7.2.1. Sprint 1
 
-#### 7.2.X.1. Sprint Planning n
+Durante el primer sprint del proyecto Reqs-AI, el equipo se enfocó en sentar las bases funcionales de la plataforma a través de tres componentes clave: la **Landing Page** (para la captación de leads de consultoras y startups), la **Web Application** (Single Page Application desarrollada en Angular que sirve como portal de analistas y técnicos) y el **Backend Service** (un Monolito Modular construido con Java 25 y Spring Boot 4 utilizando Spring Modulith). El objetivo principal consistió en implementar los mecanismos de identidad, autenticación, creación de organizaciones y workspaces, el registro y configuración de proyectos, y habilitar la lógica crítica de captura de reuniones y generación inicial de historias de usuario en formato Gherkin integrando IA (Speech-to-Text y LLM) bajo un esquema multitenancy schema-per-tenant para asegurar el aislamiento estricto de los datos.
 
-#### 7.2.X.2. Sprint Backlog n
+#### 7.2.1.1. Sprint Planning 1
 
-#### 7.2.X.3. Development Evidence for Sprint Review
+Se presenta a continuación el Sprint Planning correspondiente al primer ciclo del proyecto, detallando el contexto de planificación, las metas propuestas y la capacidad del equipo.
 
-#### 7.2.X.4. Testing Suite Evidence for Sprint Review
+A continuación se presenta una captura de pantalla de nuestro tablero de Jira para el Sprint 1:
 
-#### 7.2.X.5. Execution Evidence for Sprint Review
+![Board del Sprint 1 en Jira](./assets/insights/sprint-planning-1.png)  
+[Jira Board - Sprint 1](https://uni-ride.atlassian.net/jira/software/projects/REQ/boards/299)  
 
-#### 7.2.X.6. Services Documentation Evidence for Sprint Review
+| Sprint # | Sprint 1 |
+|---|---|
+| **Sprint Planning Background** | |
+| Date | 2026-05-11 |
+| Time | 08:00 PM |
+| Location | Reunión virtual mediante Discord |
+| Prepared By | Sulca Gonzales, Paul Fernando |
+| Attendees (to planning meeting) | Gutiérrez Soto, Jhosepmyr Orlando / Hernández Tuiro, Eric Ernesto / Ramirez Mestanza, Salim Ignacio / Varela Bustinza, Marcelo Alejandro / Sulca Gonzales, Paul Fernando |
+| **Sprint n – 1 Review Summary** | No aplica por ser el primer Sprint de desarrollo de la solución, habiéndose completado previamente el diseño de arquitectura y especificación de requerimientos en la fase de descubrimiento estratégico. |
+| **Sprint n – 1 Retrospective Summary** | No aplica por ser el primer Sprint del proyecto. |
+| **Sprint Goal & User Stories** | |
+| Sprint 1 Goal | Implementar el flujo fundamental de registro e identidad (IAM), la configuración inicial del workspace (Organizaciones y Proyectos), y habilitar el núcleo del motor de captura y análisis en vivo con transcripción y generación de historias de usuario, garantizando el aislamiento de datos multitenant. |
+| Sprint 1 Velocity | 48 |
+| Sum of Story Points | 48 |
 
-#### 7.2.X.7. Software Deployment Evidence for Sprint Review
+<br>
 
-#### 7.2.X.8. Team Collaboration Insights during Sprint
+#### 7.2.1.2. Sprint Backlog 1
+
+El objetivo de este Sprint es presentar una primera versión funcional de la Landing Page, de la Web Application y del Backend de Reqs-AI. Para ello, se priorizaron las historias de usuario relacionadas con autenticación, creación de organizaciones y proyectos, e inicio de captura de audio y análisis con IA.
+
+*(A continuación se presenta el Sprint Backlog detallando la descomposición de User Stories y Technical Stories en Tasks, estimaciones en horas, asignaciones y estado final de finalización:)*
+
+<div style="font-size:80%; overflow-x:auto;">
+  <table border="1" cellspacing="0" cellpadding="5">
+    <thead>
+      <tr>
+        <th colspan="2">Sprint #</th>
+        <th colspan="6">Sprint 1</th>
+      </tr>
+      <tr>
+        <th colspan="2">User Story / Technical Story</th>
+        <th colspan="6">Work-Item / Task</th>
+      </tr>
+      <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Estimation (Hours)</th>
+        <th>Assigned To</th>
+        <th>Status (To-do / In-Process / To-Review / Done)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- US04 -->
+      <tr>
+        <td rowspan="2">US04</td>
+        <td rowspan="2">Registro de cuenta</td>
+        <td>US04-a</td>
+        <td>Maquetar vista de registro</td>
+        <td>Diseñar el formulario de registro en Angular con validaciones básicas de campos y feedback de errores.</td>
+        <td>4</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td>US04-b</td>
+        <td>Conectar vista de registro con API</td>
+        <td>Implementar el consumo del servicio POST /api/v1/auth/register en la Web App.</td>
+        <td>3</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <!-- US05 -->
+      <tr>
+        <td rowspan="2">US05</td>
+        <td rowspan="2">Verificación de correo</td>
+        <td>US05-a</td>
+        <td>Implementar pantalla OTP</td>
+        <td>Maquetar la interfaz de ingreso de código de verificación de 6 dígitos en Angular.</td>
+        <td>3</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td>US05-b</td>
+        <td>Consumir endpoint de verificación</td>
+        <td>Conectar la vista OTP con el endpoint de validación POST /api/v1/auth/verify-email.</td>
+        <td>2</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <!-- US06 -->
+      <tr>
+        <td rowspan="2">US06</td>
+        <td rowspan="2">Inicio de sesión</td>
+        <td>US06-a</td>
+        <td>Maquetar vista de login</td>
+        <td>Diseñar el formulario de inicio de sesión centrado con campos de email y contraseña.</td>
+        <td>3</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td>US06-b</td>
+        <td>Conectar login con JWT Store</td>
+        <td>Implementar la autenticación de sesión almacenando el token JWT en el Session Store.</td>
+        <td>3</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <!-- US07 -->
+      <tr>
+        <td rowspan="2">US07</td>
+        <td rowspan="2">Recuperación de contraseña</td>
+        <td>US07-a</td>
+        <td>Maquetar formulario de recuperación</td>
+        <td>Diseñar la interfaz de solicitud de correo para recuperación de contraseña.</td>
+        <td>3</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td>US07-b</td>
+        <td>Consumir endpoint de recuperación</td>
+        <td>Implementar el consumo del servicio POST /api/v1/auth/forgot-password.</td>
+        <td>2</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <!-- US08 -->
+      <tr>
+        <td>US08</td>
+        <td>Cerrar sesión</td>
+        <td>US08-a</td>
+        <td>Implementar cierre de sesión</td>
+        <td>Agregar acción de logout en el menú del portal y limpiar cookies/tokens en el store.</td>
+        <td>2</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <!-- US09 -->
+      <tr>
+        <td>US09</td>
+        <td>Aceptar términos y política</td>
+        <td>US09-a</td>
+        <td>Checkbox de políticas en registro</td>
+        <td>Implementar la aceptación obligatoria de los términos y condiciones al registrarse.</td>
+        <td>2</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <!-- US21 -->
+      <tr>
+        <td rowspan="2">US21</td>
+        <td rowspan="2">Crear proyecto</td>
+        <td>US21-a</td>
+        <td>Diseñar interfaz de creación</td>
+        <td>Diseñar el modal de creación de proyecto con campos de nombre, descripción y metodología.</td>
+        <td>4</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td>US21-b</td>
+        <td>Integrar endpoint de proyectos</td>
+        <td>Consumir el endpoint POST /api/v1/projects para guardar el nuevo proyecto en el backend.</td>
+        <td>3</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <!-- US24 -->
+      <tr>
+        <td>US24</td>
+        <td>Agregar término al glosario</td>
+        <td>US24-a</td>
+        <td>Vista del glosario del proyecto</td>
+        <td>Diseñar la interfaz del glosario del proyecto y el formulario para añadir nuevos términos.</td>
+        <td>4</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <!-- US26 -->
+      <tr>
+        <td>US26</td>
+        <td>Editar proyecto</td>
+        <td>US26-a</td>
+        <td>Modal de edición de proyectos</td>
+        <td>Maquetar e integrar el modal para actualizar el nombre o metadatos de un proyecto existente.</td>
+        <td>3</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <!-- US38 -->
+      <tr>
+        <td>US38</td>
+        <td>Pausar y reanudar captura</td>
+        <td>US38-a</td>
+        <td>Controles de audio del asistente</td>
+        <td>Implementar los botones interactivos de pausar/reanudar en la interfaz de captura de audio.</td>
+        <td>4</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <!-- US39 -->
+      <tr>
+        <td>US39</td>
+        <td>Cerrar y guardar sesión</td>
+        <td>US39-a</td>
+        <td>Finalizar sesión de captura</td>
+        <td>Implementar el flujo de finalización de grabación y envío de confirmación al servidor.</td>
+        <td>3</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <!-- US41 -->
+      <tr>
+        <td>US41</td>
+        <td>Subir grabación de reunión</td>
+        <td>US41-a</td>
+        <td>Cargador de archivos de audio</td>
+        <td>Desarrollar el componente drag-and-drop para cargar archivos locales (.mp3, .wav) en Angular.</td>
+        <td>4</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <!-- US42 -->
+      <tr>
+        <td>US42</td>
+        <td>Historial de sesiones</td>
+        <td>US42-a</td>
+        <td>Diseñar lista de historial</td>
+        <td>Maquetar la vista de listado de sesiones anteriores del proyecto mostrando fecha, duración y estado.</td>
+        <td>4</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <!-- US44 -->
+      <tr>
+        <td>US44</td>
+        <td>Proponer modificación a historia</td>
+        <td>US44-a</td>
+        <td>Edición interactiva de sugerencias</td>
+        <td>Desarrollar la interfaz para que el analista pueda ajustar el contenido de las sugerencias del asistente.</td>
+        <td>4</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <!-- US45 -->
+      <tr>
+        <td>US45</td>
+        <td>Sugerir casos borde</td>
+        <td>US45-a</td>
+        <td>Pestaña de escenarios alternativos</td>
+        <td>Implementar la visualización estructurada de casos alternativos y de error dentro del backlog.</td>
+        <td>3</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <!-- US46 -->
+      <tr>
+        <td>US46</td>
+        <td>Control de análisis del asistente</td>
+        <td>US46-a</td>
+        <td>Switch de control del análisis</td>
+        <td>Agregar control interactivo para habilitar/deshabilitar el procesamiento automático del asistente.</td>
+        <td>2</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <!-- US47 -->
+      <tr>
+        <td>US47</td>
+        <td>Evitar historias duplicadas</td>
+        <td>US47-a</td>
+        <td>Alerta visual de duplicados</td>
+        <td>Diseñar el banner informativo de historias duplicadas semánticamente en el backlog.</td>
+        <td>3</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <!-- US48 -->
+      <tr>
+        <td>US48</td>
+        <td>Editar historia generada</td>
+        <td>US48-a</td>
+        <td>Edición inline de Gherkin</td>
+        <td>Maquetar el editor de texto interactivo con resaltado de sintaxis para cambiar especificaciones en Gherkin.</td>
+        <td>4</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <!-- US49 -->
+      <tr>
+        <td>US49</td>
+        <td>Aprobar historia</td>
+        <td>US49-a</td>
+        <td>Botón de aprobación de historias</td>
+        <td>Implementar los controles del backlog para cambiar el estado de las historias a APPROVED.</td>
+        <td>2</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <!-- US50 -->
+      <tr>
+        <td>US50</td>
+        <td>Compartir historias</td>
+        <td>US50-a</td>
+        <td>Exportación e intercambio de enlace</td>
+        <td>Desarrollar la funcionalidad para copiar enlaces públicos de revisión de las historias generadas.</td>
+        <td>3</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <!-- US51 -->
+      <tr>
+        <td>US51</td>
+        <td>Buscar y filtrar historias</td>
+        <td>US51-a</td>
+        <td>Barra de búsqueda y filtros</td>
+        <td>Implementar la búsqueda en tiempo real y el filtrado por tags y estados en la lista del backlog.</td>
+        <td>3</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <!-- US52 -->
+      <tr>
+        <td>US52</td>
+        <td>Confirmar sugerencias</td>
+        <td>US52-a</td>
+        <td>Panel de sugerencias entrantes</td>
+        <td>Diseñar el panel interactivo lateral que expone las historias recomendadas por la IA.</td>
+        <td>4</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <!-- Perfil de usuario -->
+      <tr>
+        <td>US-Profile</td>
+        <td>Editar perfil de usuario</td>
+        <td>US-Profile-a</td>
+        <td>Diseño de formulario de perfil</td>
+        <td>Maquetar los campos editables del perfil del usuario (nombre, avatar, contraseñas) en Angular.</td>
+        <td>4</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS02 -->
+      <tr>
+        <td>TS02</td>
+        <td>API: Login de Usuario</td>
+        <td>TS02-a</td>
+        <td>Endpoint POST /auth/login</td>
+        <td>Implementar validación de credenciales con Spring Security y generación del token JWT.</td>
+        <td>6</td>
+        <td>Jhosepmyr Gutiérrez</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS03 -->
+      <tr>
+        <td>TS03</td>
+        <td>API: Perfil de Usuario</td>
+        <td>TS03-a</td>
+        <td>Endpoint GET /auth/me</td>
+        <td>Desarrollar el endpoint para recuperar la información del perfil del usuario autenticado.</td>
+        <td>3</td>
+        <td>Jhosepmyr Gutiérrez</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS04 -->
+      <tr>
+        <td>TS04</td>
+        <td>API: Crear Proyecto</td>
+        <td>TS04-a</td>
+        <td>Endpoint POST /projects</td>
+        <td>Implementar la lógica y persistencia para la creación de proyectos asociados a la organización.</td>
+        <td>4</td>
+        <td>Eric Hernández</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS06 -->
+      <tr>
+        <td>TS06</td>
+        <td>API: Actualizar Proyecto</td>
+        <td>TS06-a</td>
+        <td>Endpoint PUT /projects/{id}</td>
+        <td>Crear controlador y servicio para modificar los metadatos de un proyecto de la organización.</td>
+        <td>3</td>
+        <td>Eric Hernández</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS07 -->
+      <tr>
+        <td>TS07</td>
+        <td>API: Eliminar Proyecto</td>
+        <td>TS07-a</td>
+        <td>Endpoint DELETE /projects/{id}</td>
+        <td>Desarrollar el borrado lógico (soft-delete) de un proyecto desactivando recursos relacionados.</td>
+        <td>3</td>
+        <td>Eric Hernández</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS08 -->
+      <tr>
+        <td>TS08</td>
+        <td>API: Subir Audio</td>
+        <td>TS08-a</td>
+        <td>Endpoint POST /sessions/{id}/upload</td>
+        <td>Desarrollar el endpoint multipart para la subida asíncrona de archivos de audio de reuniones.</td>
+        <td>5</td>
+        <td>Jhosepmyr Gutiérrez</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS09 -->
+      <tr>
+        <td>TS09</td>
+        <td>API: Procesar Transcript</td>
+        <td>TS09-a</td>
+        <td>Endpoint POST /sessions/{id}/process</td>
+        <td>Implementar orquestación asíncrona para iniciar la transcripción y posterior generación de historias con LLM.</td>
+        <td>6</td>
+        <td>Eric Hernández</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS10 -->
+      <tr>
+        <td>TS10</td>
+        <td>API: Ver Transcript</td>
+        <td>TS10-a</td>
+        <td>Endpoint GET /sessions/{id}/transcript</td>
+        <td>Endpoint para recuperar la transcripción segmentada por interlocutor generada para una sesión.</td>
+        <td>3</td>
+        <td>Eric Hernández</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS14 -->
+      <tr>
+        <td>TS14</td>
+        <td>API: Cerrar Sesión</td>
+        <td>TS14-a</td>
+        <td>Endpoint POST /auth/logout</td>
+        <td>Implementar la invalidación del token JWT en el backend.</td>
+        <td>3</td>
+        <td>Jhosepmyr Gutiérrez</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS15 -->
+      <tr>
+        <td>TS15</td>
+        <td>API: Verificar Email</td>
+        <td>TS15-a</td>
+        <td>Endpoint POST /auth/verify-email</td>
+        <td>Implementar validación del código OTP y activación de la cuenta del usuario en base de datos.</td>
+        <td>4</td>
+        <td>Jhosepmyr Gutiérrez</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS16 -->
+      <tr>
+        <td>TS16</td>
+        <td>API: Recuperar Contraseña</td>
+        <td>TS16-a</td>
+        <td>Endpoint POST /auth/forgot-password</td>
+        <td>Lógica para generar token temporal de recuperación y encolar el envío de correo transaccional.</td>
+        <td>4</td>
+        <td>Jhosepmyr Gutiérrez</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS17 -->
+      <tr>
+        <td>TS17</td>
+        <td>API: Actualizar Perfil</td>
+        <td>TS17-a</td>
+        <td>Endpoint PUT /auth/profile</td>
+        <td>Desarrollar persistencia de cambios del perfil de usuario a nivel de base de datos.</td>
+        <td>3</td>
+        <td>Jhosepmyr Gutiérrez</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS18 -->
+      <tr>
+        <td>TS18</td>
+        <td>API: Crear Organización</td>
+        <td>TS18-a</td>
+        <td>Endpoint POST /organizations</td>
+        <td>Lógica de creación del tenant y asignación del primer usuario como propietario (Owner).</td>
+        <td>5</td>
+        <td>Eric Hernández</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS25 -->
+      <tr>
+        <td>TS25</td>
+        <td>API: Iniciar Captura en Vivo</td>
+        <td>TS25-a</td>
+        <td>Endpoint POST /sessions/live/start</td>
+        <td>Implementar el websocket server en Spring Boot para recibir transmisión binaria de audio.</td>
+        <td>6</td>
+        <td>Jhosepmyr Gutiérrez</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS30 -->
+      <tr>
+        <td>TS30</td>
+        <td>API: Cambiar Estado de Historia</td>
+        <td>TS30-a</td>
+        <td>Endpoint PATCH /stories/{id}/status</td>
+        <td>Endpoint para actualizar el estado a DRAFT, APPROVED o REJECTED de una historia.</td>
+        <td>3</td>
+        <td>Eric Hernández</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS32 -->
+      <tr>
+        <td>TS32</td>
+        <td>API: Agregar Término a Glosario</td>
+        <td>TS32-a</td>
+        <td>Endpoint POST /projects/{id}/glossary</td>
+        <td>Implementar la inserción de términos clave del dominio definidos por el analista.</td>
+        <td>4</td>
+        <td>Eric Hernández</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS37 -->
+      <tr>
+        <td>TS37</td>
+        <td>Integrar AssemblyAI STT</td>
+        <td>TS37-a</td>
+        <td>Implementación de adaptador AssemblyAI</td>
+        <td>Desarrollar cliente HTTP para el consumo de la API de transcripción y diarización por oradores de AssemblyAI.</td>
+        <td>6</td>
+        <td>Jhosepmyr Gutiérrez</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS38 -->
+      <tr>
+        <td>TS38</td>
+        <td>Integrar Google Gemini LLM</td>
+        <td>TS38-a</td>
+        <td>Adaptador de inferencia con Gemini API</td>
+        <td>Configurar prompts estructurados y consumo de Gemini API para inferir historias de usuario en Gherkin.</td>
+        <td>7</td>
+        <td>Eric Hernández</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS39 -->
+      <tr>
+        <td>TS39</td>
+        <td>Configurar pgvector + Índice HNSW</td>
+        <td>TS39-a</td>
+        <td>Base vectorial en base de datos</td>
+        <td>Implementar la indexación vectorial HNSW y la lógica de búsqueda de duplicados semánticos con pgvector.</td>
+        <td>6</td>
+        <td>Salim Ramirez</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS40 -->
+      <tr>
+        <td>TS40</td>
+        <td>Implementar Multitenancy</td>
+        <td>TS40-a</td>
+        <td>Mecanismo de Schema-per-Tenant</td>
+        <td>Configurar la resolución dinámica de DataSource según el tenantId transportado en el JWT del request.</td>
+        <td>8</td>
+        <td>Salim Ramirez</td>
+        <td>Done</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<br>
+
+#### 7.2.1.3. Development Evidence for Sprint Review
+
+#### 7.2.1.4. Testing Suite Evidence for Sprint Review
+
+#### 7.2.1.5. Execution Evidence for Sprint Review
+
+#### 7.2.1.6. Services Documentation Evidence for Sprint Review
+
+#### 7.2.1.7. Software Deployment Evidence for Sprint Review
+
+#### 7.2.1.8. Team Collaboration Insights during Sprint
 
 ## 7.3. Validation Interviews
 
