@@ -1,4 +1,4 @@
-﻿<body>
+<body>
     <div style="text-align: center; font-weight: bolder">
         <p>Universidad Peruana de Ciencias Aplicadas - Ingeniería de Software - 8 Ciclo</p>
         <img src="assets/brand/logo-upc.png" alt="logo of UPC"/>
@@ -2122,14 +2122,14 @@ Esta capa es la puerta de entrada HTTP al BC IAM. Expone los endpoints de autent
 | **Tag OpenAPI** | `"Authentication"`                                                               |
 | **Propósito**   | Contrato OpenAPI para registro, autenticación y gestión de sesiones. Sin lógica. |
 
-| Método HTTP | Path                   | Nombre del método        | Request DTO                     | Response DTO                | Códigos HTTP       |
-|-------------|------------------------|--------------------------|---------------------------------|-----------------------------|--------------------|
-| `POST`      | `/sign-up`             | `signUp`                 | `SignUpRequest`                 | `AuthenticatedUserResponse` | 201, 400, 409      |
-| `POST`      | `/sign-in`             | `signIn`                 | `SignInRequest`                 | `AuthenticatedUserResponse` | 200, 400, 401, 409 |
-| `POST`      | `/verify`              | `verifyEmail`            | `VerifyEmailRequest`            | `void`                      | 200, 400, 409      |
-| `POST`      | `/resend-code`         | `resendVerificationCode` | `ResendVerificationCodeRequest` | `void`                      | 200, 400, 404      |
-| `POST`      | `/refresh`             | `refreshSession`         | `RefreshSessionRequest`         | `AuthenticatedUserResponse` | 200, 401           |
-| `POST`      | `/sign-out`            | `signOut`                | `RevokeRefreshTokenRequest`     | `void`                      | 204, 401           |
+| Método HTTP | Path                   | Nombre del método        | Request DTO                     | Response DTO                | Códigos HTTP       | Notas de cookie                                                                 |
+|-------------|------------------------|--------------------------|---------------------------------|-----------------------------|--------------------|---------------------------------------------------------------------------------|
+| `POST`      | `/sign-up`             | `signUp`                 | `SignUpRequest`                 | `AuthenticatedUserResponse` | 201, 400, 409      | Respuesta incluye `Set-Cookie: rt=<token>; HttpOnly; Secure; SameSite=Strict`   |
+| `POST`      | `/sign-in`             | `signIn`                 | `SignInRequest`                 | `AuthenticatedUserResponse` | 200, 400, 401, 409 | Respuesta incluye `Set-Cookie: rt=<token>; HttpOnly; Secure; SameSite=Strict`   |
+| `POST`      | `/verify`              | `verifyEmail`            | `VerifyEmailRequest`            | `void`                      | 200, 400, 409      | —                                                                               |
+| `POST`      | `/resend-code`         | `resendVerificationCode` | `ResendVerificationCodeRequest` | `void`                      | 200, 400, 404      | —                                                                               |
+| `POST`      | `/refresh`             | `refreshSession`         | — *(cookie `rt`)*               | `AuthenticatedUserResponse` | 200, 401           | Lee cookie `rt`; rota y emite nueva `Set-Cookie: rt=<token>; HttpOnly; Secure`  |
+| `POST`      | `/sign-out`            | `signOut`                | — *(cookie `rt`)*               | `void`                      | 204, 401           | Lee cookie `rt`; revoca y limpia con `Set-Cookie: rt=; Max-Age=0; HttpOnly`     |
 | `POST`      | `/forgot-password`     | `forgotPassword`         | `ForgotPasswordRequest`         | `void`                      | 200, 404           |
 | `POST`      | `/reset-password`      | `resetPassword`          | `ResetPasswordRequest`          | `void`                      | 200, 400, 401      |
 | `POST`      | `/accept-terms`        | `acceptTerms`            | `AcceptTermsRequest`            | `void`                      | 200, 400, 401      |
@@ -2197,8 +2197,8 @@ Esta capa es la puerta de entrada HTTP al BC IAM. Expone los endpoints de autent
 | `SignInRequest`                 | `interfaces/rest/dto/request/` | `email: String`, `password: String`                                          | `@NotBlank` en todos                                                |
 | `VerifyEmailRequest`            | `interfaces/rest/dto/request/` | `email: String`, `code: String`                                              | `@NotBlank` en todos                                                |
 | `ResendVerificationCodeRequest` | `interfaces/rest/dto/request/` | `email: String`                                                              | `@NotBlank`, `@Email`                                               |
-| `RefreshSessionRequest`         | `interfaces/rest/dto/request/` | `refreshToken: String`                                                       | `@NotBlank`                                                         |
-| `RevokeRefreshTokenRequest`     | `interfaces/rest/dto/request/` | `refreshToken: String`                                                       | `@NotBlank`                                                         |
+| `RefreshSessionRequest`         | `interfaces/rest/dto/request/` | — *(sin campos; el refresh token llega via cookie HttpOnly `rt`)*            | —                                                                   |
+| `RevokeRefreshTokenRequest`     | `interfaces/rest/dto/request/` | — *(sin campos; el refresh token llega via cookie HttpOnly `rt`)*            | —                                                                   |
 | `UpdateProfileRequest`          | `interfaces/rest/dto/request/` | `firstName: String`, `lastName: String`, `avatarUrl: String?`                | `@NotBlank` en `firstName` y `lastName`                             |
 | `UpdatePreferencesRequest`      | `interfaces/rest/dto/request/` | `lastVisitedOrgId: String?`, `lastVisitedProjectId: String?`                 | Opcionales, sin `@NotBlank`                                         |
 | `ForgotPasswordRequest`         | `interfaces/rest/dto/request/` | `email: String`                                                              | `@NotBlank`, `@Email`                                               |
@@ -2209,10 +2209,10 @@ Esta capa es la puerta de entrada HTTP al BC IAM. Expone los endpoints de autent
 
 **Response DTOs**
 
-| Clase                       | Paquete                         | Campos                                                                                                                                                     | Notas                                |
-|-----------------------------|---------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------|
-| `AuthenticatedUserResponse` | `interfaces/rest/dto/response/` | `id: String`, `email: String`, `firstName: String`, `lastName: String`, `accessToken: String`, `refreshToken: String`                                      | `@Builder` + `@Schema` en cada campo |
-| `UserResponse`              | `interfaces/rest/dto/response/` | `id: String`, `email: String`, `firstName: String`, `lastName: String`, `avatarUrl: String?`, `lastVisitedOrgId: String?`, `lastVisitedProjectId: String?` | `@Builder` + `@Schema` en cada campo |
+| Clase                       | Paquete                         | Campos                                                                                                                                                     | Notas                                                                                                                                      |
+|-----------------------------|---------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| `AuthenticatedUserResponse` | `interfaces/rest/dto/response/` | `id: String`, `email: String`, `firstName: String`, `lastName: String`, `accessToken: String`                                                              | `@Builder` + `@Schema` en cada campo. El refresh token **no** va en el body; se envía mediante el header `Set-Cookie` con flag `HttpOnly`. |
+| `UserResponse`              | `interfaces/rest/dto/response/` | `id: String`, `email: String`, `firstName: String`, `lastName: String`, `avatarUrl: String?`, `lastVisitedOrgId: String?`, `lastVisitedProjectId: String?` | `@Builder` + `@Schema` en cada campo                                                                                                       |
 
 ---
 
@@ -2229,10 +2229,10 @@ Esta capa es la puerta de entrada HTTP al BC IAM. Expone los endpoints de autent
 
 **Response Mappers:**
 
-| Clase                             | Método                                                                                            | Convierte                                |
-|-----------------------------------|---------------------------------------------------------------------------------------------------|------------------------------------------|
-| `AuthenticatedUserResponseMapper` | `static AuthenticatedUserResponse toResponse(User user, String accessToken, String refreshToken)` | User + tokens → DTO de autenticación.    |
-| `UserResponseMapper`              | `static UserResponse toResponse(User user, String email)`                                         | User + email de Account → DTO de perfil. |
+| Clase                             | Método                                                                       | Convierte                                                                                                                                                                                |
+|-----------------------------------|------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `AuthenticatedUserResponseMapper` | `static AuthenticatedUserResponse toResponse(User user, String accessToken)` | User + access token → DTO de autenticación. El raw refresh token es retornado por el handler al controlador para que éste lo coloque en la cookie `HttpOnly`; no transita por el mapper. |
+| `UserResponseMapper`              | `static UserResponse toResponse(User user, String email)`                    | User + email de Account → DTO de perfil.                                                                                                                                                 |
 
 ---
 
@@ -2299,15 +2299,15 @@ Esta capa orquesta los casos de uso del BC IAM. No contiene lógica de negocio; 
 
 **Flujo:**
 
-| Paso | Acción                                                   | Excepción lanzada                                            |
-|------|----------------------------------------------------------|--------------------------------------------------------------|
-| 1    | Cargar `Account` por email.                              | `AccountNotFoundException`                                   |
-| 2    | Verificar que la cuenta esté `ACTIVE`.                   | `AccountNotVerifiedException`, `InvalidCredentialsException` |
-| 3    | Comparar contraseña con `HashingServicePort.matches()`.  | `InvalidCredentialsException`                                |
-| 4    | Cargar `User` por `account.getId()`.                     | `UserNotFoundException`                                      |
-| 5    | Emitir JWT con `TokenServicePort.generateToken(userId)`. | —                                                            |
-| 6    | Crear y persistir nuevo `RefreshToken`.                  | —                                                            |
-| 7    | Retornar `AuthenticatedUserResponse` con tokens.         | —                                                            |
+| Paso | Acción                                                                                                                                                                                                                                      | Excepción lanzada                                            |
+|------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------|
+| 1    | Cargar `Account` por email.                                                                                                                                                                                                                 | `AccountNotFoundException`                                   |
+| 2    | Verificar que la cuenta esté `ACTIVE`.                                                                                                                                                                                                      | `AccountNotVerifiedException`, `InvalidCredentialsException` |
+| 3    | Comparar contraseña con `HashingServicePort.matches()`.                                                                                                                                                                                     | `InvalidCredentialsException`                                |
+| 4    | Cargar `User` por `account.getId()`.                                                                                                                                                                                                        | `UserNotFoundException`                                      |
+| 5    | Emitir JWT con `TokenServicePort.generateToken(userId)`.                                                                                                                                                                                    | —                                                            |
+| 6    | Crear y persistir nuevo `RefreshToken`; obtener el valor en texto plano (`rawToken`).                                                                                                                                                       | —                                                            |
+| 7    | Retornar par `(AuthenticatedUserResponse, rawToken)` al controlador. El controlador pone `rawToken` en `Set-Cookie: rt=<rawToken>; HttpOnly; Secure; SameSite=Strict; Path=/api/v1/authentication` y devuelve el body (solo `accessToken`). | —                                                            |
 
 ---
 
@@ -2365,14 +2365,15 @@ Esta capa orquesta los casos de uso del BC IAM. No contiene lógica de negocio; 
 
 **Flujo:**
 
-| Paso | Acción                                                        | Excepción lanzada              |
-|------|---------------------------------------------------------------|--------------------------------|
-| 1    | Cargar `RefreshToken` por hash del token recibido.            | `InvalidRefreshTokenException` |
-| 2    | Verificar validez con `refreshToken.isValid(Instant.now())`.  | `InvalidRefreshTokenException` |
-| 3    | Llamar `refreshToken.rotate()` y persistir el token revocado. | —                              |
-| 4    | Crear nuevo `RefreshToken` y persistir.                       | —                              |
-| 5    | Cargar `User` y emitir JWT con `TokenServicePort`.            | —                              |
-| 6    | Retornar `AuthenticatedUserResponse` con los nuevos tokens.   | —                              |
+| Paso | Acción                                                                                                                                                                                           | Excepción lanzada                                     |
+|------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------|
+| 1    | Leer el raw refresh token desde la cookie `rt` via `@CookieValue("rt")` en el controlador; pasar al command.                                                                                     | `InvalidRefreshTokenException` (cookie ausente → 401) |
+| 2    | Cargar `RefreshToken` por hash SHA-256 del token recibido.                                                                                                                                       | `InvalidRefreshTokenException`                        |
+| 3    | Verificar validez con `refreshToken.isValid(Instant.now())`.                                                                                                                                     | `InvalidRefreshTokenException`                        |
+| 4    | Llamar `refreshToken.rotate()` y persistir el token revocado.                                                                                                                                    | —                                                     |
+| 5    | Crear nuevo `RefreshToken` y persistir; obtener el nuevo `rawToken`.                                                                                                                             | —                                                     |
+| 6    | Cargar `User` y emitir JWT con `TokenServicePort`.                                                                                                                                               | —                                                     |
+| 7    | Retornar par `(AuthenticatedUserResponse, rawToken)` al controlador. El controlador rota la cookie: `Set-Cookie: rt=<rawToken>; HttpOnly; Secure; SameSite=Strict; Path=/api/v1/authentication`. | —                                                     |
 
 ---
 
@@ -2388,11 +2389,13 @@ Esta capa orquesta los casos de uso del BC IAM. No contiene lógica de negocio; 
 
 **Flujo:**
 
-| Paso | Acción                                                                     | Excepción lanzada              |
-|------|----------------------------------------------------------------------------|--------------------------------|
-| 1    | Cargar `RefreshToken` por hash del token.                                  | `InvalidRefreshTokenException` |
-| 2    | Llamar `refreshToken.revoke(Instant.now())` y persistir.                   | —                              |
-| 3    | Publicar `SessionRevokedEvent(userId, tokenHash)` para auditoría.          | —                              |
+| Paso | Acción                                                                                                                         | Excepción lanzada                                     |
+|------|--------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------|
+| 1    | Leer el raw refresh token desde la cookie `rt` via `@CookieValue("rt")` en el controlador; pasar al command.                   | `InvalidRefreshTokenException` (cookie ausente → 401) |
+| 2    | Cargar `RefreshToken` por hash SHA-256 del token recibido.                                                                     | `InvalidRefreshTokenException`                        |
+| 3    | Llamar `refreshToken.revoke(Instant.now())` y persistir.                                                                       | —                                                     |
+| 4    | Publicar `SessionRevokedEvent(userId, tokenHash)` para auditoría.                                                              | —                                                     |
+| 5    | El controlador limpia la cookie: `Set-Cookie: rt=; Max-Age=0; HttpOnly; Secure; SameSite=Strict; Path=/api/v1/authentication`. | —                                                     |
 
 ---
 
@@ -2409,14 +2412,14 @@ Esta capa orquesta los casos de uso del BC IAM. No contiene lógica de negocio; 
 
 **Flujo:**
 
-| Paso | Acción                                                                            | Excepción lanzada                        |
-|------|-----------------------------------------------------------------------------------|------------------------------------------|
-| 1    | Cargar `User` por `userId`.                                                       | `UserNotFoundException`                  |
-| 2    | Llamar `WorkspaceMembershipPort.isMember(userId, targetOrganizationId)`.          | `AccessDeniedException` si no es miembro |
-| 3    | Actualizar `UserPreferences.lastVisitedOrgId = targetOrganizationId` y persistir. | —                                        |
-| 4    | Revocar el refresh token anterior.                                                | —                                        |
-| 5    | Emitir nuevos JWT (access + refresh) con `tenantId = targetOrganizationId`.       | —                                        |
-| 6    | Retornar `AuthenticatedUserResponse` con los nuevos tokens.                       | —                                        |
+| Paso | Acción                                                                                                                                                                                           | Excepción lanzada                        |
+|------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------|
+| 1    | Cargar `User` por `userId`.                                                                                                                                                                      | `UserNotFoundException`                  |
+| 2    | Llamar `WorkspaceMembershipPort.isMember(userId, targetOrganizationId)`.                                                                                                                         | `AccessDeniedException` si no es miembro |
+| 3    | Actualizar `UserPreferences.lastVisitedOrgId = targetOrganizationId` y persistir.                                                                                                                | —                                        |
+| 4    | Revocar el refresh token anterior (leído de cookie `rt` por el controlador).                                                                                                                     | —                                        |
+| 5    | Emitir nuevo access token JWT con `tenantId = targetOrganizationId`; crear y persistir nuevo `RefreshToken`.                                                                                     | —                                        |
+| 6    | Retornar par `(AuthenticatedUserResponse, rawToken)` al controlador. El controlador rota la cookie: `Set-Cookie: rt=<rawToken>; HttpOnly; Secure; SameSite=Strict; Path=/api/v1/authentication`. | —                                        |
 
 > **Nota:** `WorkspaceMembershipPort` es un Service Port en IAM que delega a la API pública del BC Workspace (`WorkspaceModuleApi`) para verificar membresía sin crear dependencia circular.
 
@@ -2627,12 +2630,12 @@ Esta capa contiene las implementaciones técnicas de los puertos definidos en la
 
 **Configuración de Seguridad**
 
-| Clase                                  | Propósito                                                                                                                                                                                                 |
-|----------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `WebSecurityConfiguration`             | Define la cadena de filtros Spring Security: CORS habilitado, CSRF deshabilitado, sesión stateless, `permitAll` en `/api/v1/authentication/**` y Swagger UI. Registra `BearerAuthorizationRequestFilter`. |
-| `BearerAuthorizationRequestFilter`     | Intercepta cada request, extrae el Bearer token del header `Authorization`, lo valida con `TokenServicePort` y establece la autenticación en el `SecurityContextHolder`.                                  |
-| `UnauthorizedRequestHandlerEntryPoint` | Responde con `401 Unauthorized` ante cualquier acceso sin token válido.                                                                                                                                   |
-| `UserDetailsServiceImpl`               | Implementa `UserDetailsService` de Spring Security. Carga `Account` por email para el proceso de autenticación del filtro.                                                                                |
+| Clase                                  | Propósito                                                                                                                                                                                                                                                                                                                        |
+|----------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `WebSecurityConfiguration`             | Define la cadena de filtros Spring Security: CORS habilitado con `allowCredentials(true)` y `allowedOrigins` explícito (requerido por el browser para aceptar cookies cross-origin), CSRF deshabilitado, sesión stateless, `permitAll` en `/api/v1/authentication/**` y Swagger UI. Registra `BearerAuthorizationRequestFilter`. |
+| `BearerAuthorizationRequestFilter`     | Intercepta cada request, extrae el Bearer token del header `Authorization`, lo valida con `TokenServicePort` y establece la autenticación en el `SecurityContextHolder`.                                                                                                                                                         |
+| `UnauthorizedRequestHandlerEntryPoint` | Responde con `401 Unauthorized` ante cualquier acceso sin token válido.                                                                                                                                                                                                                                                          |
+| `UserDetailsServiceImpl`               | Implementa `UserDetailsService` de Spring Security. Carga `Account` por email para el proceso de autenticación del filtro.                                                                                                                                                                                                       |
 
 **JWT (Access Token):**
 - Claims incluidos: `sub` (email), `userId`.
@@ -4158,14 +4161,15 @@ Historia de usuario generada por IA a partir de una sesión. El equipo la revisa
 | `embedding`          | `List<Float>?`              | Vector (768d) del contenido para búsqueda de similitud (pgvector) |
 | `externalRef`        | `JiraIssueRef?`             | Referencia externa tras exportar (idempotencia de export)         |
 
-| Método                             | Descripción                                                      |
-|------------------------------------|------------------------------------------------------------------|
-| `approve()`                        | Cambia el estado a `APPROVED`; solo desde `DRAFT`                |
-| `reject()`                         | Cambia el estado a `REJECTED`; solo desde `DRAFT`                |
-| `updatePriority(priority)`         | Actualiza la prioridad de la historia                            |
-| `updateStoryPoints(points)`        | Actualiza los puntos de historia estimados                       |
-| `addCriterion(description, type)`  | Agrega un criterio de aceptación                                 |
-| `removeCriterion(criterionId)`     | Elimina un criterio de aceptación existente                      |
+| Método                                                                 | Descripción                                                            |
+|------------------------------------------------------------------------|------------------------------------------------------------------------|
+| `approve()`                                                            | Cambia el estado a `APPROVED`; solo desde `DRAFT`                      |
+| `reject()`                                                             | Cambia el estado a `REJECTED`; solo desde `DRAFT`                      |
+| `updatePriority(priority)`                                             | Actualiza la prioridad de la historia                                  |
+| `updateStoryPoints(points)`                                            | Actualiza los puntos de historia estimados                             |
+| `addAcceptanceCriterion(scenario?, given, when, then)`                 | Agrega un criterio Given/When/Then a la historia                       |
+| `updateAcceptanceCriterion(criterionId, scenario?, given, when, then)` | Actualiza un criterio existente                                        |
+| `removeAcceptanceCriterion(criterionId)`                               | Elimina un criterio; `orphanRemoval` emite el `DELETE` automáticamente |
 
 | Excepción lanzada                   | Condición de disparo                                             |
 |-------------------------------------|------------------------------------------------------------------|
@@ -4207,18 +4211,20 @@ Propuesta generada por la IA durante la reunión en vivo, pendiente de confirmac
 
 **`AcceptanceCriterion`** — tabla: `acceptance_criteria`
 
-Criterio de aceptación asociado a una historia de usuario. Puede expresarse en formato Gherkin (`GIVEN_WHEN_THEN`) o como ítem de checklist (`CHECKLIST`).
+Criterio de aceptación asociado a una historia de usuario. Siempre expresado en formato Gherkin (Given / When / Then). El campo `scenario` es una etiqueta opcional; los criterios generados por IA lo dejan en `null`.
 
-| Campo         | Tipo                    | Descripción                             |
-|---------------|-------------------------|-----------------------------------------|
-| `id`          | `AcceptanceCriterionId` | Identificador único del criterio        |
-| `storyId`     | `UserStoryId`           | Historia de usuario a la que pertenece  |
-| `description` | `String`                | Descripción del criterio de aceptación  |
-| `type`        | `CriterionType`         | Formato: `GIVEN_WHEN_THEN`, `CHECKLIST` |
+| Campo      | Tipo                    | Descripción                                              |
+|------------|-------------------------|----------------------------------------------------------|
+| `id`       | `AcceptanceCriterionId` | Identificador único del criterio                         |
+| `story`    | `UserStory`             | Historia de usuario a la que pertenece (aggregate root)  |
+| `scenario` | `String?`               | Etiqueta opcional del escenario (ej. "Happy path")       |
+| `given`    | `String`                | Precondición o contexto del criterio                     |
+| `when`     | `String`                | Acción o evento que desencadena el comportamiento        |
+| `then`     | `String`                | Resultado esperado tras la acción                        |
 
-| Método                      | Descripción                        |
-|-----------------------------|------------------------------------|
-| `update(description, type)` | Actualiza la descripción y el tipo |
+| Método                                | Descripción                                       |
+|---------------------------------------|---------------------------------------------------|
+| `update(scenario, given, when, then)` | Reemplaza todos los campos del criterio existente |
 
 ---
 
@@ -4250,7 +4256,6 @@ Fragmento de transcripción recibido en streaming desde el servicio STT durante 
 | `SessionStatus`    | `DRAFT`, `RECORDING`, `PAUSED`, `STOPPED`, `PROCESSING`, `COMPLETED`, `FAILED` | Ciclo de vida de una sesión en vivo             |
 | `StoryStatus`      | `DRAFT`, `APPROVED`, `REJECTED`, `MERGED`, `EXPORTED`                          | Estado de revisión de una historia de usuario   |
 | `Priority`         | `LOW`, `MEDIUM`, `HIGH`, `CRITICAL`                                            | Prioridad de una historia en el backlog         |
-| `CriterionType`    | `GIVEN_WHEN_THEN`, `CHECKLIST`                                                 | Formato de expresión del criterio de aceptación |
 | `SuggestionType`   | `NEW_STORY`, `UPDATE_STORY`, `EDGE_CASE`, `CLARIFYING_QUESTION`                | Tipo de propuesta del asistente de IA           |
 | `SuggestionStatus` | `PENDING`, `ACCEPTED`, `REJECTED`, `SUPERSEDED`                                | Estado de revisión de una sugerencia            |
 | `TriggerSource`    | `INTERVAL`, `SILENCE`, `MANUAL`                                                | Disparador que originó el análisis de IA        |
@@ -4404,7 +4409,7 @@ Los DTOs se ubican en `com.kntrosoft.reqsai.discovery.interfaces.rest.dto`.
 | `UploadTranscriptRequest`       | Request                | `transcript: String`                                                                                  |
 | `UpdatePriorityRequest`         | Request                | `priority: Priority`                                                                                  |
 | `UpdateStoryPointsRequest`      | Request                | `storyPoints: Int`                                                                                    |
-| `AddAcceptanceCriterionRequest` | Request                | `description: String`, `type: CriterionType`                                                          |
+| `AddAcceptanceCriterionRequest` | Request                | `scenario: String?`, `given: String`, `when: String`, `then: String`                                  |
 | `AcceptSuggestionRequest`       | Request                | `editedPayload: SuggestionPayload?`                                                                   |
 | `UpdateUserStoryContentRequest` | Request                | `title: String?`, `role: String?`, `action: String?`, `benefit: String?`                              |
 | `UpdateSpeakerLabelRequest`     | Request                | `speakerLabel: String` (ej. "Cliente", "Analista")                                                    |
@@ -4440,9 +4445,9 @@ Los comandos se ubican en `com.kntrosoft.reqsai.discovery.application.commands`.
 | `RejectUserStoryCommand`                           | `storyId`, `requestedBy`                                                                           |
 | `UpdateUserStoryPriorityCommand`                   | `storyId`, `priority`, `requestedBy`                                                               |
 | `UpdateStoryPointsCommand`                         | `storyId`, `storyPoints`, `requestedBy`                                                            |
-| `AddAcceptanceCriterionCommand`                    | `storyId`, `description`, `type`, `requestedBy`                                                    |
-| `UpdateAcceptanceCriterionCommand`                 | `criterionId`, `description`, `type`, `requestedBy`                                                |
-| `RemoveAcceptanceCriterionCommand`                 | `criterionId`, `requestedBy`                                                                       |
+| `AddAcceptanceCriterionCommand`                    | `projectId`, `storyId`, `scenario?`, `given`, `when`, `then`                                       |
+| `UpdateAcceptanceCriterionCommand`                 | `projectId`, `storyId`, `criterionId`, `scenario?`, `given`, `when`, `then`                        |
+| `DeleteAcceptanceCriterionCommand`                 | `projectId`, `storyId`, `criterionId`                                                              |
 | `UpdateUserStoryContentCommand`                    | `storyId`, `title: String?`, `role: String?`, `action: String?`, `benefit: String?`, `requestedBy` |
 | `UpdateSpeakerLabelCommand`                        | `segmentId`, `sessionId`, `speakerLabel: String`, `requestedBy`                                    |
 | `CreateShareLinkCommand`                           | `projectId`, `requestedBy`, `expiresInDays: Int?`                                                  |
@@ -4709,7 +4714,7 @@ En esta sección se presenta el diagrama de componentes C4 (Nivel 3) del BC Requ
 
 #### 5.4.7.1. Bounded Context Domain Layer Class Diagrams
 
-En esta sección se presenta el diagrama de clases UML del Domain Layer del BC Requirement Discovery. Incluye los tres Aggregate Roots (`DiscoverySession`, `UserStory`, `Suggestion`), las entidades `AcceptanceCriterion` (pertenece a `UserStory`) y `TranscriptSegment` (pertenece a `DiscoverySession`), los Value Objects de identidad y de dominio (`LanguageCode`, `SuggestionPayload`, `JiraIssueRef`), las enumeraciones (`SessionStatus`, `StoryStatus`, `Priority`, `CriterionType`, `SuggestionType`, `SuggestionStatus`, `TriggerSource`), los Domain Events internos (incluidos `SegmentTranscribedEvent` y `SuggestionRaisedEvent`) y el evento `AiTokensConsumedEvent` publicado al Api package para que Billing BC actualice el consumo de tokens.
+En esta sección se presenta el diagrama de clases UML del Domain Layer del BC Requirement Discovery. Incluye los tres Aggregate Roots (`DiscoverySession`, `UserStory`, `Suggestion`), las entidades `AcceptanceCriterion` (pertenece a `UserStory`) y `TranscriptSegment` (pertenece a `DiscoverySession`), los Value Objects de identidad y de dominio (`LanguageCode`, `SuggestionPayload`, `JiraIssueRef`), las enumeraciones (`SessionStatus`, `StoryStatus`, `Priority`, `SuggestionType`, `SuggestionStatus`, `TriggerSource`), los Domain Events internos (incluidos `SegmentTranscribedEvent` y `SuggestionRaisedEvent`) y el evento `AiTokensConsumedEvent` publicado al Api package para que Billing BC actualice el consumo de tokens.
 
 ![Discovery Domain Class Diagram](assets/diagrams/discovery/discovery-class.png)
 
@@ -6299,31 +6304,843 @@ El video del prototipo interactivo se encuentra disponible en el siguiente enlac
 
 ### 7.1.1. Software Development Environment Configuration
 
+A continuación se presentan los productos de software seleccionados para apoyar cada etapa del ciclo de vida del producto digital Reqs-AI. Se detallan sus nombres, propósitos dentro del proyecto y enlaces de acceso o descarga, diferenciando entre soluciones SaaS y software local.
+
+**Project Management**
+
+| **Herramienta** | **Propósito** | **Enlace / Ruta de Acceso** |
+|---|---|---|
+| **Jira** | Gestión ágil de sprint backlogs, control de tableros Scrum y Kanban, seguimiento de incidencias e integración de tareas con el desarrollo de software. | [https://www.atlassian.com/software/jira](https://www.atlassian.com/software/jira) |
+| **Trello** | Tableros de organización complementaria para la planeación colaborativa ágil y seguimiento de asignaciones menores. | [https://trello.com](https://trello.com) |
+
+<br>
+
+**Requirements Management**
+
+| **Herramienta** | **Propósito** | **Enlace / Ruta de Acceso** |
+|---|---|---|
+| **Miro** | Colaboración visual en vivo para la estructuración y modelado de artefactos de descubrimiento, tales como User Personas, Empathy Maps, Journey Maps y As-Is/To-Be Scenario Mapping. | [https://miro.com](https://miro.com) |
+
+<br>
+
+**Domain-Driven Design Approach**
+
+| **Herramienta** | **Propósito** | **Enlace / Ruta de Acceso** |
+|---|---|---|
+| **Miro** | Modelado colaborativo de la lógica del dominio, incluyendo Design-Level Event Storming, Candidate Context Discovery, Bounded Context Canvases y Context Maps. | [https://miro.com](https://miro.com) |
+
+<br>
+
+**Software Architecture Design**
+
+| **Herramienta** | **Propósito** | **Enlace / Ruta de Acceso** |
+|---|---|---|
+| **PlantUML** | Creación de diagramas arquitectónicos y diagramas tácticos mediante un enfoque Diagram-as-Code (C4 Model y Diagramas de Clase). | [https://plantuml.com](https://plantuml.com) |
+
+<br>
+
+**Product UX/UI Design**
+
+| **Herramienta** | **Propósito** | **Enlace / Ruta de Acceso** |
+|---|---|---|
+| **Figma** | Diseño colaborativo de wireframes de baja fidelidad, wireflows, mock-ups de alta fidelidad y prototipos interactivos navegables para la aplicación Web. | [https://figma.com](https://figma.com) |
+
+<br>
+
+**Software Development**
+
+| **Herramienta / Tecnología** | **Propósito** | **Enlace / Ruta de Descarga** |
+|---|---|---|
+| **IntelliJ IDEA** | IDE empresarial enfocado en la codificación y compilación del backend modular estructurado en Java con Spring Boot. | [https://www.jetbrains.com/idea](https://www.jetbrains.com/idea) |
+| **Visual Studio Code** | IDE principal para el desarrollo de la aplicación web frontend en Angular. | [https://code.visualstudio.com](https://code.visualstudio.com) |
+| **Java 25** | Lenguaje de programación robusto y de última generación para construir la lógica y servicios de la solución backend. | [https://www.oracle.com/java](https://www.oracle.com/java) |
+| **Spring Boot 4** | Framework del backend para la creación de servicios REST y WebSockets rápidos, estables y listos para producción. | [https://spring.io/projects/spring-boot](https://spring.io/projects/spring-boot) |
+| **Spring Modulith** | Tecnología para validar la estructura de monolito modular del backend, asegurando fronteras limpias entre los Bounded Contexts. | [https://spring.io/projects/spring-modulith](https://spring.io/projects/spring-modulith) |
+| **Angular** | Framework frontend basado en componentes para construir la aplicación web principal Reqs-AI. | [https://angular.dev](https://angular.dev) |
+| **TypeScript** | Lenguaje tipado sobre JavaScript utilizado para implementar la lógica de control, servicios y stores del cliente web. | [https://www.typescriptlang.org](https://www.typescriptlang.org) |
+| **PostgreSQL** | Motor de base de datos relacional para la persistencia transaccional y de identidad de los tenants. | [https://www.postgresql.org](https://www.postgresql.org) |
+| **pgvector** | Extensión vectorial para PostgreSQL que permite almacenar embeddings y realizar búsquedas de similitud coseno en el motor RAG. | [https://github.com/pgvector/pgvector](https://github.com/pgvector/pgvector) |
+| **Docker** | Plataforma de contenedorización para empaquetar de manera aislada y consistente la aplicación backend Reqs-AI. | [https://www.docker.com](https://www.docker.com) |
+
+<br>
+
+**Software Testing**
+
+| **Herramienta / Tecnología** | **Propósito** | **Enlace / Ruta de Descarga** |
+|---|---|---|
+| **Gherkin** | Lenguaje de definición de comportamiento de software para modelar criterios de aceptación de historias de usuario. | [https://cucumber.io/docs/gherkin](https://cucumber.io/docs/gherkin) |
+| **JUnit 5 & Mockito** | Frameworks de pruebas automatizadas del backend para validar la funcionalidad y lógica de dominio con aislamiento. | [https://junit.org/junit5](https://junit.org/junit5) |
+| **Jasmine & Karma** | Biblioteca y corredor de pruebas automatizadas para asegurar la estabilidad de componentes y stores en Angular. | [https://jasmine.github.io](https://jasmine.github.io) |
+
+<br>
+
+**Software Deployment**
+
+| **Herramienta / Plataforma** | **Propósito** | **Enlace / Ruta de Acceso** |
+|---|---|---|
+| **AWS S3** | Alojamiento y almacenamiento duradero de los activos estáticos compilados de la aplicación web y landing page. | [https://aws.amazon.com/s3](https://aws.amazon.com/s3) |
+| **Amazon CloudFront** | Red de entrega de contenido (CDN) global y proxy inverso que asegura la distribución rápida de la web app y enrutamiento del API. | [https://aws.amazon.com/cloudfront](https://aws.amazon.com/cloudfront) |
+| **AWS API Gateway** | Punto de entrada unificado para el tráfico REST y WebSocket seguro hacia el backend modular de Reqs-AI. | [https://aws.amazon.com/api-gateway](https://aws.amazon.com/api-gateway) |
+| **AWS ECS + Fargate** | Aprovisionamiento serverless de contenedores para desplegar la imagen Docker de la aplicación backend. | [https://aws.amazon.com/ecs](https://aws.amazon.com/ecs) |
+| **AWS RDS** | Base de datos relacional PostgreSQL administrada y escalable con pgvector integrado en entornos de alta disponibilidad. | [https://aws.amazon.com/rds](https://aws.amazon.com/rds) |
+
+<br>
+
+**Software Documentation**
+
+| **Herramienta / Recurso** | **Propósito** | **Enlace / Ruta de Acceso** |
+|---|---|---|
+| **Visual Studio Code** | Edición interactiva del informe en Markdown y exportación formateada a formato digital PDF. | [https://code.visualstudio.com](https://code.visualstudio.com) |
+| **Markdown** | Lenguaje de marcado para la redacción estructurada y formateo de la documentación del reporte técnico. | [https://www.markdownguide.org](https://www.markdownguide.org) |
+| **Git** | Sistema de control de versiones distribuido para la gestión colaborativa del código fuente. | [https://git-scm.com](https://git-scm.com) |
+| **GitHub** | Repositorio centralizado con soporte para Pull Requests, ramas organizadas, registro de issues y CI/CD. | [https://github.com](https://github.com) |
+| **GitFlow Workflow** | Estrategia de ramificación orientada a estructurar la evolución segura del código fuente y los entregables. | [https://nvie.com/posts/a-successful-git-branching-model](https://nvie.com/posts/a-successful-git-branching-model) |
+| **Conventional Commits** | Estándar formal de mensajes de commit para asegurar la claridad e historial limpio del código fuente. | [https://www.conventionalcommits.org](https://www.conventionalcommits.org) |
+| **Semantic Versioning** | Esquema de numeración formal para el control de versiones y entregas progresivas (Releases). | [https://semver.org](https://semver.org) |
+
+<br>
+
 ### 7.1.2. Source Code Management
+
+El equipo utilizará **GitHub** como plataforma de alojamiento centralizado y **Git** como control de versiones distribuido para la base de código de Reqs-AI. Para asegurar la colaboración y estabilidad del producto, se adopta la metodología **GitFlow Workflow** combinada con el esquema **Semantic Versioning 2.0.0** para el versionado de entregas y el estándar **Conventional Commits** para la mensajería del historial de cambios.
+
+**Repositorios del Proyecto**
+
+| **Repositorio** | **Descripción** |
+|:---|:---|
+| [https://github.com/Kntro-Soft/ReqsAI-Report](https://github.com/Kntro-Soft/ReqsAI-Report) | Documentación técnica exhaustiva e informe técnico del proyecto en Markdown. |
+| [https://github.com/Kntro-Soft/reqsai-landing](https://github.com/Kntro-Soft/reqsai-landing) | Código fuente de la Landing Page pública optimizada para captación de leads. |
+| [https://github.com/Kntro-Soft/reqsai-web](https://github.com/Kntro-Soft/reqsai-web) | Aplicación Web (Single Page Application) en Angular para analistas y líderes técnicos. |
+| [https://github.com/Kntro-Soft/reqsai-api](https://github.com/Kntro-Soft/reqsai-api) | API Backend monolítica modular en Java con Spring Boot 4 y especificaciones de pruebas (.feature). |
+
+<br>
+
+**GitFlow Workflow**
+
+La estrategia de desarrollo de ramas se basa en el modelo propuesto por Vincent Driessen, el cual organiza el ciclo de desarrollo a través de las siguientes ramas principales permanentes y temporales:
+
+*   **main**: Contiene la versión de producción estable y probada del software. Cada confirmación aquí representa un lanzamiento listo para los usuarios.
+*   **develop**: Rama principal de integración para el desarrollo continuo. Aquí se fusionan todas las características listas antes de ser transferidas a producción.
+
+**Branches usados en GitFlow**
+
+| **Tipo de rama** | **Propósito** | **Convención de nombres** | **Ejemplo** |
+|---|---|---|---|
+| **feature** | Creación y desarrollo de nuevas funcionalidades específicas de negocio. | `feature/<nombre-descriptivo>` | `feature/iam-jwt-authentication` |
+| **release** | Preparación y estabilización de una versión para su pase a producción. | `release/vX.Y.Z` | `release/v1.0.0` |
+| **hotfix** | Corrección inmediata y urgente de errores críticos detectados en producción. | `hotfix/<nombre-descriptivo>` | `hotfix/fix-jwt-rotation-crash` |
+
+<br>
+
+**Semantic Versioning**
+
+Se adopta el esquema de versionado semántico 2.0.0 para catalogar y etiquetar los releases de producción (`main`) con el formato:
+
+`vMAJOR.MINOR.PATCH`
+
+*   **MAJOR**: Incrementos cuando se realizan cambios incompatibles en la API o arquitectura general.
+*   **MINOR**: Incrementos al añadir nuevas funcionalidades compatibles con versiones previas.
+*   **PATCH**: Incrementos al realizar correcciones de errores menores compatibles con versiones previas.
+
+<br>
+
+**Conventional Commits**
+
+Para garantizar que el historial de commits sea legible, estructurado y permita la generación automática de historiales de cambios (changelogs), los mensajes de commit deben seguir el siguiente formato:
+
+`<tipo>(<scope-opcional>): <descripción breve>`
+
+**Tipos a usar**:
+*   `feat`: Una nueva funcionalidad para el producto digital (ej: `feat(iam): add password hash implementation`).
+*   `fix`: Una corrección de un error de software (ej: `fix(discovery): adjust cosine similarity threshold`).
+*   `docs`: Cambios exclusivos en la documentación (ej: `docs(readme): update deployment section`).
+*   `style`: Modificaciones de formato o estilo que no alteran el comportamiento del código (espacios, punto y coma, etc.).
+*   `refactor`: Cambios en el código que no corrigen errores ni añaden funcionalidades (reestructuraciones internas).
+*   `test`: Adición o modificación de pruebas unitarias o de integración (ej: `test(workspace): add integration tests for projects`).
+*   `chore`: Tareas periódicas de mantenimiento o actualización de configuraciones (ej: `chore(deps): update spring modulith dependencies`).
+
+<br>
 
 ### 7.1.3. Source Code Style Guide & Conventions
 
+Con la finalidad de asegurar la legibilidad, mantenibilidad y la consistencia del código fuente entre todos los miembros del equipo, se establecen los siguientes lineamientos y convenciones de estilo. Se adopta el idioma inglés como convención única para nombrar todos los elementos del código (variables, métodos, clases, base de datos y comentarios).
+
+**Nomenclatura General**
+*   Uso mandatorio de nombres significativos y autodescriptivos en inglés para variables y funciones, evitando abreviaciones ambiguas o términos numéricos genéricos.
+*   El código debe ser formateado automáticamente antes de realizar commits utilizando el formateador configurado del IDE.
+
+**HTML5**
+*   Uso de elementos semánticos estándar (`<header>`, `<nav>`, `<main>`, `<section>`, `<footer>`, `<article>`).
+*   Los atributos deben escribirse en minúsculas y sus valores encerrados entre comillas dobles (`class="card-container"`).
+*   Los nombres de las clases de estilos personalizadas deben usar el formato **kebab-case** (`button-primary`, `input-search`).
+*   Indentación estructurada utilizando 2 espacios.
+
+**CSS & Tailwind CSS**
+*   Para las clases CSS personalizadas, se utiliza el formato **kebab-case** en minúsculas.
+*   Para el aplicativo web (Angular), se prioriza el uso de Tailwind CSS. Las clases de utilidad deben ordenarse siguiendo una secuencia lógica: Layout/Flexbox -> Spacing (Margin/Padding) -> Sizing (Width/Height) -> Typography -> Design/Colors.
+*   Las clases personalizadas complejas de CSS deben evitarse y delegarse a componentes de utilidad Tailwind organizados con `@apply`.
+
+**TypeScript & Angular (Web Application)**
+*   Se adopta el **Google TypeScript Style Guide** para estructurar la aplicación frontend.
+*   **camelCase** para variables, propiedades, métodos y parámetros de funciones.
+*   **PascalCase** para clases, interfaces, enums, componentes, directivas, pipes y módulos.
+*   Constantes y enums globales en `UPPER_CASE_WITH_UNDERSCORES`.
+*   **Regla Arquitectónica Obligatoria (Service-as-a-Store & Componentes)**:
+    *   **Service-as-a-Store**: Toda la lógica de negocio, control de estado del dominio y llamadas REST del cliente Angular deben implementarse dentro de servicios Angular específicos (`Service`), los cuales encapsulan el estado utilizando RxJS (`BehaviorSubject` o `Signals`) y exponen únicamente estados de lectura.
+    *   **Componentes de UI**: Los componentes Angular deben ser extremadamente livianos y dedicarse estrictamente a la lógica de la interfaz de usuario (captura de interacción del usuario y renderización del estado). Tienen estrictamente prohibido contener lógica compleja de dominio o manipulación de estado directo; en su lugar, deben inyectar el Servicio correspondiente (Store) y delegarle el control.
+    *   Los archivos de componentes deben seguir el sufijo `.component.ts` y los servicios `.service.ts`.
+
+**Java & Spring Boot (Backend Service)**
+*   Se adoptan las convenciones del **Google Java Style Guide** y las buenas prácticas de diseño de **Spring Modulith**.
+*   **camelCase** para variables, nombres de métodos y parámetros.
+*   **PascalCase** para clases, interfaces y enums del backend.
+*   Los nombres de paquetes deben ser en minúsculas y seguir el dominio inverso (`com.kntrosoft.reqsai`).
+*   Constantes globales y campos estáticos finales en `UPPER_CASE_WITH_UNDERSCORES`.
+*   **Convenciones del Monolito Modular**:
+    *   El código debe organizarse en paquetes correspondientes a los 5 Bounded Contexts tácticos de la solución (`com.kntrosoft.reqsai.iam`, `com.kntrosoft.reqsai.billing`, `com.kntrosoft.reqsai.workspace`, `com.kntrosoft.reqsai.discovery`, `com.kntrosoft.reqsai.gateway`).
+    *   La comunicación inter-módulo se realiza de forma desacoplada mediante la publicación de eventos (`ApplicationEventPublisher`) o mediante llamadas a APIs públicas de otros módulos (declaradas en interfaces).
+    *   Se respeta el diseño DDD por capas: dominio (`domain`), aplicación (`application`), interfaz (`interface`) e infraestructura (`infrastructure`). Se evita el uso de lógica de negocio o transaccional dentro de controladores REST.
+
+**Gherkin (Especificaciones BDD)**
+*   Las especificaciones de criterios de aceptación escritas en archivos `.feature` deben redactarse obligatoriamente en inglés.
+*   Uso riguroso de la estructura `Given`, `When`, `Then`, `And`, `But` con una tabulación clara que resalte los pasos de prueba.
+*   Cada escenario de prueba debe ser independiente de los demás y modelar de forma autodescriptiva un flujo del sistema (happy path, unhappy path o edge case).
+
+<br>
+
 ### 7.1.4. Software Deployment Configuration
+
+Para garantizar el despliegue automático, escalable y seguro de cada uno de los productos digitales que conforman la solución Reqs-AI, se ha configurado una arquitectura basada completamente en servicios de la nube pública **Amazon Web Services (AWS)**. A continuación se detalla la configuración del despliegue:
+
+**Distribución de Productos en Plataformas de Despliegue**
+
+| **Producto / Componente** | **Plataforma de Despliegue** | **Propósito de Uso** | **Enlace / Ruta de Acceso** |
+|---|---|---|---|
+| **Landing Page** | **AWS S3 + CloudFront** | Alojamiento estático y distribución acelerada globalmente mediante ubicaciones perimetrales (Edge). | [https://aws.amazon.com/cloudfront](https://aws.amazon.com/cloudfront) |
+| **Web Application (Angular)** | **AWS S3 + CloudFront** | Distribución global de la Single Page Application (SPA), almacenamiento seguro de compilados y redirección de APIs. | [https://aws.amazon.com/cloudfront](https://aws.amazon.com/cloudfront) |
+| **Backend Service (Spring Boot)** | **AWS ECS + Fargate** | Despliegue serverless de la API modularizada en contenedores Docker y orquestación de recursos de cómputo. | [https://aws.amazon.com/ecs](https://aws.amazon.com/ecs) |
+| **Database (PostgreSQL)** | **AWS RDS** | Base de datos relacional administrada para almacenar datos transaccionales, de tenants y embeddings vectoriales (pgvector). | [https://aws.amazon.com/rds](https://aws.amazon.com/rds) |
+| **Observability (Grafana Stack)** | **AWS EC2 + Docker Compose** | Instancia dedicada para almacenar y consultar logs (Loki), métricas (Prometheus) y trazas (Tempo) de la infraestructura. | [https://aws.amazon.com/ec2](https://aws.amazon.com/ec2) |
+
+<br>
+
+**Configuración Paso a Paso de Despliegue por Entorno**
+
+**1. Landing Page y Aplicativo Web (Amazon S3 + CloudFront)**
+*   Se ejecuta la compilación de la aplicación en Angular mediante el comando `npm run build` para generar los activos optimizados en la carpeta `dist/`.
+*   Los archivos estáticos generados se cargan de manera automática a un bucket de **Amazon S3** privado.
+*   Se configura una distribución en **Amazon CloudFront** que sirve de CDN. Se establece una política de Control de Acceso de Origen (OAC) para bloquear el acceso público directo a S3, obligando a los usuarios a acceder a través de CloudFront.
+*   Se configuran reglas de redirección de errores en CloudFront de modo que cualquier error HTTP 404 sea redirigido a `/index.html` con un código HTTP 200, garantizando el correcto funcionamiento del enrutamiento del lado del cliente del SPA.
+*   Se asocia un dominio personalizado y certificados SSL/TLS gratuitos administrados por **AWS Certificate Manager (ACM)** para brindar HTTPS.
+
+**2. Backend Service (AWS ECS con Fargate)**
+*   Se define un `Dockerfile` multietapa para compilar el backend modular con Java 25 y Spring Boot 4, creando una imagen Docker ligera optimizada para producción.
+*   Al realizar un merge en la rama `main`, un pipeline de CI/CD en **GitHub Actions** ejecuta las pruebas automatizadas, empaqueta la imagen Docker y la sube al repositorio privado en **Amazon ECR (Elastic Container Registry)**.
+*   Se configura una **Task Definition** en AWS ECS que define los parámetros de ejecución. Esta especifica dos contenedores que operan conjuntamente en la misma tarea (patrón sidecar): el contenedor de la aplicación backend Reqs-AI (expuesto en el puerto 8080) y el agente **Grafana Alloy** para la recolección de logs, métricas y trazas distribuidas.
+*   La tarea se ejecuta de manera serverless en **AWS Fargate** asignando CPU y memoria virtual dinámicamente y protegiendo el servicio mediante un Balanceador de Carga de Aplicación (ALB) asociado al AWS API Gateway.
+
+**3. Base de Datos Relacional y Multitenancy (AWS RDS)**
+*   Se provisiona una instancia relacional de **PostgreSQL** administrada a través de **AWS RDS** dentro de subredes privadas.
+*   Se conecta como administrador a la instancia RDS para habilitar la extensión vectorial requerida ejecutando la consulta SQL: `CREATE EXTENSION IF NOT EXISTS pgvector;`.
+*   Para manejar la arquitectura multitenancy *schema-per-tenant*, se configura la migración automática de base de datos con **Flyway** al iniciar el backend. Cada vez que se crea una nueva organización, el backend genera dinámicamente el esquema de base de datos e invoca a Flyway para estructurar las tablas iniciales desde los archivos `.sql` almacenados en los recursos del backend.
+
+#### Diagrama de Despliegue C4 Model
+
+A continuación se presenta el Diagrama de Despliegue de Reqs-AI, correspondiente al Nivel 4 del C4 Model, el cual ilustra la topología física de red, los nodos de ejecución de los entornos cliente y nube, los canales de seguridad y la comunicación de persistencia y observabilidad del sistema:
+
+![Deployment Diagram](./assets/diagrams/architecture/deployment-diagram.png)
 
 ## 7.2. Solution Implementation
 
-### 7.2.X. Sprint n
+### 7.2.1. Sprint 1
 
-#### 7.2.X.1. Sprint Planning n
+Durante el primer sprint del proyecto Reqs-AI, el equipo se enfocó en sentar las bases funcionales de la plataforma a través de tres componentes clave: la **Landing Page** (para la captación de leads de consultoras y startups), la **Web Application** (Single Page Application desarrollada en Angular que sirve como portal de analistas y técnicos) y el **Backend Service** (un Monolito Modular construido con Java 25 y Spring Boot 4 utilizando Spring Modulith). El objetivo principal consistió en implementar los mecanismos de identidad, autenticación, creación de organizaciones y workspaces, el registro y configuración de proyectos, y habilitar la lógica crítica de captura de reuniones y generación inicial de historias de usuario en formato Gherkin integrando IA (Speech-to-Text y LLM) bajo un esquema multitenancy schema-per-tenant para asegurar el aislamiento estricto de los datos.
 
-#### 7.2.X.2. Sprint Backlog n
+#### 7.2.1.1. Sprint Planning 1
 
-#### 7.2.X.3. Development Evidence for Sprint Review
+Se presenta a continuación el Sprint Planning correspondiente al primer ciclo del proyecto, detallando el contexto de planificación, las metas propuestas y la capacidad del equipo.
 
-#### 7.2.X.4. Testing Suite Evidence for Sprint Review
+A continuación se presenta una captura de pantalla de nuestro tablero de Jira para el Sprint 1:
 
-#### 7.2.X.5. Execution Evidence for Sprint Review
+![Board del Sprint 1 en Jira](./assets/insights/sprint-planning-1.png)  
+[Jira Board - Sprint 1](https://uni-ride.atlassian.net/jira/software/projects/REQ/boards/299)  
 
-#### 7.2.X.6. Services Documentation Evidence for Sprint Review
+| Sprint # | Sprint 1 |
+|---|---|
+| **Sprint Planning Background** | |
+| Date | 2026-05-11 |
+| Time | 08:00 PM |
+| Location | Reunión virtual mediante Discord |
+| Prepared By | Sulca Gonzales, Paul Fernando |
+| Attendees (to planning meeting) | Gutiérrez Soto, Jhosepmyr Orlando / Hernández Tuiro, Eric Ernesto / Ramirez Mestanza, Salim Ignacio / Varela Bustinza, Marcelo Alejandro / Sulca Gonzales, Paul Fernando |
+| **Sprint n – 1 Review Summary** | No aplica por ser el primer Sprint de desarrollo de la solución, habiéndose completado previamente el diseño de arquitectura y especificación de requerimientos en la fase de descubrimiento estratégico. |
+| **Sprint n – 1 Retrospective Summary** | No aplica por ser el primer Sprint del proyecto. |
+| **Sprint Goal & User Stories** | |
+| Sprint 1 Goal | Implementar el flujo fundamental de registro e identidad (IAM), la configuración inicial del workspace (Organizaciones y Proyectos), y habilitar el núcleo del motor de captura y análisis en vivo con transcripción y generación de historias de usuario, garantizando el aislamiento de datos multitenant. |
+| Sprint 1 Velocity | 48 |
+| Sum of Story Points | 48 |
 
-#### 7.2.X.7. Software Deployment Evidence for Sprint Review
+<br>
 
-#### 7.2.X.8. Team Collaboration Insights during Sprint
+#### 7.2.1.2. Sprint Backlog 1
+
+El objetivo de este Sprint es presentar una primera versión funcional de la Landing Page, de la Web Application y del Backend de Reqs-AI. Para ello, se priorizaron las historias de usuario relacionadas con autenticación, creación de organizaciones y proyectos, e inicio de captura de audio y análisis con IA.
+
+*(A continuación se presenta el Sprint Backlog detallando la descomposición de User Stories y Technical Stories en Tasks, estimaciones en horas, asignaciones y estado final de finalización:)*
+
+<div style="font-size:80%; overflow-x:auto;">
+  <table border="1" cellspacing="0" cellpadding="5">
+    <thead>
+      <tr>
+        <th colspan="2">Sprint #</th>
+        <th colspan="6">Sprint 1</th>
+      </tr>
+      <tr>
+        <th colspan="2">User Story / Technical Story</th>
+        <th colspan="6">Work-Item / Task</th>
+      </tr>
+      <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Estimation (Hours)</th>
+        <th>Assigned To</th>
+        <th>Status (To-do / In-Process / To-Review / Done)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- US04 -->
+      <tr>
+        <td rowspan="2">US04</td>
+        <td rowspan="2">Registro de cuenta</td>
+        <td>US04-a</td>
+        <td>Maquetar vista de registro</td>
+        <td>Diseñar el formulario de registro en Angular con validaciones básicas de campos y feedback de errores.</td>
+        <td>4</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td>US04-b</td>
+        <td>Conectar vista de registro con API</td>
+        <td>Implementar el consumo del servicio POST /api/v1/auth/register en la Web App.</td>
+        <td>3</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <!-- US05 -->
+      <tr>
+        <td rowspan="2">US05</td>
+        <td rowspan="2">Verificación de correo</td>
+        <td>US05-a</td>
+        <td>Implementar pantalla OTP</td>
+        <td>Maquetar la interfaz de ingreso de código de verificación de 6 dígitos en Angular.</td>
+        <td>3</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td>US05-b</td>
+        <td>Consumir endpoint de verificación</td>
+        <td>Conectar la vista OTP con el endpoint de validación POST /api/v1/auth/verify-email.</td>
+        <td>2</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <!-- US06 -->
+      <tr>
+        <td rowspan="2">US06</td>
+        <td rowspan="2">Inicio de sesión</td>
+        <td>US06-a</td>
+        <td>Maquetar vista de login</td>
+        <td>Diseñar el formulario de inicio de sesión centrado con campos de email y contraseña.</td>
+        <td>3</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td>US06-b</td>
+        <td>Conectar login con JWT Store</td>
+        <td>Implementar la autenticación de sesión almacenando el token JWT en el Session Store.</td>
+        <td>3</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <!-- US07 -->
+      <tr>
+        <td rowspan="2">US07</td>
+        <td rowspan="2">Recuperación de contraseña</td>
+        <td>US07-a</td>
+        <td>Maquetar formulario de recuperación</td>
+        <td>Diseñar la interfaz de solicitud de correo para recuperación de contraseña.</td>
+        <td>3</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td>US07-b</td>
+        <td>Consumir endpoint de recuperación</td>
+        <td>Implementar el consumo del servicio POST /api/v1/auth/forgot-password.</td>
+        <td>2</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <!-- US08 -->
+      <tr>
+        <td>US08</td>
+        <td>Cerrar sesión</td>
+        <td>US08-a</td>
+        <td>Implementar cierre de sesión</td>
+        <td>Agregar acción de logout en el menú del portal y limpiar cookies/tokens en el store.</td>
+        <td>2</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <!-- US09 -->
+      <tr>
+        <td>US09</td>
+        <td>Aceptar términos y política</td>
+        <td>US09-a</td>
+        <td>Checkbox de políticas en registro</td>
+        <td>Implementar la aceptación obligatoria de los términos y condiciones al registrarse.</td>
+        <td>2</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <!-- US21 -->
+      <tr>
+        <td rowspan="2">US21</td>
+        <td rowspan="2">Crear proyecto</td>
+        <td>US21-a</td>
+        <td>Diseñar interfaz de creación</td>
+        <td>Diseñar el modal de creación de proyecto con campos de nombre, descripción y metodología.</td>
+        <td>4</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td>US21-b</td>
+        <td>Integrar endpoint de proyectos</td>
+        <td>Consumir el endpoint POST /api/v1/projects para guardar el nuevo proyecto en el backend.</td>
+        <td>3</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <!-- US24 -->
+      <tr>
+        <td>US24</td>
+        <td>Agregar término al glosario</td>
+        <td>US24-a</td>
+        <td>Vista del glosario del proyecto</td>
+        <td>Diseñar la interfaz del glosario del proyecto y el formulario para añadir nuevos términos.</td>
+        <td>4</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <!-- US26 -->
+      <tr>
+        <td>US26</td>
+        <td>Editar proyecto</td>
+        <td>US26-a</td>
+        <td>Modal de edición de proyectos</td>
+        <td>Maquetar e integrar el modal para actualizar el nombre o metadatos de un proyecto existente.</td>
+        <td>3</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <!-- US38 -->
+      <tr>
+        <td>US38</td>
+        <td>Pausar y reanudar captura</td>
+        <td>US38-a</td>
+        <td>Controles de audio del asistente</td>
+        <td>Implementar los botones interactivos de pausar/reanudar en la interfaz de captura de audio.</td>
+        <td>4</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <!-- US39 -->
+      <tr>
+        <td>US39</td>
+        <td>Cerrar y guardar sesión</td>
+        <td>US39-a</td>
+        <td>Finalizar sesión de captura</td>
+        <td>Implementar el flujo de finalización de grabación y envío de confirmación al servidor.</td>
+        <td>3</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <!-- US41 -->
+      <tr>
+        <td>US41</td>
+        <td>Subir grabación de reunión</td>
+        <td>US41-a</td>
+        <td>Cargador de archivos de audio</td>
+        <td>Desarrollar el componente drag-and-drop para cargar archivos locales (.mp3, .wav) en Angular.</td>
+        <td>4</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <!-- US42 -->
+      <tr>
+        <td>US42</td>
+        <td>Historial de sesiones</td>
+        <td>US42-a</td>
+        <td>Diseñar lista de historial</td>
+        <td>Maquetar la vista de listado de sesiones anteriores del proyecto mostrando fecha, duración y estado.</td>
+        <td>4</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <!-- US44 -->
+      <tr>
+        <td>US44</td>
+        <td>Proponer modificación a historia</td>
+        <td>US44-a</td>
+        <td>Edición interactiva de sugerencias</td>
+        <td>Desarrollar la interfaz para que el analista pueda ajustar el contenido de las sugerencias del asistente.</td>
+        <td>4</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <!-- US45 -->
+      <tr>
+        <td>US45</td>
+        <td>Sugerir casos borde</td>
+        <td>US45-a</td>
+        <td>Pestaña de escenarios alternativos</td>
+        <td>Implementar la visualización estructurada de casos alternativos y de error dentro del backlog.</td>
+        <td>3</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <!-- US46 -->
+      <tr>
+        <td>US46</td>
+        <td>Control de análisis del asistente</td>
+        <td>US46-a</td>
+        <td>Switch de control del análisis</td>
+        <td>Agregar control interactivo para habilitar/deshabilitar el procesamiento automático del asistente.</td>
+        <td>2</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <!-- US47 -->
+      <tr>
+        <td>US47</td>
+        <td>Evitar historias duplicadas</td>
+        <td>US47-a</td>
+        <td>Alerta visual de duplicados</td>
+        <td>Diseñar el banner informativo de historias duplicadas semánticamente en el backlog.</td>
+        <td>3</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <!-- US48 -->
+      <tr>
+        <td>US48</td>
+        <td>Editar historia generada</td>
+        <td>US48-a</td>
+        <td>Edición inline de Gherkin</td>
+        <td>Maquetar el editor de texto interactivo con resaltado de sintaxis para cambiar especificaciones en Gherkin.</td>
+        <td>4</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <!-- US49 -->
+      <tr>
+        <td>US49</td>
+        <td>Aprobar historia</td>
+        <td>US49-a</td>
+        <td>Botón de aprobación de historias</td>
+        <td>Implementar los controles del backlog para cambiar el estado de las historias a APPROVED.</td>
+        <td>2</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <!-- US50 -->
+      <tr>
+        <td>US50</td>
+        <td>Compartir historias</td>
+        <td>US50-a</td>
+        <td>Exportación e intercambio de enlace</td>
+        <td>Desarrollar la funcionalidad para copiar enlaces públicos de revisión de las historias generadas.</td>
+        <td>3</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <!-- US51 -->
+      <tr>
+        <td>US51</td>
+        <td>Buscar y filtrar historias</td>
+        <td>US51-a</td>
+        <td>Barra de búsqueda y filtros</td>
+        <td>Implementar la búsqueda en tiempo real y el filtrado por tags y estados en la lista del backlog.</td>
+        <td>3</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <!-- US52 -->
+      <tr>
+        <td>US52</td>
+        <td>Confirmar sugerencias</td>
+        <td>US52-a</td>
+        <td>Panel de sugerencias entrantes</td>
+        <td>Diseñar el panel interactivo lateral que expone las historias recomendadas por la IA.</td>
+        <td>4</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <!-- Perfil de usuario -->
+      <tr>
+        <td>US-Profile</td>
+        <td>Editar perfil de usuario</td>
+        <td>US-Profile-a</td>
+        <td>Diseño de formulario de perfil</td>
+        <td>Maquetar los campos editables del perfil del usuario (nombre, avatar, contraseñas) en Angular.</td>
+        <td>4</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS02 -->
+      <tr>
+        <td>TS02</td>
+        <td>API: Login de Usuario</td>
+        <td>TS02-a</td>
+        <td>Endpoint POST /auth/login</td>
+        <td>Implementar validación de credenciales con Spring Security y generación del token JWT.</td>
+        <td>6</td>
+        <td>Jhosepmyr Gutiérrez</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS03 -->
+      <tr>
+        <td>TS03</td>
+        <td>API: Perfil de Usuario</td>
+        <td>TS03-a</td>
+        <td>Endpoint GET /auth/me</td>
+        <td>Desarrollar el endpoint para recuperar la información del perfil del usuario autenticado.</td>
+        <td>3</td>
+        <td>Jhosepmyr Gutiérrez</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS04 -->
+      <tr>
+        <td>TS04</td>
+        <td>API: Crear Proyecto</td>
+        <td>TS04-a</td>
+        <td>Endpoint POST /projects</td>
+        <td>Implementar la lógica y persistencia para la creación de proyectos asociados a la organización.</td>
+        <td>4</td>
+        <td>Eric Hernández</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS06 -->
+      <tr>
+        <td>TS06</td>
+        <td>API: Actualizar Proyecto</td>
+        <td>TS06-a</td>
+        <td>Endpoint PUT /projects/{id}</td>
+        <td>Crear controlador y servicio para modificar los metadatos de un proyecto de la organización.</td>
+        <td>3</td>
+        <td>Eric Hernández</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS07 -->
+      <tr>
+        <td>TS07</td>
+        <td>API: Eliminar Proyecto</td>
+        <td>TS07-a</td>
+        <td>Endpoint DELETE /projects/{id}</td>
+        <td>Desarrollar el borrado lógico (soft-delete) de un proyecto desactivando recursos relacionados.</td>
+        <td>3</td>
+        <td>Eric Hernández</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS08 -->
+      <tr>
+        <td>TS08</td>
+        <td>API: Subir Audio</td>
+        <td>TS08-a</td>
+        <td>Endpoint POST /sessions/{id}/upload</td>
+        <td>Desarrollar el endpoint multipart para la subida asíncrona de archivos de audio de reuniones.</td>
+        <td>5</td>
+        <td>Jhosepmyr Gutiérrez</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS09 -->
+      <tr>
+        <td>TS09</td>
+        <td>API: Procesar Transcript</td>
+        <td>TS09-a</td>
+        <td>Endpoint POST /sessions/{id}/process</td>
+        <td>Implementar orquestación asíncrona para iniciar la transcripción y posterior generación de historias con LLM.</td>
+        <td>6</td>
+        <td>Eric Hernández</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS10 -->
+      <tr>
+        <td>TS10</td>
+        <td>API: Ver Transcript</td>
+        <td>TS10-a</td>
+        <td>Endpoint GET /sessions/{id}/transcript</td>
+        <td>Endpoint para recuperar la transcripción segmentada por interlocutor generada para una sesión.</td>
+        <td>3</td>
+        <td>Eric Hernández</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS14 -->
+      <tr>
+        <td>TS14</td>
+        <td>API: Cerrar Sesión</td>
+        <td>TS14-a</td>
+        <td>Endpoint POST /auth/logout</td>
+        <td>Implementar la invalidación del token JWT en el backend.</td>
+        <td>3</td>
+        <td>Jhosepmyr Gutiérrez</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS15 -->
+      <tr>
+        <td>TS15</td>
+        <td>API: Verificar Email</td>
+        <td>TS15-a</td>
+        <td>Endpoint POST /auth/verify-email</td>
+        <td>Implementar validación del código OTP y activación de la cuenta del usuario en base de datos.</td>
+        <td>4</td>
+        <td>Jhosepmyr Gutiérrez</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS16 -->
+      <tr>
+        <td>TS16</td>
+        <td>API: Recuperar Contraseña</td>
+        <td>TS16-a</td>
+        <td>Endpoint POST /auth/forgot-password</td>
+        <td>Lógica para generar token temporal de recuperación y encolar el envío de correo transaccional.</td>
+        <td>4</td>
+        <td>Jhosepmyr Gutiérrez</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS17 -->
+      <tr>
+        <td>TS17</td>
+        <td>API: Actualizar Perfil</td>
+        <td>TS17-a</td>
+        <td>Endpoint PUT /auth/profile</td>
+        <td>Desarrollar persistencia de cambios del perfil de usuario a nivel de base de datos.</td>
+        <td>3</td>
+        <td>Jhosepmyr Gutiérrez</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS18 -->
+      <tr>
+        <td>TS18</td>
+        <td>API: Crear Organización</td>
+        <td>TS18-a</td>
+        <td>Endpoint POST /organizations</td>
+        <td>Lógica de creación del tenant y asignación del primer usuario como propietario (Owner).</td>
+        <td>5</td>
+        <td>Eric Hernández</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS25 -->
+      <tr>
+        <td>TS25</td>
+        <td>API: Iniciar Captura en Vivo</td>
+        <td>TS25-a</td>
+        <td>Endpoint POST /sessions/live/start</td>
+        <td>Implementar el websocket server en Spring Boot para recibir transmisión binaria de audio.</td>
+        <td>6</td>
+        <td>Jhosepmyr Gutiérrez</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS30 -->
+      <tr>
+        <td>TS30</td>
+        <td>API: Cambiar Estado de Historia</td>
+        <td>TS30-a</td>
+        <td>Endpoint PATCH /stories/{id}/status</td>
+        <td>Endpoint para actualizar el estado a DRAFT, APPROVED o REJECTED de una historia.</td>
+        <td>3</td>
+        <td>Eric Hernández</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS32 -->
+      <tr>
+        <td>TS32</td>
+        <td>API: Agregar Término a Glosario</td>
+        <td>TS32-a</td>
+        <td>Endpoint POST /projects/{id}/glossary</td>
+        <td>Implementar la inserción de términos clave del dominio definidos por el analista.</td>
+        <td>4</td>
+        <td>Eric Hernández</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS37 -->
+      <tr>
+        <td>TS37</td>
+        <td>Integrar AssemblyAI STT</td>
+        <td>TS37-a</td>
+        <td>Implementación de adaptador AssemblyAI</td>
+        <td>Desarrollar cliente HTTP para el consumo de la API de transcripción y diarización por oradores de AssemblyAI.</td>
+        <td>6</td>
+        <td>Jhosepmyr Gutiérrez</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS38 -->
+      <tr>
+        <td>TS38</td>
+        <td>Integrar Google Gemini LLM</td>
+        <td>TS38-a</td>
+        <td>Adaptador de inferencia con Gemini API</td>
+        <td>Configurar prompts estructurados y consumo de Gemini API para inferir historias de usuario en Gherkin.</td>
+        <td>7</td>
+        <td>Eric Hernández</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS39 -->
+      <tr>
+        <td>TS39</td>
+        <td>Configurar pgvector + Índice HNSW</td>
+        <td>TS39-a</td>
+        <td>Base vectorial en base de datos</td>
+        <td>Implementar la indexación vectorial HNSW y la lógica de búsqueda de duplicados semánticos con pgvector.</td>
+        <td>6</td>
+        <td>Salim Ramirez</td>
+        <td>Done</td>
+      </tr>
+      <!-- TS40 -->
+      <tr>
+        <td>TS40</td>
+        <td>Implementar Multitenancy</td>
+        <td>TS40-a</td>
+        <td>Mecanismo de Schema-per-Tenant</td>
+        <td>Configurar la resolución dinámica de DataSource según el tenantId transportado en el JWT del request.</td>
+        <td>8</td>
+        <td>Salim Ramirez</td>
+        <td>Done</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<br>
+
+#### 7.2.1.3. Development Evidence for Sprint Review
+
+#### 7.2.1.4. Testing Suite Evidence for Sprint Review
+
+#### 7.2.1.5. Execution Evidence for Sprint Review
+
+#### 7.2.1.6. Services Documentation Evidence for Sprint Review
+
+#### 7.2.1.7. Software Deployment Evidence for Sprint Review
+
+#### 7.2.1.8. Team Collaboration Insights during Sprint
 
 ## 7.3. Validation Interviews
 
