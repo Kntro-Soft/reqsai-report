@@ -2122,14 +2122,14 @@ Esta capa es la puerta de entrada HTTP al BC IAM. Expone los endpoints de autent
 | **Tag OpenAPI** | `"Authentication"`                                                               |
 | **Propósito**   | Contrato OpenAPI para registro, autenticación y gestión de sesiones. Sin lógica. |
 
-| Método HTTP | Path                   | Nombre del método        | Request DTO                     | Response DTO                | Códigos HTTP       |
-|-------------|------------------------|--------------------------|---------------------------------|-----------------------------|--------------------|
-| `POST`      | `/sign-up`             | `signUp`                 | `SignUpRequest`                 | `AuthenticatedUserResponse` | 201, 400, 409      |
-| `POST`      | `/sign-in`             | `signIn`                 | `SignInRequest`                 | `AuthenticatedUserResponse` | 200, 400, 401, 409 |
-| `POST`      | `/verify`              | `verifyEmail`            | `VerifyEmailRequest`            | `void`                      | 200, 400, 409      |
-| `POST`      | `/resend-code`         | `resendVerificationCode` | `ResendVerificationCodeRequest` | `void`                      | 200, 400, 404      |
-| `POST`      | `/refresh`             | `refreshSession`         | `RefreshSessionRequest`         | `AuthenticatedUserResponse` | 200, 401           |
-| `POST`      | `/sign-out`            | `signOut`                | `RevokeRefreshTokenRequest`     | `void`                      | 204, 401           |
+| Método HTTP | Path                   | Nombre del método        | Request DTO                     | Response DTO                | Códigos HTTP       | Notas de cookie                                                                 |
+|-------------|------------------------|--------------------------|---------------------------------|-----------------------------|--------------------|---------------------------------------------------------------------------------|
+| `POST`      | `/sign-up`             | `signUp`                 | `SignUpRequest`                 | `AuthenticatedUserResponse` | 201, 400, 409      | Respuesta incluye `Set-Cookie: rt=<token>; HttpOnly; Secure; SameSite=Strict`   |
+| `POST`      | `/sign-in`             | `signIn`                 | `SignInRequest`                 | `AuthenticatedUserResponse` | 200, 400, 401, 409 | Respuesta incluye `Set-Cookie: rt=<token>; HttpOnly; Secure; SameSite=Strict`   |
+| `POST`      | `/verify`              | `verifyEmail`            | `VerifyEmailRequest`            | `void`                      | 200, 400, 409      | —                                                                               |
+| `POST`      | `/resend-code`         | `resendVerificationCode` | `ResendVerificationCodeRequest` | `void`                      | 200, 400, 404      | —                                                                               |
+| `POST`      | `/refresh`             | `refreshSession`         | — *(cookie `rt`)*               | `AuthenticatedUserResponse` | 200, 401           | Lee cookie `rt`; rota y emite nueva `Set-Cookie: rt=<token>; HttpOnly; Secure`  |
+| `POST`      | `/sign-out`            | `signOut`                | — *(cookie `rt`)*               | `void`                      | 204, 401           | Lee cookie `rt`; revoca y limpia con `Set-Cookie: rt=; Max-Age=0; HttpOnly`     |
 | `POST`      | `/forgot-password`     | `forgotPassword`         | `ForgotPasswordRequest`         | `void`                      | 200, 404           |
 | `POST`      | `/reset-password`      | `resetPassword`          | `ResetPasswordRequest`          | `void`                      | 200, 400, 401      |
 | `POST`      | `/accept-terms`        | `acceptTerms`            | `AcceptTermsRequest`            | `void`                      | 200, 400, 401      |
@@ -2197,8 +2197,8 @@ Esta capa es la puerta de entrada HTTP al BC IAM. Expone los endpoints de autent
 | `SignInRequest`                 | `interfaces/rest/dto/request/` | `email: String`, `password: String`                                          | `@NotBlank` en todos                                                |
 | `VerifyEmailRequest`            | `interfaces/rest/dto/request/` | `email: String`, `code: String`                                              | `@NotBlank` en todos                                                |
 | `ResendVerificationCodeRequest` | `interfaces/rest/dto/request/` | `email: String`                                                              | `@NotBlank`, `@Email`                                               |
-| `RefreshSessionRequest`         | `interfaces/rest/dto/request/` | `refreshToken: String`                                                       | `@NotBlank`                                                         |
-| `RevokeRefreshTokenRequest`     | `interfaces/rest/dto/request/` | `refreshToken: String`                                                       | `@NotBlank`                                                         |
+| `RefreshSessionRequest`         | `interfaces/rest/dto/request/` | — *(sin campos; el refresh token llega via cookie HttpOnly `rt`)*            | —                                                                   |
+| `RevokeRefreshTokenRequest`     | `interfaces/rest/dto/request/` | — *(sin campos; el refresh token llega via cookie HttpOnly `rt`)*            | —                                                                   |
 | `UpdateProfileRequest`          | `interfaces/rest/dto/request/` | `firstName: String`, `lastName: String`, `avatarUrl: String?`                | `@NotBlank` en `firstName` y `lastName`                             |
 | `UpdatePreferencesRequest`      | `interfaces/rest/dto/request/` | `lastVisitedOrgId: String?`, `lastVisitedProjectId: String?`                 | Opcionales, sin `@NotBlank`                                         |
 | `ForgotPasswordRequest`         | `interfaces/rest/dto/request/` | `email: String`                                                              | `@NotBlank`, `@Email`                                               |
@@ -2209,10 +2209,10 @@ Esta capa es la puerta de entrada HTTP al BC IAM. Expone los endpoints de autent
 
 **Response DTOs**
 
-| Clase                       | Paquete                         | Campos                                                                                                                                                     | Notas                                |
-|-----------------------------|---------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------|
-| `AuthenticatedUserResponse` | `interfaces/rest/dto/response/` | `id: String`, `email: String`, `firstName: String`, `lastName: String`, `accessToken: String`, `refreshToken: String`                                      | `@Builder` + `@Schema` en cada campo |
-| `UserResponse`              | `interfaces/rest/dto/response/` | `id: String`, `email: String`, `firstName: String`, `lastName: String`, `avatarUrl: String?`, `lastVisitedOrgId: String?`, `lastVisitedProjectId: String?` | `@Builder` + `@Schema` en cada campo |
+| Clase                       | Paquete                         | Campos                                                                                                                                                     | Notas                                                                                                                                      |
+|-----------------------------|---------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| `AuthenticatedUserResponse` | `interfaces/rest/dto/response/` | `id: String`, `email: String`, `firstName: String`, `lastName: String`, `accessToken: String`                                                              | `@Builder` + `@Schema` en cada campo. El refresh token **no** va en el body; se envía mediante el header `Set-Cookie` con flag `HttpOnly`. |
+| `UserResponse`              | `interfaces/rest/dto/response/` | `id: String`, `email: String`, `firstName: String`, `lastName: String`, `avatarUrl: String?`, `lastVisitedOrgId: String?`, `lastVisitedProjectId: String?` | `@Builder` + `@Schema` en cada campo                                                                                                       |
 
 ---
 
@@ -2229,10 +2229,10 @@ Esta capa es la puerta de entrada HTTP al BC IAM. Expone los endpoints de autent
 
 **Response Mappers:**
 
-| Clase                             | Método                                                                                            | Convierte                                |
-|-----------------------------------|---------------------------------------------------------------------------------------------------|------------------------------------------|
-| `AuthenticatedUserResponseMapper` | `static AuthenticatedUserResponse toResponse(User user, String accessToken, String refreshToken)` | User + tokens → DTO de autenticación.    |
-| `UserResponseMapper`              | `static UserResponse toResponse(User user, String email)`                                         | User + email de Account → DTO de perfil. |
+| Clase                             | Método                                                                       | Convierte                                                                                                                                                                                |
+|-----------------------------------|------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `AuthenticatedUserResponseMapper` | `static AuthenticatedUserResponse toResponse(User user, String accessToken)` | User + access token → DTO de autenticación. El raw refresh token es retornado por el handler al controlador para que éste lo coloque en la cookie `HttpOnly`; no transita por el mapper. |
+| `UserResponseMapper`              | `static UserResponse toResponse(User user, String email)`                    | User + email de Account → DTO de perfil.                                                                                                                                                 |
 
 ---
 
@@ -2299,15 +2299,15 @@ Esta capa orquesta los casos de uso del BC IAM. No contiene lógica de negocio; 
 
 **Flujo:**
 
-| Paso | Acción                                                   | Excepción lanzada                                            |
-|------|----------------------------------------------------------|--------------------------------------------------------------|
-| 1    | Cargar `Account` por email.                              | `AccountNotFoundException`                                   |
-| 2    | Verificar que la cuenta esté `ACTIVE`.                   | `AccountNotVerifiedException`, `InvalidCredentialsException` |
-| 3    | Comparar contraseña con `HashingServicePort.matches()`.  | `InvalidCredentialsException`                                |
-| 4    | Cargar `User` por `account.getId()`.                     | `UserNotFoundException`                                      |
-| 5    | Emitir JWT con `TokenServicePort.generateToken(userId)`. | —                                                            |
-| 6    | Crear y persistir nuevo `RefreshToken`.                  | —                                                            |
-| 7    | Retornar `AuthenticatedUserResponse` con tokens.         | —                                                            |
+| Paso | Acción                                                                                                                                                                                                                                      | Excepción lanzada                                            |
+|------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------|
+| 1    | Cargar `Account` por email.                                                                                                                                                                                                                 | `AccountNotFoundException`                                   |
+| 2    | Verificar que la cuenta esté `ACTIVE`.                                                                                                                                                                                                      | `AccountNotVerifiedException`, `InvalidCredentialsException` |
+| 3    | Comparar contraseña con `HashingServicePort.matches()`.                                                                                                                                                                                     | `InvalidCredentialsException`                                |
+| 4    | Cargar `User` por `account.getId()`.                                                                                                                                                                                                        | `UserNotFoundException`                                      |
+| 5    | Emitir JWT con `TokenServicePort.generateToken(userId)`.                                                                                                                                                                                    | —                                                            |
+| 6    | Crear y persistir nuevo `RefreshToken`; obtener el valor en texto plano (`rawToken`).                                                                                                                                                       | —                                                            |
+| 7    | Retornar par `(AuthenticatedUserResponse, rawToken)` al controlador. El controlador pone `rawToken` en `Set-Cookie: rt=<rawToken>; HttpOnly; Secure; SameSite=Strict; Path=/api/v1/authentication` y devuelve el body (solo `accessToken`). | —                                                            |
 
 ---
 
@@ -2365,14 +2365,15 @@ Esta capa orquesta los casos de uso del BC IAM. No contiene lógica de negocio; 
 
 **Flujo:**
 
-| Paso | Acción                                                        | Excepción lanzada              |
-|------|---------------------------------------------------------------|--------------------------------|
-| 1    | Cargar `RefreshToken` por hash del token recibido.            | `InvalidRefreshTokenException` |
-| 2    | Verificar validez con `refreshToken.isValid(Instant.now())`.  | `InvalidRefreshTokenException` |
-| 3    | Llamar `refreshToken.rotate()` y persistir el token revocado. | —                              |
-| 4    | Crear nuevo `RefreshToken` y persistir.                       | —                              |
-| 5    | Cargar `User` y emitir JWT con `TokenServicePort`.            | —                              |
-| 6    | Retornar `AuthenticatedUserResponse` con los nuevos tokens.   | —                              |
+| Paso | Acción                                                                                                                                                                                           | Excepción lanzada                                     |
+|------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------|
+| 1    | Leer el raw refresh token desde la cookie `rt` via `@CookieValue("rt")` en el controlador; pasar al command.                                                                                     | `InvalidRefreshTokenException` (cookie ausente → 401) |
+| 2    | Cargar `RefreshToken` por hash SHA-256 del token recibido.                                                                                                                                       | `InvalidRefreshTokenException`                        |
+| 3    | Verificar validez con `refreshToken.isValid(Instant.now())`.                                                                                                                                     | `InvalidRefreshTokenException`                        |
+| 4    | Llamar `refreshToken.rotate()` y persistir el token revocado.                                                                                                                                    | —                                                     |
+| 5    | Crear nuevo `RefreshToken` y persistir; obtener el nuevo `rawToken`.                                                                                                                             | —                                                     |
+| 6    | Cargar `User` y emitir JWT con `TokenServicePort`.                                                                                                                                               | —                                                     |
+| 7    | Retornar par `(AuthenticatedUserResponse, rawToken)` al controlador. El controlador rota la cookie: `Set-Cookie: rt=<rawToken>; HttpOnly; Secure; SameSite=Strict; Path=/api/v1/authentication`. | —                                                     |
 
 ---
 
@@ -2388,11 +2389,13 @@ Esta capa orquesta los casos de uso del BC IAM. No contiene lógica de negocio; 
 
 **Flujo:**
 
-| Paso | Acción                                                                     | Excepción lanzada              |
-|------|----------------------------------------------------------------------------|--------------------------------|
-| 1    | Cargar `RefreshToken` por hash del token.                                  | `InvalidRefreshTokenException` |
-| 2    | Llamar `refreshToken.revoke(Instant.now())` y persistir.                   | —                              |
-| 3    | Publicar `SessionRevokedEvent(userId, tokenHash)` para auditoría.          | —                              |
+| Paso | Acción                                                                                                                         | Excepción lanzada                                     |
+|------|--------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------|
+| 1    | Leer el raw refresh token desde la cookie `rt` via `@CookieValue("rt")` en el controlador; pasar al command.                   | `InvalidRefreshTokenException` (cookie ausente → 401) |
+| 2    | Cargar `RefreshToken` por hash SHA-256 del token recibido.                                                                     | `InvalidRefreshTokenException`                        |
+| 3    | Llamar `refreshToken.revoke(Instant.now())` y persistir.                                                                       | —                                                     |
+| 4    | Publicar `SessionRevokedEvent(userId, tokenHash)` para auditoría.                                                              | —                                                     |
+| 5    | El controlador limpia la cookie: `Set-Cookie: rt=; Max-Age=0; HttpOnly; Secure; SameSite=Strict; Path=/api/v1/authentication`. | —                                                     |
 
 ---
 
@@ -2409,14 +2412,14 @@ Esta capa orquesta los casos de uso del BC IAM. No contiene lógica de negocio; 
 
 **Flujo:**
 
-| Paso | Acción                                                                            | Excepción lanzada                        |
-|------|-----------------------------------------------------------------------------------|------------------------------------------|
-| 1    | Cargar `User` por `userId`.                                                       | `UserNotFoundException`                  |
-| 2    | Llamar `WorkspaceMembershipPort.isMember(userId, targetOrganizationId)`.          | `AccessDeniedException` si no es miembro |
-| 3    | Actualizar `UserPreferences.lastVisitedOrgId = targetOrganizationId` y persistir. | —                                        |
-| 4    | Revocar el refresh token anterior.                                                | —                                        |
-| 5    | Emitir nuevos JWT (access + refresh) con `tenantId = targetOrganizationId`.       | —                                        |
-| 6    | Retornar `AuthenticatedUserResponse` con los nuevos tokens.                       | —                                        |
+| Paso | Acción                                                                                                                                                                                           | Excepción lanzada                        |
+|------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------|
+| 1    | Cargar `User` por `userId`.                                                                                                                                                                      | `UserNotFoundException`                  |
+| 2    | Llamar `WorkspaceMembershipPort.isMember(userId, targetOrganizationId)`.                                                                                                                         | `AccessDeniedException` si no es miembro |
+| 3    | Actualizar `UserPreferences.lastVisitedOrgId = targetOrganizationId` y persistir.                                                                                                                | —                                        |
+| 4    | Revocar el refresh token anterior (leído de cookie `rt` por el controlador).                                                                                                                     | —                                        |
+| 5    | Emitir nuevo access token JWT con `tenantId = targetOrganizationId`; crear y persistir nuevo `RefreshToken`.                                                                                     | —                                        |
+| 6    | Retornar par `(AuthenticatedUserResponse, rawToken)` al controlador. El controlador rota la cookie: `Set-Cookie: rt=<rawToken>; HttpOnly; Secure; SameSite=Strict; Path=/api/v1/authentication`. | —                                        |
 
 > **Nota:** `WorkspaceMembershipPort` es un Service Port en IAM que delega a la API pública del BC Workspace (`WorkspaceModuleApi`) para verificar membresía sin crear dependencia circular.
 
@@ -2627,12 +2630,12 @@ Esta capa contiene las implementaciones técnicas de los puertos definidos en la
 
 **Configuración de Seguridad**
 
-| Clase                                  | Propósito                                                                                                                                                                                                 |
-|----------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `WebSecurityConfiguration`             | Define la cadena de filtros Spring Security: CORS habilitado, CSRF deshabilitado, sesión stateless, `permitAll` en `/api/v1/authentication/**` y Swagger UI. Registra `BearerAuthorizationRequestFilter`. |
-| `BearerAuthorizationRequestFilter`     | Intercepta cada request, extrae el Bearer token del header `Authorization`, lo valida con `TokenServicePort` y establece la autenticación en el `SecurityContextHolder`.                                  |
-| `UnauthorizedRequestHandlerEntryPoint` | Responde con `401 Unauthorized` ante cualquier acceso sin token válido.                                                                                                                                   |
-| `UserDetailsServiceImpl`               | Implementa `UserDetailsService` de Spring Security. Carga `Account` por email para el proceso de autenticación del filtro.                                                                                |
+| Clase                                  | Propósito                                                                                                                                                                                                                                                                                                                        |
+|----------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `WebSecurityConfiguration`             | Define la cadena de filtros Spring Security: CORS habilitado con `allowCredentials(true)` y `allowedOrigins` explícito (requerido por el browser para aceptar cookies cross-origin), CSRF deshabilitado, sesión stateless, `permitAll` en `/api/v1/authentication/**` y Swagger UI. Registra `BearerAuthorizationRequestFilter`. |
+| `BearerAuthorizationRequestFilter`     | Intercepta cada request, extrae el Bearer token del header `Authorization`, lo valida con `TokenServicePort` y establece la autenticación en el `SecurityContextHolder`.                                                                                                                                                         |
+| `UnauthorizedRequestHandlerEntryPoint` | Responde con `401 Unauthorized` ante cualquier acceso sin token válido.                                                                                                                                                                                                                                                          |
+| `UserDetailsServiceImpl`               | Implementa `UserDetailsService` de Spring Security. Carga `Account` por email para el proceso de autenticación del filtro.                                                                                                                                                                                                       |
 
 **JWT (Access Token):**
 - Claims incluidos: `sub` (email), `userId`.
