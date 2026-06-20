@@ -1,4 +1,4 @@
-﻿<body>
+<body>
     <div style="text-align: center; font-weight: bolder">
         <p>Universidad Peruana de Ciencias Aplicadas - Ingeniería de Software - 8 Ciclo</p>
         <img src="assets/brand/logo-upc.png" alt="logo of UPC"/>
@@ -6304,11 +6304,251 @@ El video del prototipo interactivo se encuentra disponible en el siguiente enlac
 
 ### 7.1.1. Software Development Environment Configuration
 
+A continuación se presentan los productos de software seleccionados para apoyar cada etapa del ciclo de vida del producto digital Reqs-AI. Se detallan sus nombres, propósitos dentro del proyecto y enlaces de acceso o descarga, diferenciando entre soluciones SaaS y software local.
+
+**Project Management**
+
+| **Herramienta** | **Propósito** | **Enlace / Ruta de Acceso** |
+|---|---|---|
+| **Jira** | Gestión ágil de sprint backlogs, control de tableros Scrum y Kanban, seguimiento de incidencias e integración de tareas con el desarrollo de software. | [https://www.atlassian.com/software/jira](https://www.atlassian.com/software/jira) |
+| **Trello** | Tableros de organización complementaria para la planeación colaborativa ágil y seguimiento de asignaciones menores. | [https://trello.com](https://trello.com) |
+
+<br>
+
+**Requirements Management**
+
+| **Herramienta** | **Propósito** | **Enlace / Ruta de Acceso** |
+|---|---|---|
+| **Miro** | Colaboración visual en vivo para la estructuración y modelado de artefactos de descubrimiento, tales como User Personas, Empathy Maps, Journey Maps y As-Is/To-Be Scenario Mapping. | [https://miro.com](https://miro.com) |
+
+<br>
+
+**Domain-Driven Design Approach**
+
+| **Herramienta** | **Propósito** | **Enlace / Ruta de Acceso** |
+|---|---|---|
+| **Miro** | Modelado colaborativo de la lógica del dominio, incluyendo Design-Level Event Storming, Candidate Context Discovery, Bounded Context Canvases y Context Maps. | [https://miro.com](https://miro.com) |
+
+<br>
+
+**Software Architecture Design**
+
+| **Herramienta** | **Propósito** | **Enlace / Ruta de Acceso** |
+|---|---|---|
+| **PlantUML** | Creación de diagramas arquitectónicos y diagramas tácticos mediante un enfoque Diagram-as-Code (C4 Model y Diagramas de Clase). | [https://plantuml.com](https://plantuml.com) |
+
+<br>
+
+**Product UX/UI Design**
+
+| **Herramienta** | **Propósito** | **Enlace / Ruta de Acceso** |
+|---|---|---|
+| **Figma** | Diseño colaborativo de wireframes de baja fidelidad, wireflows, mock-ups de alta fidelidad y prototipos interactivos navegables para la aplicación Web. | [https://figma.com](https://figma.com) |
+
+<br>
+
+**Software Development**
+
+| **Herramienta / Tecnología** | **Propósito** | **Enlace / Ruta de Descarga** |
+|---|---|---|
+| **IntelliJ IDEA** | IDE empresarial enfocado en la codificación y compilación del backend modular estructurado en Java con Spring Boot. | [https://www.jetbrains.com/idea](https://www.jetbrains.com/idea) |
+| **Visual Studio Code** | IDE principal para el desarrollo de la aplicación web frontend en Angular. | [https://code.visualstudio.com](https://code.visualstudio.com) |
+| **Java 25** | Lenguaje de programación robusto y de última generación para construir la lógica y servicios de la solución backend. | [https://www.oracle.com/java](https://www.oracle.com/java) |
+| **Spring Boot 4** | Framework del backend para la creación de servicios REST y WebSockets rápidos, estables y listos para producción. | [https://spring.io/projects/spring-boot](https://spring.io/projects/spring-boot) |
+| **Spring Modulith** | Tecnología para validar la estructura de monolito modular del backend, asegurando fronteras limpias entre los Bounded Contexts. | [https://spring.io/projects/spring-modulith](https://spring.io/projects/spring-modulith) |
+| **Angular** | Framework frontend basado en componentes para construir la aplicación web principal Reqs-AI. | [https://angular.dev](https://angular.dev) |
+| **TypeScript** | Lenguaje tipado sobre JavaScript utilizado para implementar la lógica de control, servicios y stores del cliente web. | [https://www.typescriptlang.org](https://www.typescriptlang.org) |
+| **PostgreSQL** | Motor de base de datos relacional para la persistencia transaccional y de identidad de los tenants. | [https://www.postgresql.org](https://www.postgresql.org) |
+| **pgvector** | Extensión vectorial para PostgreSQL que permite almacenar embeddings y realizar búsquedas de similitud coseno en el motor RAG. | [https://github.com/pgvector/pgvector](https://github.com/pgvector/pgvector) |
+| **Docker** | Plataforma de contenedorización para empaquetar de manera aislada y consistente la aplicación backend Reqs-AI. | [https://www.docker.com](https://www.docker.com) |
+
+<br>
+
+**Software Testing**
+
+| **Herramienta / Tecnología** | **Propósito** | **Enlace / Ruta de Descarga** |
+|---|---|---|
+| **Gherkin** | Lenguaje de definición de comportamiento de software para modelar criterios de aceptación de historias de usuario. | [https://cucumber.io/docs/gherkin](https://cucumber.io/docs/gherkin) |
+| **JUnit 5 & Mockito** | Frameworks de pruebas automatizadas del backend para validar la funcionalidad y lógica de dominio con aislamiento. | [https://junit.org/junit5](https://junit.org/junit5) |
+| **Jasmine & Karma** | Biblioteca y corredor de pruebas automatizadas para asegurar la estabilidad de componentes y stores en Angular. | [https://jasmine.github.io](https://jasmine.github.io) |
+
+<br>
+
+**Software Deployment**
+
+| **Herramienta / Plataforma** | **Propósito** | **Enlace / Ruta de Acceso** |
+|---|---|---|
+| **AWS S3** | Alojamiento y almacenamiento duradero de los activos estáticos compilados de la aplicación web y landing page. | [https://aws.amazon.com/s3](https://aws.amazon.com/s3) |
+| **Amazon CloudFront** | Red de entrega de contenido (CDN) global y proxy inverso que asegura la distribución rápida de la web app y enrutamiento del API. | [https://aws.amazon.com/cloudfront](https://aws.amazon.com/cloudfront) |
+| **AWS API Gateway** | Punto de entrada unificado para el tráfico REST y WebSocket seguro hacia el backend modular de Reqs-AI. | [https://aws.amazon.com/api-gateway](https://aws.amazon.com/api-gateway) |
+| **AWS ECS + Fargate** | Aprovisionamiento serverless de contenedores para desplegar la imagen Docker de la aplicación backend. | [https://aws.amazon.com/ecs](https://aws.amazon.com/ecs) |
+| **AWS RDS** | Base de datos relacional PostgreSQL administrada y escalable con pgvector integrado en entornos de alta disponibilidad. | [https://aws.amazon.com/rds](https://aws.amazon.com/rds) |
+
+<br>
+
+**Software Documentation**
+
+| **Herramienta / Recurso** | **Propósito** | **Enlace / Ruta de Acceso** |
+|---|---|---|
+| **Visual Studio Code** | Edición interactiva del informe en Markdown y exportación formateada a formato digital PDF. | [https://code.visualstudio.com](https://code.visualstudio.com) |
+| **Markdown** | Lenguaje de marcado para la redacción estructurada y formateo de la documentación del reporte técnico. | [https://www.markdownguide.org](https://www.markdownguide.org) |
+| **Git** | Sistema de control de versiones distribuido para la gestión colaborativa del código fuente. | [https://git-scm.com](https://git-scm.com) |
+| **GitHub** | Repositorio centralizado con soporte para Pull Requests, ramas organizadas, registro de issues y CI/CD. | [https://github.com](https://github.com) |
+| **GitFlow Workflow** | Estrategia de ramificación orientada a estructurar la evolución segura del código fuente y los entregables. | [https://nvie.com/posts/a-successful-git-branching-model](https://nvie.com/posts/a-successful-git-branching-model) |
+| **Conventional Commits** | Estándar formal de mensajes de commit para asegurar la claridad e historial limpio del código fuente. | [https://www.conventionalcommits.org](https://www.conventionalcommits.org) |
+| **Semantic Versioning** | Esquema de numeración formal para el control de versiones y entregas progresivas (Releases). | [https://semver.org](https://semver.org) |
+
+<br>
+
 ### 7.1.2. Source Code Management
+
+El equipo utilizará **GitHub** como plataforma de alojamiento centralizado y **Git** como control de versiones distribuido para la base de código de Reqs-AI. Para asegurar la colaboración y estabilidad del producto, se adopta la metodología **GitFlow Workflow** combinada con el esquema **Semantic Versioning 2.0.0** para el versionado de entregas y el estándar **Conventional Commits** para la mensajería del historial de cambios.
+
+**Repositorios del Proyecto**
+
+| **Repositorio** | **Descripción** |
+|:---|:---|
+| [https://github.com/Kntro-Soft/ReqsAI-Report](https://github.com/Kntro-Soft/ReqsAI-Report) | Documentación técnica exhaustiva e informe técnico del proyecto en Markdown. |
+| [https://github.com/Kntro-Soft/reqsai-landing-page](https://github.com/Kntro-Soft/reqsai-landing-page) | Código fuente de la Landing Page pública optimizada para captación de leads. |
+| [https://github.com/Kntro-Soft/reqsai-web-app](https://github.com/Kntro-Soft/reqsai-web-app) | Aplicación Web (Single Page Application) en Angular para analistas y líderes técnicos. |
+| [https://github.com/Kntro-Soft/reqsai-backend](https://github.com/Kntro-Soft/reqsai-backend) | API Backend monolítica modular en Java con Spring Boot 4 y especificaciones de pruebas (.feature). |
+
+<br>
+
+**GitFlow Workflow**
+
+La estrategia de desarrollo de ramas se basa en el modelo propuesto por Vincent Driessen, el cual organiza el ciclo de desarrollo a través de las siguientes ramas principales permanentes y temporales:
+
+*   **main**: Contiene la versión de producción estable y probada del software. Cada confirmación aquí representa un lanzamiento listo para los usuarios.
+*   **develop**: Rama principal de integración para el desarrollo continuo. Aquí se fusionan todas las características listas antes de ser transferidas a producción.
+
+**Branches usados en GitFlow**
+
+| **Tipo de rama** | **Propósito** | **Convención de nombres** | **Ejemplo** |
+|---|---|---|---|
+| **feature** | Creación y desarrollo de nuevas funcionalidades específicas de negocio. | `feature/<nombre-descriptivo>` | `feature/iam-jwt-authentication` |
+| **release** | Preparación y estabilización de una versión para su pase a producción. | `release/vX.Y.Z` | `release/v1.0.0` |
+| **hotfix** | Corrección inmediata y urgente de errores críticos detectados en producción. | `hotfix/<nombre-descriptivo>` | `hotfix/fix-jwt-rotation-crash` |
+
+<br>
+
+**Semantic Versioning**
+
+Se adopta el esquema de versionado semántico 2.0.0 para catalogar y etiquetar los releases de producción (`main`) con el formato:
+
+`vMAJOR.MINOR.PATCH`
+
+*   **MAJOR**: Incrementos cuando se realizan cambios incompatibles en la API o arquitectura general.
+*   **MINOR**: Incrementos al añadir nuevas funcionalidades compatibles con versiones previas.
+*   **PATCH**: Incrementos al realizar correcciones de errores menores compatibles con versiones previas.
+
+<br>
+
+**Conventional Commits**
+
+Para garantizar que el historial de commits sea legible, estructurado y permita la generación automática de historiales de cambios (changelogs), los mensajes de commit deben seguir el siguiente formato:
+
+`<tipo>(<scope-opcional>): <descripción breve>`
+
+**Tipos a usar**:
+*   `feat`: Una nueva funcionalidad para el producto digital (ej: `feat(iam): add password hash implementation`).
+*   `fix`: Una corrección de un error de software (ej: `fix(discovery): adjust cosine similarity threshold`).
+*   `docs`: Cambios exclusivos en la documentación (ej: `docs(readme): update deployment section`).
+*   `style`: Modificaciones de formato o estilo que no alteran el comportamiento del código (espacios, punto y coma, etc.).
+*   `refactor`: Cambios en el código que no corrigen errores ni añaden funcionalidades (reestructuraciones internas).
+*   `test`: Adición o modificación de pruebas unitarias o de integración (ej: `test(workspace): add integration tests for projects`).
+*   `chore`: Tareas periódicas de mantenimiento o actualización de configuraciones (ej: `chore(deps): update spring modulith dependencies`).
+
+<br>
 
 ### 7.1.3. Source Code Style Guide & Conventions
 
+Con la finalidad de asegurar la legibilidad, mantenibilidad y la consistencia del código fuente entre todos los miembros del equipo, se establecen los siguientes lineamientos y convenciones de estilo. Se adopta el idioma inglés como convención única para nombrar todos los elementos del código (variables, métodos, clases, base de datos y comentarios).
+
+**Nomenclatura General**
+*   Uso mandatorio de nombres significativos y autodescriptivos en inglés para variables y funciones, evitando abreviaciones ambiguas o términos numéricos genéricos.
+*   El código debe ser formateado automáticamente antes de realizar commits utilizando el formateador configurado del IDE.
+
+**HTML5**
+*   Uso de elementos semánticos estándar (`<header>`, `<nav>`, `<main>`, `<section>`, `<footer>`, `<article>`).
+*   Los atributos deben escribirse en minúsculas y sus valores encerrados entre comillas dobles (`class="card-container"`).
+*   Los nombres de las clases de estilos personalizadas deben usar el formato **kebab-case** (`button-primary`, `input-search`).
+*   Indentación estructurada utilizando 2 espacios.
+
+**CSS & Tailwind CSS**
+*   Para las clases CSS personalizadas, se utiliza el formato **kebab-case** en minúsculas.
+*   Para el aplicativo web (Angular), se prioriza el uso de Tailwind CSS. Las clases de utilidad deben ordenarse siguiendo una secuencia lógica: Layout/Flexbox -> Spacing (Margin/Padding) -> Sizing (Width/Height) -> Typography -> Design/Colors.
+*   Las clases personalizadas complejas de CSS deben evitarse y delegarse a componentes de utilidad Tailwind organizados con `@apply`.
+
+**TypeScript & Angular (Web Application)**
+*   Se adopta el **Google TypeScript Style Guide** para estructurar la aplicación frontend.
+*   **camelCase** para variables, propiedades, métodos y parámetros de funciones.
+*   **PascalCase** para clases, interfaces, enums, componentes, directivas, pipes y módulos.
+*   Constantes y enums globales en `UPPER_CASE_WITH_UNDERSCORES`.
+*   **Regla Arquitectónica Obligatoria (Service-as-a-Store & Componentes)**:
+    *   **Service-as-a-Store**: Toda la lógica de negocio, control de estado del dominio y llamadas REST del cliente Angular deben implementarse dentro de servicios Angular específicos (`Service`), los cuales encapsulan el estado utilizando RxJS (`BehaviorSubject` o `Signals`) y exponen únicamente estados de lectura.
+    *   **Componentes de UI**: Los componentes Angular deben ser extremadamente livianos y dedicarse estrictamente a la lógica de la interfaz de usuario (captura de interacción del usuario y renderización del estado). Tienen estrictamente prohibido contener lógica compleja de dominio o manipulación de estado directo; en su lugar, deben inyectar el Servicio correspondiente (Store) y delegarle el control.
+    *   Los archivos de componentes deben seguir el sufijo `.component.ts` y los servicios `.service.ts`.
+
+**Java & Spring Boot (Backend Service)**
+*   Se adoptan las convenciones del **Google Java Style Guide** y las buenas prácticas de diseño de **Spring Modulith**.
+*   **camelCase** para variables, nombres de métodos y parámetros.
+*   **PascalCase** para clases, interfaces y enums del backend.
+*   Los nombres de paquetes deben ser en minúsculas y seguir el dominio inverso (`com.kntrosoft.reqsai`).
+*   Constantes globales y campos estáticos finales en `UPPER_CASE_WITH_UNDERSCORES`.
+*   **Convenciones del Monolito Modular**:
+    *   El código debe organizarse en paquetes correspondientes a los 5 Bounded Contexts tácticos de la solución (`com.kntrosoft.reqsai.iam`, `com.kntrosoft.reqsai.billing`, `com.kntrosoft.reqsai.workspace`, `com.kntrosoft.reqsai.discovery`, `com.kntrosoft.reqsai.gateway`).
+    *   La comunicación inter-módulo se realiza de forma desacoplada mediante la publicación de eventos (`ApplicationEventPublisher`) o mediante llamadas a APIs públicas de otros módulos (declaradas en interfaces).
+    *   Se respeta el diseño DDD por capas: dominio (`domain`), aplicación (`application`), interfaz (`interface`) e infraestructura (`infrastructure`). Se evita el uso de lógica de negocio o transaccional dentro de controladores REST.
+
+**Gherkin (Especificaciones BDD)**
+*   Las especificaciones de criterios de aceptación escritas en archivos `.feature` deben redactarse obligatoriamente en inglés.
+*   Uso riguroso de la estructura `Given`, `When`, `Then`, `And`, `But` con una tabulación clara que resalte los pasos de prueba.
+*   Cada escenario de prueba debe ser independiente de los demás y modelar de forma autodescriptiva un flujo del sistema (happy path, unhappy path o edge case).
+
+<br>
+
 ### 7.1.4. Software Deployment Configuration
+
+Para garantizar el despliegue automático, escalable y seguro de cada uno de los productos digitales que conforman la solución Reqs-AI, se ha configurado una arquitectura basada completamente en servicios de la nube pública **Amazon Web Services (AWS)**. A continuación se detalla la configuración del despliegue:
+
+**Distribución de Productos en Plataformas de Despliegue**
+
+| **Producto / Componente** | **Plataforma de Despliegue** | **Propósito de Uso** | **Enlace / Ruta de Acceso** |
+|---|---|---|---|
+| **Landing Page** | **AWS S3 + CloudFront** | Alojamiento estático y distribución acelerada globalmente mediante ubicaciones perimetrales (Edge). | [https://aws.amazon.com/cloudfront](https://aws.amazon.com/cloudfront) |
+| **Web Application (Angular)** | **AWS S3 + CloudFront** | Distribución global de la Single Page Application (SPA), almacenamiento seguro de compilados y redirección de APIs. | [https://aws.amazon.com/cloudfront](https://aws.amazon.com/cloudfront) |
+| **Backend Service (Spring Boot)** | **AWS ECS + Fargate** | Despliegue serverless de la API modularizada en contenedores Docker y orquestación de recursos de cómputo. | [https://aws.amazon.com/ecs](https://aws.amazon.com/ecs) |
+| **Database (PostgreSQL)** | **AWS RDS** | Base de datos relacional administrada para almacenar datos transaccionales, de tenants y embeddings vectoriales (pgvector). | [https://aws.amazon.com/rds](https://aws.amazon.com/rds) |
+| **Observability (Grafana Stack)** | **AWS EC2 + Docker Compose** | Instancia dedicada para almacenar y consultar logs (Loki), métricas (Prometheus) y trazas (Tempo) de la infraestructura. | [https://aws.amazon.com/ec2](https://aws.amazon.com/ec2) |
+
+<br>
+
+**Configuración Paso a Paso de Despliegue por Entorno**
+
+**1. Landing Page y Aplicativo Web (Amazon S3 + CloudFront)**
+*   Se ejecuta la compilación de la aplicación en Angular mediante el comando `npm run build` para generar los activos optimizados en la carpeta `dist/`.
+*   Los archivos estáticos generados se cargan de manera automática a un bucket de **Amazon S3** privado.
+*   Se configura una distribución en **Amazon CloudFront** que sirve de CDN. Se establece una política de Control de Acceso de Origen (OAC) para bloquear el acceso público directo a S3, obligando a los usuarios a acceder a través de CloudFront.
+*   Se configuran reglas de redirección de errores en CloudFront de modo que cualquier error HTTP 404 sea redirigido a `/index.html` con un código HTTP 200, garantizando el correcto funcionamiento del enrutamiento del lado del cliente del SPA.
+*   Se asocia un dominio personalizado y certificados SSL/TLS gratuitos administrados por **AWS Certificate Manager (ACM)** para brindar HTTPS.
+
+**2. Backend Service (AWS ECS con Fargate)**
+*   Se define un `Dockerfile` multietapa para compilar el backend modular con Java 25 y Spring Boot 4, creando una imagen Docker ligera optimizada para producción.
+*   Al realizar un merge en la rama `main`, un pipeline de CI/CD en **GitHub Actions** ejecuta las pruebas automatizadas, empaqueta la imagen Docker y la sube al repositorio privado en **Amazon ECR (Elastic Container Registry)**.
+*   Se configura una **Task Definition** en AWS ECS que define los parámetros de ejecución. Esta especifica dos contenedores que operan conjuntamente en la misma tarea (patrón sidecar): el contenedor de la aplicación backend Reqs-AI (expuesto en el puerto 8080) y el agente **Grafana Alloy** para la recolección de logs, métricas y trazas distribuidas.
+*   La tarea se ejecuta de manera serverless en **AWS Fargate** asignando CPU y memoria virtual dinámicamente y protegiendo el servicio mediante un Balanceador de Carga de Aplicación (ALB) asociado al AWS API Gateway.
+
+**3. Base de Datos Relacional y Multitenancy (AWS RDS)**
+*   Se provisiona una instancia relacional de **PostgreSQL** administrada a través de **AWS RDS** dentro de subredes privadas.
+*   Se conecta como administrador a la instancia RDS para habilitar la extensión vectorial requerida ejecutando la consulta SQL: `CREATE EXTENSION IF NOT EXISTS pgvector;`.
+*   Para manejar la arquitectura multitenancy *schema-per-tenant*, se configura la migración automática de base de datos con **Flyway** al iniciar el backend. Cada vez que se crea una nueva organización, el backend genera dinámicamente el esquema de base de datos e invoca a Flyway para estructurar las tablas iniciales desde los archivos `.sql` almacenados en los recursos del backend.
+
+#### Diagrama de Despliegue C4 Model
+
+A continuación se presenta el Diagrama de Despliegue de Reqs-AI, correspondiente al Nivel 4 del C4 Model, el cual ilustra la topología física de red, los nodos de ejecución de los entornos cliente y nube, los canales de seguridad y la comunicación de persistencia y observabilidad del sistema:
+
+![Deployment Diagram](./assets/diagrams/architecture/deployment-diagram.png)
 
 ## 7.2. Solution Implementation
 
