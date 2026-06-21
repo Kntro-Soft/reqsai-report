@@ -54,7 +54,7 @@ note right of subscriptions
   <b>payment_provider / payment_external_id</b>
   - Embedding del VO <b>PaymentProviderRef</b>
   - NULL para plan FREE
-  - STRIPE | CULQI | PAYPAL | MERCADO_PAGO
+  - STRIPE | CULQI
 
   <b>token_quota_used</b>
   - Tokens consumidos en el periodo actual
