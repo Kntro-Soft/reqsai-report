@@ -7267,6 +7267,130 @@ A continuación se debe colocar la captura del tablero Jira correspondiente al S
 
 <br>
 
+#### 7.2.2.2. Sprint Backlog 2
+
+El objetivo de este Sprint fue estabilizar la solución y preparar su operación en un entorno cloud. Para ello, se priorizaron historias técnicas relacionadas con infraestructura, despliegue, documentación, pruebas de integración y verificación del flujo frontend-backend.
+
+<div style="font-size:80%; overflow-x:auto;">
+  <table border="1" cellspacing="0" cellpadding="5">
+    <thead>
+      <tr>
+        <th colspan="2">Sprint #</th>
+        <th colspan="6">Sprint 2</th>
+      </tr>
+      <tr>
+        <th colspan="2">User Story / Technical Story</th>
+        <th colspan="6">Work-Item / Task</th>
+      </tr>
+      <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Estimation (Hours)</th>
+        <th>Assigned To</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td rowspan="2">TS01</td>
+        <td rowspan="2">Preparación de entorno cloud</td>
+        <td>TS01-a</td>
+        <td>Instalar herramientas CLI</td>
+        <td>Instalar y validar AWS CLI y Terraform CLI para administrar infraestructura desde local.</td>
+        <td>3</td>
+        <td>Jhosepmyr Gutiérrez</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td>TS01-b</td>
+        <td>Configurar credenciales AWS</td>
+        <td>Crear usuario IAM, generar Access Key y configurar el perfil local `reqsai-infra`.</td>
+        <td>3</td>
+        <td>Jhosepmyr Gutiérrez</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td rowspan="2">TS02</td>
+        <td rowspan="2">Infraestructura base con Terraform</td>
+        <td>TS02-a</td>
+        <td>Configurar bootstrap</td>
+        <td>Preparar el bootstrap para estado remoto y base de despliegue con Terraform.</td>
+        <td>4</td>
+        <td>Eric Hernández</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td>TS02-b</td>
+        <td>Crear recursos de red</td>
+        <td>Crear VPC, Internet Gateway, subnets públicas, privadas, subnets de base de datos, NAT Gateway, Elastic IP, DB Subnet Group y tablas de ruteo.</td>
+        <td>8</td>
+        <td>Eric Hernández</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td rowspan="2">TS03</td>
+        <td rowspan="2">Despliegue backend</td>
+        <td>TS03-a</td>
+        <td>Configurar ECR y ECS Fargate</td>
+        <td>Crear repositorio Docker ECR, clúster ECS Fargate y base para ejecutar el backend contenerizado.</td>
+        <td>6</td>
+        <td>Salim Ramirez</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td>TS03-b</td>
+        <td>Configurar Task Definition y ECS Service</td>
+        <td>Crear definición de tarea, servicio ECS del backend y validar ejecución del contenedor.</td>
+        <td>6</td>
+        <td>Salim Ramirez</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td rowspan="2">TS04</td>
+        <td rowspan="2">Servicios administrados y seguridad</td>
+        <td>TS04-a</td>
+        <td>Configurar RDS, Secrets e IAM Roles</td>
+        <td>Crear base de datos RDS, registrar secretos de aplicación y definir roles IAM requeridos por ECS y GitHub Actions.</td>
+        <td>8</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td>TS04-b</td>
+        <td>Configurar Security Groups y ALB</td>
+        <td>Definir reglas de firewall, Application Load Balancer y exposición controlada del backend.</td>
+        <td>6</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td rowspan="2">TS05</td>
+        <td rowspan="2">Despliegue frontend</td>
+        <td>TS05-a</td>
+        <td>Configurar S3 y CloudFront</td>
+        <td>Crear bucket para archivos estáticos y distribución CDN para publicar la aplicación web.</td>
+        <td>5</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td>TS05-b</td>
+        <td>Sincronizar frontend y validar CORS</td>
+        <td>Subir los archivos del frontend, validar acceso por CloudFront y comprobar conexión con backend sin errores de CORS.</td>
+        <td>5</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<br>
+
+
 ## 7.3. Validation Interviews
 
 La sección de entrevistas de validación debe evidenciar el proceso usado para validar la solución con usuarios, especialistas o stakeholders relacionados con el producto. En el paquete recibido no se adjuntaron capturas, audios, transcripciones o registros de entrevistas; por ello, se deja la estructura base para completarla con la información real.
