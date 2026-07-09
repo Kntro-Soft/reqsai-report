@@ -7840,20 +7840,58 @@ En esta sección se presenta el registro de entrevistas de validación realizada
 
 ### 7.3.3. Evaluaciones según heurísticas
 
-En esta sección se presenta una matriz base para evaluar la solución según heurísticas de usabilidad, claridad de navegación, control del usuario y calidad del flujo de generación de requisitos. La evaluación final debe completarse con observaciones reales obtenidas durante las entrevistas y pruebas con usuarios.
+#### UX Heuristics & Principles Evaluation
+#### Usability – Inclusive Design – Information Architecture
 
-| Heurística evaluada | Hallazgo esperado a validar | Severidad inicial | Recomendación | Estado |
-|---|---|---|---|---|
-| Visibilidad del estado del sistema | Validar si el usuario entiende cuándo una sesión está activa, pausada, detenida o procesando sugerencias. | Media | Mantener estados visibles, etiquetas claras y feedback inmediato durante el flujo de discovery. | Pendiente de validación |
-| Relación entre sistema y mundo real | Validar si los términos workspace, proyecto, sesión, historia y criterio de aceptación son familiares para el usuario objetivo. | Baja | Mantener nomenclatura cercana al proceso real de levantamiento de requisitos. | Pendiente de validación |
-| Control y libertad del usuario | Validar si aprobar, rechazar o editar sugerencias antes de convertirlas en historias transmite control suficiente. | Media | Asegurar confirmaciones y posibilidad de corregir decisiones antes de publicar resultados. | Pendiente de validación |
-| Consistencia y estándares | Validar si la navegación, botones, estados y formularios son consistentes entre proyecto, sesiones, stories y settings. | Baja | Mantener patrones visuales y de interacción constantes en toda la aplicación. | Evidenciado parcialmente |
-| Prevención de errores | Validar si los formularios de configuración, glosario, restricciones e historias previenen errores de entrada. | Media | Agregar validaciones visibles, mensajes claros y restricciones antes de guardar. | Pendiente de validación |
-| Reconocimiento antes que recuerdo | Validar si la barra lateral, rutas y títulos permiten ubicarse sin memorizar pasos. | Baja | Mantener navegación persistente y encabezados claros por módulo. | Evidenciado parcialmente |
-| Flexibilidad y eficiencia de uso | Validar si usuarios avanzados pueden pasar rápido de sesión a historias sin fricción innecesaria. | Media | Incorporar accesos rápidos, filtros y acciones masivas para revisión de sugerencias. | Pendiente de validación |
-| Diseño estético y minimalista | Validar si la interfaz mantiene foco en las acciones principales sin sobrecargar la experiencia. | Baja | Priorizar información crítica y reducir elementos secundarios en flujos de alta presión. | Evidenciado parcialmente |
-| Ayuda para reconocer y recuperarse de errores | Validar si los errores de conexión, CORS, autenticación o carga de datos son comprensibles para el usuario. | Media | Mostrar causa probable del error y acción recomendada. | Pendiente de evidencia |
-| Ayuda y documentación | Validar si los usuarios entienden el flujo sin depender de documentación externa. | Baja | Complementar Swagger técnico con ayuda funcional dentro de la aplicación. | Pendiente de validación |
+**CARRERA** : Ingeniería de Software
+
+**CURSO** : Arquitecturas de Software Emergentes
+
+**NRC** : 11821
+
+**PROFESOR** : Christian Luis De Los Rios Fernandez
+
+**AUDITOR** : Kntro-Soft
+
+**CLIENTES** : Diego Melendez, Daniela Martínez, Manuel Gonzales, Daniel Franco
+
+#### SITE o APP A EVALUAR:
+
+**Reqs-AI**
+
+#### TAREAS A EVALUAR:
+
+El alcance de esta evaluación incluye la revisión de usabilidad de las siguientes tareas:
+
+1. Flujo completo del Onboarding
+2. Gestión del proyectos
+3. Grabación y captura
+4. Historias de usuario
+5. Glosario
+6. Restricciones
+
+#### FUERA DE ALCANCE:
+
+No están incluidas en esta versión de la evaluación las siguientes tareas:
+
+1. Gestión avanzada o edición del estado de la suscripción.
+2. Recuperación de contraseña.
+3. Modificación avanzada de la organización.
+4. Recuperación de contraseña.
+5. Reportes de bugs.
+6. Configuración explícita de i18n y modo oscuro/claro en la versión móvil actual.
+
+#### ESCALA DE SEVERIDAD:
+
+| Nivel | Descripción                                                                                                                                                                     |
+|-------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1     | **Problema superficial**: puede ser fácilmente superado por el usuario o ocurre con muy poca frecuencia. No necesita ser arreglado a menos que exista disponibilidad de tiempo. |
+| 2     | **Problema menor**: puede ocurrir con cierta frecuencia o ser un poco más difícil de superar. Se le debería asignar una prioridad baja para el siguiente release.               |
+| 3     | **Problema mayor**: ocurre frecuentemente o los usuarios no son capaces de resolverlo fácilmente. Es importante corregirlo y asignarle prioridad alta.                          |
+| 4     | **Problema muy grave**: error de gran impacto que impide al usuario continuar con el uso de la herramienta. Debe corregirse antes del lanzamiento.                              |
+
+#### TABLA RESUMEN:
+
 
 ---
 
