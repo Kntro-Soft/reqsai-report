@@ -7419,6 +7419,44 @@ En relación con los productos de la solución, el avance evidenciado se resume 
 | Kntro-Soft/reqsai-api | develop | 8c0c1c2 | Merge pull request #19 from Kntro-Soft/feature/workspace-project-context | Se integró contexto de proyecto, glosario y restricciones. | 20/06/2026 |
 | Kntro-Soft/reqsai-api | develop | 6206d08 | Merge pull request #23 from Kntro-Soft/feature/discovery-realtime-suggestions | Se integraron sugerencias en tiempo real para historias de usuario. | 20/06/2026 |
 
+#### 7.2.2.4. Testing Suite Evidence for Sprint Review
+
+Durante este Sprint se mantuvo el enfoque de pruebas automatizadas para el backend `reqsai-api`, complementándolo con validaciones técnicas de despliegue. El alcance de testing incluye pruebas unitarias, pruebas de integración, pruebas de arquitectura, preparación de pruebas E2E para frontend y smoke testing sobre el ambiente cloud desplegado.
+
+No se evidencia el uso de archivos BDD `.feature` en Gherkin para este Sprint; por ello, el alcance de testing reportado se centra en pruebas técnicas implementadas y verificaciones manuales controladas sobre la infraestructura desplegada.
+
+**Relación de tests diseñados**
+
+| Tipo de test | Clase, módulo o comportamiento relacionado | User Story / Technical Story relacionada | Estado de evidencia |
+|---|---|---|---|
+| Unit Test | Entidades y value objects de Workspace | Creación y configuración de organización/workspace | Evidenciado por commits |
+| Unit Test | `DiscoverySession` y ciclo de vida de grabación | Crear, pausar, reanudar, detener y reiniciar sesiones | Evidenciado por commits |
+| Unit Test | `UserStory` y criterios de aceptación | Crear historias y gestionar criterios | Evidenciado por commits |
+| Unit Test | Servicios de procesamiento STT a LLM | Procesar transcripción y generar historias con IA | Evidenciado por commits |
+| Integration Test | Endpoints de sesiones, proyectos e historias | Consulta y gestión de recursos Discovery | Evidenciado por commits |
+| Integration Test | Flujo de creación de historias de usuario | Crear historia y validar persistencia | Evidenciado por commits |
+| Integration Test | Procesamiento y recuperación de transcripciones | Procesar transcript y consultar resultados | Evidenciado por commits |
+| Architecture Test | Reglas de arquitectura y dependencias | Validar separación modular y dependencias | Evidenciado por commits |
+| E2E Setup | Configuración base de Playwright en `reqsai-web` | Validación futura de flujos web | Evidenciado parcialmente |
+| Deployment Smoke Test | Validación de backend, frontend y conexión CORS | Despliegue cloud Sprint 2 | Evidenciado por capturas |
+
+**Testing de deployment**
+
+| Validación | Resultado esperado | Resultado observado | Estado |
+|---|---|---|---|
+| Validar AWS CLI y Terraform CLI | Las herramientas deben responder con versión instalada | Se evidencia instalación y verificación local | Passed |
+| Validar creación de infraestructura base | Terraform debe crear red, subnets, tablas de ruteo y recursos asociados | Se evidencia lista de recursos de red creados | Passed |
+| Validar repositorio ECR | Debe existir repositorio para imagen Docker del backend | Se evidencia creación de ECR | Passed |
+| Validar ECS Fargate | El backend debe poder ejecutarse como servicio contenerizado | Se evidencia creación de ECS Fargate, Task Definition y ECS Service | Passed |
+| Validar base de datos y secretos | RDS y Secrets Manager deben estar disponibles para el backend | Se evidencia creación de RDS y secrets | Passed |
+| Validar ALB y security groups | El backend debe exponerse de forma controlada | Se evidencia configuración de firewall y load balancer | Passed |
+| Validar frontend estático | La aplicación web debe estar disponible por CloudFront | Se evidencia frontend desplegado | Passed |
+| Validar integración frontend-backend | El frontend debe conectarse al backend sin problemas de CORS | Se evidencia conexión sin problemas de CORS | Passed |
+
+![Backend desplegado](assets/deployment/sprint-2/30_backend_deployed_successfully.png)
+
+![Frontend desplegado y conectado al backend](assets/deployment/sprint-2/37_frontend_deployed_and_cors_ok.png)
+
 
 ## 7.3. Validation Interviews
 
