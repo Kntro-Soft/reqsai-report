@@ -7457,6 +7457,24 @@ No se evidencia el uso de archivos BDD `.feature` en Gherkin para este Sprint; p
 
 ![Frontend desplegado y conectado al backend](assets/deployment/sprint-2/37_frontend_deployed_and_cors_ok.png)
 
+#### 7.2.2.5. Execution Evidence for Sprint Review
+
+La evidencia de ejecución del Sprint 2 demuestra que la solución fue preparada para operar en un entorno cloud. El backend fue desplegado como servicio contenerizado en AWS ECS Fargate, apoyado por ECR para almacenamiento de imágenes, RDS para persistencia, Secrets Manager para configuración sensible, IAM Roles para permisos de ejecución y Application Load Balancer para exposición controlada. Por su parte, el frontend fue publicado mediante S3 y CloudFront, permitiendo acceder a la interfaz web desde una URL pública de distribución.
+
+**Evidencias principales de ejecución:**
+
+| Evidencia | Descripción | Captura |
+|---|---|---|
+| Backend desplegado | Se evidencia que el servicio backend quedó publicado y operativo. | `30_backend_deployed_successfully.png` |
+| Servicio ECS | Se evidencia configuración y creación del ECS Service del backend. | `27_ecs_service_backend_config.png`, `28_ecs_service_backend_created.png` |
+| Frontend desplegado | Se evidencia pantalla de login de Reqs-AI publicada mediante CloudFront. | `37_frontend_deployed_and_cors_ok.png` |
+| Integración CORS | Se evidencia que el frontend se comunica con backend sin problemas de CORS. | `37_frontend_deployed_and_cors_ok.png` |
+| Variables y pipeline | Se evidencia configuración de OIDC y variables de repositorio para despliegue. | `38_github_oidc_provider_config.png`, `40_github_repository_variables_backend_frontend.png` |
+
+![ECS Service para backend](assets/deployment/sprint-2/28_ecs_service_backend_created.png)
+
+![Frontend por CloudFront](assets/deployment/sprint-2/37_frontend_deployed_and_cors_ok.png)
+
 
 ## 7.3. Validation Interviews
 
