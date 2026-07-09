@@ -7390,6 +7390,35 @@ El objetivo de este Sprint fue estabilizar la solución y preparar su operación
 
 <br>
 
+#### 7.2.2.3. Development Evidence for Sprint Review
+
+Durante este Sprint se continuó con la consolidación técnica de los productos digitales de Reqs-AI. El backend `reqsai-api` mantuvo el núcleo funcional relacionado con IAM, Workspace y Discovery, mientras que la aplicación web `reqsai-web` fue preparada para operar en un entorno desplegado. Adicionalmente, el equipo incorporó evidencias de infraestructura y configuración productiva para asegurar que el producto pueda ser ejecutado fuera del entorno local.
+
+En relación con los productos de la solución, el avance evidenciado se resume de la siguiente manera:
+
+| Producto de la solución | Estado según evidencia recibida | Observación |
+|---|---|---|
+| Landing Page | Sin evidencia visual adjunta | No se adjuntaron capturas específicas de Landing Page en este paquete. |
+| Web Applications | Evidenciado | Se evidencia despliegue del frontend mediante S3 y CloudFront, además de conexión con backend sin problemas de CORS. |
+| Web Services | Evidenciado | Se evidencia despliegue del backend mediante ECR, ECS Fargate, Task Definition, ECS Service, ALB, RDS, Secrets e IAM Roles. |
+| Mobile Applications | Sin evidencia visual adjunta | No se adjuntaron capturas, APK o build mobile para este Sprint. |
+| Otros | Evidenciado | Se evidencia infraestructura como código, configuración cloud, OIDC para GitHub Actions y documentación de despliegue. |
+
+**Tabla de commits relacionados con implementación**
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Commited on (Date) |
+|---|---|---|---|---|---|
+| Kntro-Soft/reqsai-api | develop | b5ea23f | feat: introduce Create Organization vertical slice, API versioning, and test enhancements | Se implementó el flujo de creación de organizaciones, versionado de API y soporte inicial de pruebas para el contexto Workspace. | 14/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 2a4ef5b | feat: add REST API contract and implementation for discovery session creation | Se implementó el contrato REST y la creación de sesiones de descubrimiento. | 14/06/2026 |
+| Kntro-Soft/reqsai-api | develop | c161841 | feat: implement REST controller and API contract for manual user story creation under a project | Se implementó la creación manual de historias de usuario dentro de un proyecto. | 15/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 8a92089 | feat: add Create User Story flow with embedding-based duplicate detection | Se agregó el flujo de creación de historias de usuario con detección de duplicados basada en embeddings. | 15/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 7dd60a3 | feat: add GET endpoints for sessions and user stories in discovery scope | Se agregaron endpoints de consulta para sesiones e historias de usuario. | 15/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 62335d8 | feat: add REST API for session transcript operations | Se implementaron operaciones REST para transcripciones de sesiones. | 17/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 531b84c | feat: implement STT to LLM pipeline and enhance AI provider handling | Se integró el flujo STT a LLM para transcripción y generación de requerimientos. | 17/06/2026 |
+| Kntro-Soft/reqsai-api | develop | b4d2c98 | feat: implement pause, resume, and stop recording REST endpoints | Se implementaron endpoints para pausar, reanudar y detener grabaciones. | 17/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 8c0c1c2 | Merge pull request #19 from Kntro-Soft/feature/workspace-project-context | Se integró contexto de proyecto, glosario y restricciones. | 20/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 6206d08 | Merge pull request #23 from Kntro-Soft/feature/discovery-realtime-suggestions | Se integraron sugerencias en tiempo real para historias de usuario. | 20/06/2026 |
+
 
 ## 7.3. Validation Interviews
 
