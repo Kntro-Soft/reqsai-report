@@ -7241,6 +7241,31 @@ Durante el segundo sprint del proyecto **Reqs-AI**, el equipo se enfocó en cons
 
 El objetivo principal del Sprint fue dejar evidenciada la preparación y ejecución del despliegue productivo, validando que el backend pueda operar como servicio contenerizado, que el frontend pueda publicarse como aplicación estática distribuida por CDN, y que ambos componentes puedan comunicarse correctamente sin problemas de CORS.
 
+#### 7.2.2.1. Sprint Planning 2
+
+Se presenta a continuación el Sprint Planning correspondiente al segundo ciclo del proyecto, tomando como referencia el avance funcional logrado en el Sprint anterior y priorizando la estabilización técnica, pruebas, documentación y despliegue de la solución.
+
+A continuación se debe colocar la captura del tablero Jira correspondiente al Sprint 2:
+
+![Board del Sprint 2 en Jira](./assets/insights/sprint-planning-2.png)  
+[Jira Board - Sprint 2](https://uni-ride.atlassian.net/jira/software/projects/REQ/boards/299)
+
+| Sprint # | Sprint 2 |
+|---|---|
+| **Sprint Planning Background** | |
+| Date | 2026-06-22 |
+| Time | 08:00 PM |
+| Location | Reunión virtual mediante Discord |
+| Prepared By | Sulca Gonzales, Paul Fernando |
+| Attendees (to planning meeting) | Gutiérrez Soto, Jhosepmyr Orlando / Hernández Tuiro, Eric Ernesto / Ramirez Mestanza, Salim Ignacio / Varela Bustinza, Marcelo Alejandro / Sulca Gonzales, Paul Fernando |
+| **Sprint n - 1 Review Summary** | En el Sprint 1 se implementó la base funcional de Reqs-AI: autenticación, gestión de organizaciones, workspaces, proyectos, sesiones de discovery, historias de usuario, criterios de aceptación y primeras capacidades de asistencia con IA. |
+| **Sprint n - 1 Retrospective Summary** | Se identificó la necesidad de reforzar la evidencia técnica, mejorar la documentación del despliegue, organizar capturas por producto y validar la integración entre frontend y backend en un entorno cloud. |
+| **Sprint Goal & User Stories** | |
+| Sprint 2 Goal | Consolidar la solución Reqs-AI mediante pruebas, documentación y despliegue cloud, evidenciando infraestructura AWS, backend contenerizado, frontend publicado por CDN e integración funcional entre ambos componentes. |
+| Sprint 2 Velocity | 48 |
+| Sum of Story Points | 48 |
+
+<br>
 
 ## 7.3. Validation Interviews
 
