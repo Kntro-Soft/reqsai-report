@@ -7475,6 +7475,170 @@ La evidencia de ejecución del Sprint 2 demuestra que la solución fue preparada
 
 ![Frontend por CloudFront](assets/deployment/sprint-2/37_frontend_deployed_and_cors_ok.png)
 
+#### 7.2.2.6. Services Documentation Evidence for Sprint Review
+
+Durante el Sprint 2 se mantuvo la documentación de servicios del backend mediante contratos REST y Swagger/OpenAPI. Esta documentación permite revisar los endpoints disponibles para autenticación, workspace, proyectos, sesiones de discovery, transcripciones, historias de usuario y criterios de aceptación.
+
+La documentación de servicios se complementa con la evidencia de despliegue, ya que el backend no solo queda definido a nivel contractual, sino también preparado para operar en un ambiente cloud con variables, secretos, base de datos y exposición controlada.
+
+##### Endpoints documentados
+
+| Grupo de endpoints | Descripción | Estado |
+|---|---|---|
+| IAM / Auth | Registro, login, verificación de correo, recuperación y cambio de contraseña. | Documentado |
+| Workspace / Organizations | Creación y gestión de organizaciones y workspaces. | Documentado |
+| Projects | Creación, consulta y configuración de proyectos. | Documentado |
+| Discovery Sessions | Creación, consulta y ciclo de vida de sesiones de discovery. | Documentado |
+| Transcripts | Operaciones para registrar, procesar y consultar transcripciones. | Documentado |
+| User Stories | Creación manual y asistida de historias de usuario. | Documentado |
+| Acceptance Criteria | Gestión de criterios de aceptación asociados a historias. | Documentado |
+| Realtime Suggestions | Sugerencias en tiempo real generadas a partir de la sesión. | Documentado |
+
+##### Commits relacionados con documentación de servicios
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Commited on (Date) |
+|---|---|---|---|---|---|
+| Kntro-Soft/reqsai-api | develop | 855c8ba | chore: add `DEPLOYMENT.md` to document deployment architecture, pipelines, and configuration | Se agregó documentación de arquitectura y proceso de despliegue. | 09/06/2026 |
+| Kntro-Soft/reqsai-api | develop | daede8f | chore: add Spring profile configurations, AI abstraction setup, and comprehensive documentation for local and production environments | Se agregaron perfiles Spring para ejecución local y producción. | 12/06/2026 |
+| Kntro-Soft/reqsai-web | develop | de154c4 | chore: add deployment guide for Reqs-AI frontend with S3, CloudFront, and Docker instructions | Se agregó guía de despliegue del frontend con S3, CloudFront y Docker. | 19/06/2026 |
+
+#### 7.2.2.7. Software Deployment Evidence for Sprint Review
+
+Durante este Sprint se ejecutó y documentó el despliegue de Reqs-AI sobre AWS. A diferencia del Sprint anterior, donde la evidencia se centraba en una preparación inicial y despliegue backend, en este Sprint se evidencia un flujo cloud más completo: configuración local de herramientas, creación de usuario IAM, configuración de perfil AWS, bootstrap de Terraform, creación de red, repositorio ECR, ECS Fargate, security groups, Application Load Balancer, RDS, Secrets Manager, IAM Roles, Task Definition, ECS Service, publicación del frontend por S3/CloudFront y conexión frontend-backend sin problemas de CORS.
+
+El despliegue evidencia los siguientes avances:
+
+* Instalación y validación de AWS CLI y Terraform CLI.
+* Creación de usuario IAM y Access Key para despliegue.
+* Configuración local del perfil `reqsai-infra`.
+* Configuración de bootstrap y entorno `production`.
+* Creación de red cloud: VPC, Internet Gateway, subnets públicas, privadas y de base de datos, NAT Gateway, Elastic IP, DB Subnet Group y tablas de ruteo.
+* Creación de repositorio Docker en ECR.
+* Configuración y creación de ECS Fargate.
+* Configuración de security groups y Application Load Balancer.
+* Configuración de RDS y Secrets Manager.
+* Configuración de IAM Roles para ejecución y despliegue.
+* Creación de Task Definition y ECS Service para backend.
+* Validación de backend desplegado.
+* Configuración de S3 y CloudFront para frontend.
+* Sincronización manual del frontend.
+* Validación de frontend desplegado y conectado al backend sin problemas de CORS.
+* Configuración de OIDC provider, roles, políticas y variables de repositorio para GitHub Actions.
+
+##### Preparación del entorno local
+
+![Instalación de AWS CLI y comandos de Terraform](assets/deployment/sprint-2/01_aws_cli_install_and_terraform_commands.png)
+
+![Evidencia de Terraform CLI](assets/deployment/sprint-2/02_terraform_cli_install_evidence.png)
+
+##### Configuración de acceso AWS e IAM
+
+![Creación de usuario IAM con Access Key](assets/deployment/sprint-2/03_iam_user_access_key_step.png)
+
+![Credenciales de seguridad IAM](assets/deployment/sprint-2/05_iam_security_credentials_console.png)
+
+![Access Key creada](assets/deployment/sprint-2/06_iam_access_key_created.png)
+
+![Configuración de perfil AWS y bootstrap](assets/deployment/sprint-2/07_aws_configure_profile_and_bootstrap.png)
+
+##### Configuración de infraestructura base
+
+![Bootstrap de Terraform](assets/deployment/sprint-2/08_terraform_bootstrap_code.png)
+
+![Entorno production y red](assets/deployment/sprint-2/09_production_environment_and_network_config.png)
+
+![Recursos de red creados](assets/deployment/sprint-2/10_network_resources_created.png)
+
+##### Configuración de backend en AWS
+
+![Configuración de repositorio ECR](assets/deployment/sprint-2/11_ecr_repository_config.png)
+
+![Repositorio ECR creado](assets/deployment/sprint-2/12_ecr_repository_created.png)
+
+![Configuración de ECS Fargate](assets/deployment/sprint-2/13_ecs_fargate_config.png)
+
+![ECS Fargate creado](assets/deployment/sprint-2/14_ecs_fargate_created.png)
+
+![Configuración de security groups](assets/deployment/sprint-2/15_security_groups_config.png)
+
+![Security groups creados](assets/deployment/sprint-2/16_security_groups_created.png)
+
+![Configuración de Application Load Balancer](assets/deployment/sprint-2/17_application_load_balancer_config.png)
+
+![Application Load Balancer creado](assets/deployment/sprint-2/18_application_load_balancer_created.png)
+
+##### Configuración de base de datos, secretos y roles
+
+![Configuración de RDS](assets/deployment/sprint-2/19_rds_config.png)
+
+![RDS creado](assets/deployment/sprint-2/20_rds_created.png)
+
+![Configuración de secrets](assets/deployment/sprint-2/21_secrets_config.png)
+
+![Secrets creados](assets/deployment/sprint-2/22_secrets_created.png)
+
+![Configuración de IAM Roles](assets/deployment/sprint-2/23_iam_roles_config.png)
+
+![IAM Roles creados](assets/deployment/sprint-2/24_iam_roles_created.png)
+
+##### Task Definition y ECS Service del backend
+
+![Configuración de Task Definition](assets/deployment/sprint-2/25_task_definition_config.png)
+
+![Task Definition creada](assets/deployment/sprint-2/26_task_definition_created.png)
+
+![Configuración de ECS Service para backend](assets/deployment/sprint-2/27_ecs_service_backend_config.png)
+
+![ECS Service para backend creado](assets/deployment/sprint-2/28_ecs_service_backend_created.png)
+
+![Logs de despliegue backend](assets/deployment/sprint-2/29_ecs_service_backend_deploy_logs.png)
+
+![Backend desplegado](assets/deployment/sprint-2/30_backend_deployed_successfully.png)
+
+##### Despliegue del frontend con S3 y CloudFront
+
+![Configuración de S3 y CloudFront](assets/deployment/sprint-2/32_s3_cloudfront_config.png)
+
+![S3 y CloudFront creados](assets/deployment/sprint-2/33_s3_cloudfront_created.png)
+
+![Frontend inicial sin contenido](assets/deployment/sprint-2/34_frontend_empty_cloudfront.png)
+
+![Sincronización manual del frontend](assets/deployment/sprint-2/35_frontend_manual_sync.png)
+
+![Verificación de sincronización frontend](assets/deployment/sprint-2/36_frontend_sync_verification.png)
+
+![Frontend desplegado y conectado al backend](assets/deployment/sprint-2/37_frontend_deployed_and_cors_ok.png)
+
+##### Configuración de despliegue con GitHub Actions y OIDC
+
+![Configuración de OIDC provider](assets/deployment/sprint-2/38_github_oidc_provider_config.png)
+
+![OIDC provider creado](assets/deployment/sprint-2/39_github_oidc_provider_created.png)
+
+![Variables de repositorio backend y frontend](assets/deployment/sprint-2/40_github_repository_variables_backend_frontend.png)
+
+![Resultado de workflow de despliegue](assets/deployment/sprint-2/41_github_actions_deploy_result.png)
+
+##### Commits relacionados con deployment
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Commited on (Date) |
+|---|---|---|---|---|---|
+| Kntro-Soft/reqsai-api | develop | f811bc6 | chore: add `Dockerfile` and `.dockerignore` for containerized application builds and runtime | Se agregaron archivos Docker para construir y ejecutar el backend en contenedores. | 09/06/2026 |
+| Kntro-Soft/reqsai-api | develop | ac8da2a | chore: add `compose.yaml` for service orchestration with profiles for core and app environments | Se agregó Compose para orquestación de servicios en entornos core y app. | 09/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 5592ac1 | chore: add `.env.example` with default configurations for local development setup | Se agregó plantilla de variables de entorno para configuración local. | 09/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 855c8ba | chore: add `DEPLOYMENT.md` to document deployment architecture, pipelines, and configuration | Se agregó documentación de arquitectura y proceso de despliegue. | 09/06/2026 |
+| Kntro-Soft/reqsai-api | develop | f073e85 | chore: add GitHub Actions workflows for CI, CodeQL analysis, and ECS deploy | Se agregaron workflows para CI, análisis CodeQL y base de despliegue ECS. | 12/06/2026 |
+| Kntro-Soft/reqsai-api | develop | daede8f | chore: add Spring profile configurations, AI abstraction setup, and comprehensive documentation for local and production environments | Se agregaron perfiles Spring para ejecución local y producción. | 12/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 78c7694 | feat(infrastructure): add WhisperLive container setup for streaming STT | Se agregó configuración de contenedor para WhisperLive y STT en streaming. | 19/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 52de132 | feat(docker): update default timezone in Dockerfile to UTC | Se ajustó la zona horaria del Dockerfile a UTC. | 20/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 93923c4 | fix(docker/config): ensure audit timestamps use UTC timezone | Se corrigió la configuración de timestamps para consistencia en despliegue. | 20/06/2026 |
+| Kntro-Soft/reqsai-web | develop | b04a34d | chore: add Docker setup for frontend development and production deployment | Se agregó configuración Docker para desarrollo y producción del frontend. | 19/06/2026 |
+| Kntro-Soft/reqsai-web | develop | e4e4534 | chore: add nginx configuration for Angular app SPA deployment | Se agregó configuración Nginx para servir la aplicación Angular como SPA. | 19/06/2026 |
+| Kntro-Soft/reqsai-web | develop | 4e86cc1 | chore: add .dockerignore for optimized Docker builds | Se agregó `.dockerignore` para optimizar builds Docker del frontend. | 19/06/2026 |
+| Kntro-Soft/reqsai-web | develop | 76aadeb | chore: add environment configuration for production and development | Se agregaron configuraciones de ambiente para desarrollo y producción. | 19/06/2026 |
+| Kntro-Soft/reqsai-web | develop | dcdfbbe | chore: add GitHub Actions workflows for CI, CodeQL analysis, and deployment | Se agregaron workflows de CI, CodeQL y deployment para el frontend. | 19/06/2026 |
+| Kntro-Soft/reqsai-web | develop | de154c4 | chore: add deployment guide for Reqs-AI frontend with S3, CloudFront, and Docker instructions | Se agregó guía de despliegue del frontend con S3, CloudFront y Docker. | 19/06/2026 |
+
 
 ## 7.3. Validation Interviews
 
