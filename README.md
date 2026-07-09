@@ -7639,60 +7639,165 @@ El despliegue evidencia los siguientes avances:
 | Kntro-Soft/reqsai-web | develop | dcdfbbe | chore: add GitHub Actions workflows for CI, CodeQL analysis, and deployment | Se agregaron workflows de CI, CodeQL y deployment para el frontend. | 19/06/2026 |
 | Kntro-Soft/reqsai-web | develop | de154c4 | chore: add deployment guide for Reqs-AI frontend with S3, CloudFront, and Docker instructions | Se agregó guía de despliegue del frontend con S3, CloudFront y Docker. | 19/06/2026 |
 
+#### 7.2.2.8. Team Collaboration Insights during Sprint
+
+Durante este Sprint, el equipo mantuvo una estrategia de colaboración basada en ramas, pull requests e integración progresiva sobre `develop`. El trabajo se organizó por frentes técnicos: backend, frontend, infraestructura, documentación y despliegue. Esto permitió separar responsabilidades, reducir conflictos y mantener trazabilidad de los cambios integrados.
+
+La colaboración se evidencia principalmente en los merge commits de pull requests. Estos muestran que el equipo integró avances de manera progresiva, revisando funcionalidades por rama antes de incorporarlas al flujo principal de desarrollo.
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Commited on (Date) |
+|---|---|---|---|---|---|
+| Kntro-Soft/reqsai-api | develop | 456b9e8 | Merge pull request #1 from Kntro-Soft/feature/project-foundation | Se integró la base del proyecto backend. | 12/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 9998210 | Merge pull request #2 from Kntro-Soft/feature/workspace-create-organization | Se integró la creación de organizaciones. | 14/06/2026 |
+| Kntro-Soft/reqsai-api | develop | d39beeb | Merge pull request #3 from Kntro-Soft/feature/discovery-create-session | Se integró la creación de sesiones de descubrimiento. | 15/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 1364da1 | Merge pull request #4 from Kntro-Soft/feature/discovery-create-user-story | Se integró la creación de historias de usuario. | 15/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 8dd18dc | Merge pull request #5 from Kntro-Soft/feature/discovery-get-resources | Se integraron endpoints de consulta para recursos Discovery. | 15/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 3078083 | Merge pull request #6 from Kntro-Soft/feature/discovery-process-transcript | Se integró el procesamiento de transcripciones. | 17/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 45692c4 | Merge pull request #8 from Kntro-Soft/feature/discovery-session-lifecycle | Se integró el ciclo de vida de sesiones de descubrimiento. | 18/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 3a0aa6f | Merge pull request #11 from Kntro-Soft/feature/tooling-quality-gates | Se integraron herramientas de calidad y CI. | 18/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 57dbe82 | Merge pull request #12 from Kntro-Soft/feature/workspace-create-project | Se integró la creación de proyectos. | 19/06/2026 |
+| Kntro-Soft/reqsai-api | develop | b6d91cb | Merge pull request #13 from Kntro-Soft/feature/workspace-project-management | Se integró la gestión de proyectos. | 19/06/2026 |
+| Kntro-Soft/reqsai-api | develop | bcbbe81 | Merge pull request #15 from Kntro-Soft/feature/discovery-manage-acceptance-criteria | Se integró la gestión de criterios de aceptación. | 20/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 9c7f57e | Merge pull request #17 from Kntro-Soft/feature/discovery-recording | Se integró funcionalidad de grabación y transcripción. | 20/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 8c0c1c2 | Merge pull request #19 from Kntro-Soft/feature/workspace-project-context | Se integró contexto de proyecto, glosario y restricciones. | 20/06/2026 |
+| Kntro-Soft/reqsai-api | develop | d5c2c98 | Merge pull request #22 from Kntro-Soft/feature/iam-auth | Se integraron mejoras de IAM y autenticación. | 20/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 6206d08 | Merge pull request #23 from Kntro-Soft/feature/discovery-realtime-suggestions | Se integraron sugerencias en tiempo real para historias de usuario. | 20/06/2026 |
+| Kntro-Soft/reqsai-web | develop | 43fecb7 | Merge pull request #1 from Kntro-Soft/feature/project-foundation | Se integró la base inicial del frontend. | 19/06/2026 |
+| Kntro-Soft/reqsai-web | develop | 0539912 | Merge pull request #3 from Kntro-Soft/feature/project-logo | Se integró el logo y branding de Reqs-AI. | 20/06/2026 |
+
+Como aprendizaje principal, el Sprint permitió consolidar la integración entre backend, frontend, documentación y despliegue cloud. También permitió identificar la importancia de mantener evidencias visuales organizadas, separar ramas por funcionalidad y documentar pasos técnicos críticos para facilitar la revisión del avance del producto.
+
+---
 
 ## 7.3. Validation Interviews
 
-La sección de entrevistas de validación debe evidenciar el proceso usado para validar la solución con usuarios, especialistas o stakeholders relacionados con el producto. En el paquete recibido no se adjuntaron capturas, audios, transcripciones o registros de entrevistas; por ello, se deja la estructura base para completarla con la información real.
+En esta sección se presenta el diseño de entrevistas de validación para **Reqs-AI**, plataforma SaaS B2B orientada a transformar sesiones de discovery en artefactos de requisitos listos para delivery. El propósito de estas entrevistas es evaluar la experiencia de uso, la claridad del flujo, la utilidad percibida de la asistencia con IA y la capacidad de la aplicación para apoyar la generación de requerimientos trazables y accionables.
+
+Para este entregable, el alcance se limita a la **aplicación web actual disponible en el repositorio**. En consecuencia, no se valida una landing page comercial, ya que dicho artefacto no se encuentra implementado de forma visible en la evidencia disponible. Asimismo, se excluyen del diseño las integraciones aún no operativas o señaladas como pendientes, especialmente la integración con Jira y la sección de Integrations. Los apartados de **Registro de Entrevistas** y **Evaluaciones según heurísticas** se dejan estructurados para completar con la evidencia real de las sesiones ejecutadas.
 
 ### 7.3.1. Diseño de Entrevistas
 
-El diseño de entrevistas debe explicar el objetivo de la validación, el perfil de los entrevistados, los criterios de selección, el guion de preguntas y el propósito de cada pregunta.
+Para validar la propuesta de valor y la experiencia de uso de Reqs-AI, se diseñaron entrevistas semiestructuradas dirigidas a dos segmentos principales del producto: **Líder Técnico de Startup** y **Analista de Sistemas / Producto Enterprise**. Aunque ambos segmentos comparten el núcleo del flujo de negocio, cada uno interactúa con la plataforma desde prioridades distintas. El primero busca velocidad, reducción de fricción y utilidad inmediata para pasar de reunión a sprint; el segundo busca trazabilidad, control, estandarización y calidad de los artefactos generados.
 
-| Elemento                  | Descripción                                                                                                                                                                                              |
-| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Objetivo de la entrevista | Validar si la propuesta de Reqs-AI ayuda a organizar sesiones de levantamiento de requerimientos, transformar conversaciones en historias de usuario y facilitar el análisis de criterios de aceptación. |
-| Tipo de entrevista        | Entrevista semiestructurada de validación del producto.                                                                                                                                                  |
-| Perfil de entrevistados   | Product owners, analistas funcionales, miembros de equipos de desarrollo, docentes o stakeholders relacionados con levantamiento de requerimientos.                                                      |
-| Criterios de selección    | Personas con experiencia o participación en definición de requerimientos, gestión de proyectos de software o revisión de historias de usuario.                                                           |
-| Duración estimada         | 10 a 20 minutos por entrevista.                                                                                                                                                                          |
-| Modalidad                 | Virtual o presencial, según disponibilidad del entrevistado.                                                                                                                                             |
+Las entrevistas están planteadas sobre funcionalidades efectivamente presentes en la aplicación web actual, incluyendo autenticación, workspace, proyectos, configuración del contexto técnico, glosario, restricciones, sesiones de discovery, historial y gestión de historias de usuario.
 
-**Guion de entrevista propuesto**
+#### A. Segmento: Líder Técnico de Startup
 
-| N.º | Pregunta                                                                                                          | Propósito                                     |
-| --- | ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| 1   | ¿Cómo realizan actualmente el levantamiento y registro de requerimientos en un proyecto?                          | Identificar el proceso actual del usuario.    |
-| 2   | ¿Qué problemas suelen aparecer al convertir reuniones o conversaciones en historias de usuario?                   | Detectar dolores y oportunidades de mejora.   |
-| 3   | ¿Considera útil una herramienta que transcriba sesiones y sugiera historias de usuario automáticamente? ¿Por qué? | Validar la utilidad percibida de la solución. |
-| 4   | ¿Qué información mínima debería mostrar una historia de usuario para que sea útil en un backlog?                  | Identificar criterios funcionales esperados.  |
-| 5   | ¿Qué tan importante sería revisar, aprobar o rechazar historias generadas antes de agregarlas al backlog?         | Validar el flujo de control y revisión.       |
-| 6   | ¿La organización por workspace, proyectos, sesiones e historias le resulta clara?                                 | Validar la arquitectura de información.       |
-| 7   | ¿Qué mejoras sugeriría para que la herramienta sea más fácil de usar?                                             | Recoger oportunidades de mejora.              |
+**Objetivos de la sesión:**
+
+* Validar si el flujo de acceso, entrada al workspace y navegación inicial hacia el proyecto resulta claro y suficientemente ágil para un usuario con presión por velocidad de ejecución.
+* Evaluar si la configuración del contexto técnico del proyecto permite capturar rápidamente stack, arquitectura y dominio sin fricción innecesaria.
+* Comprobar si el módulo de discovery en vivo y la revisión de sugerencias con IA ayudan a convertir una conversación en historias utilizables para planificación técnica.
+* Identificar puntos de fricción, ruido cognitivo o pasos redundantes que afecten la transición entre reunión, validación y backlog.
+
+**Artefactos a evaluar:** Aplicación Web.
+
+**User Flows del Segmento a Validar:**
+
+```text
+[Flujo 1: Acceso y Setup Inicial]
+Sign In -> Organización / Workspace -> Lista de Proyectos -> Ingreso a Proyecto.
+
+[Flujo 2: Configuración de Contexto Técnico]
+Proyecto -> Settings del Proyecto -> Configuración de stack, arquitectura y dominio.
+
+[Flujo 3: Discovery en Vivo y Decisión Rápida]
+Proyecto -> Sessions -> Iniciar sesión -> Pausar / Reanudar / Detener -> Revisar sugerencias -> Aprobar / Rechazar -> Stories.
+```
+
+**Guía de Tareas y Escenarios:**
+
+1. **Escenario de acceso y orientación inicial:** “Usted acaba de ingresar a Reqs-AI porque necesita preparar una reunión de discovery con un cliente que se realizará hoy. Inicie sesión, ubique su workspace y acceda al proyecto en el que trabajará con su equipo.”
+2. **Tarea de configuración técnica:** “Antes de iniciar la sesión, complete o revise la información técnica base del proyecto. Diríjase a la configuración del proyecto e identifique dónde registraría el stack, la arquitectura y el dominio del sistema para dar mejor contexto a la IA.”
+3. **Tarea de discovery y decisión operativa:** “Ahora imagine que ya está conduciendo la reunión. Ingrese al módulo de sesiones, inicie una sesión de discovery, revise las sugerencias generadas por el sistema y decida cuáles aprobaría o descartaría para convertirlas en historias útiles para su siguiente sprint.”
+
+**Preguntas durante la interacción:**
+
+1. Al iniciar sesión y entrar al workspace, ¿le resultó evidente cómo llegar al proyecto en el que iba a trabajar o tuvo que pensar demasiado en la ruta?
+2. En la configuración del proyecto, ¿la captura del contexto técnico le parece suficientemente rápida para un entorno de startup o siente que le interrumpe el ritmo?
+3. Mientras revisa las sugerencias de la sesión en vivo, ¿percibe que la IA le muestra señal útil o demasiado ruido que tendría que filtrar manualmente?
+4. Al aprobar o rechazar sugerencias, ¿le queda claro qué impacto tendrá esa decisión sobre las historias del proyecto y el backlog resultante?
+5. ¿La transición entre sesión de discovery e historias le transmite una sensación de continuidad operacional o siente que cambia demasiado de contexto?
+
+**Preguntas de cierre:**
+
+6. En comparación con su proceso actual, ¿cree que esta aplicación le ahorraría tiempo real entre la reunión y la planificación del sprint? ¿Por qué?
+7. ¿Qué parte del flujo sintió más lenta, innecesaria o poco alineada con una operación de alta velocidad?
+8. ¿Confiaría en usar estas sugerencias como base para discutir tareas técnicas con su equipo el mismo día de la reunión?
+9. Si tuviera que resumir la utilidad del producto para un equipo pequeño de ingeniería, ¿qué valor principal destacaría y qué objeción mantendría?
+
+#### B. Segmento: Analista de Sistemas / Producto Enterprise
+
+**Objetivos de la sesión:**
+
+* Validar si la estructura del workspace y del proyecto permite comprender con claridad dónde se encuentra la información relevante para la ingeniería de requisitos.
+* Evaluar si el uso de glosario, restricciones y datos del proyecto apoya la construcción de trazabilidad y consistencia semántica.
+* Comprobar si el flujo de historial, revisión de sugerencias, edición de historias y criterios de aceptación soporta una revisión humana rigurosa antes de publicar resultados.
+* Identificar riesgos de ambigüedad, pérdida de control, falta de auditabilidad o debilidades en la precisión de historias y criterios.
+
+**Artefactos a evaluar:** Aplicación Web.
+
+**User Flows del Segmento a Validar:**
+
+```text
+[Flujo 1: Acceso y Comprensión del Proyecto]
+Sign In -> Workspace -> Lista de Proyectos -> Overview del Proyecto.
+
+[Flujo 2: Curación del Contexto]
+Proyecto -> Project Info / Settings -> Glossary -> Constraints.
+
+[Flujo 3: Revisión Analítica de Resultados]
+Proyecto -> Sessions / History -> Cola de sugerencias -> Stories -> Story Detail -> Revisión de criterios de aceptación.
+```
+
+**Guía de Tareas y Escenarios:**
+
+1. **Escenario de acceso y entendimiento del entorno:** “Usted ha recibido la responsabilidad de analizar un proyecto ya creado dentro de Reqs-AI. Inicie sesión, entre al workspace correspondiente y localice el proyecto para comprender rápidamente su estructura general y el contexto disponible.”
+2. **Tarea de curación del contexto:** “Antes de revisar resultados generados por IA, navegue por la información del proyecto, el glosario y las restricciones técnicas. Identifique dónde registraría o verificaría términos clave del negocio y reglas relevantes para reducir ambigüedad en futuras sesiones.”
+3. **Tarea de revisión y refinamiento de artefactos:** “Acceda a las sesiones del proyecto o a su historial, revise las sugerencias pendientes y luego entre a las historias generadas para editar una de ellas y comprobar si los criterios de aceptación le permiten una validación suficientemente precisa antes de llevarla a backlog.”
+
+**Preguntas durante la interacción:**
+
+1. Al ingresar al proyecto, ¿la estructura de navegación le ayudó a entender dónde se ubican el contexto, las sesiones y las historias, o le pareció dispersa?
+2. En las secciones de glosario y restricciones, ¿siente que el producto le da mecanismos suficientes para reducir ambigüedad y mantener consistencia terminológica?
+3. Al revisar el historial o las sugerencias generadas por IA, ¿le queda claro qué proviene de la sesión y qué ya fue validado o descartado por una persona?
+4. Cuando entra al detalle de una historia y revisa sus criterios de aceptación, ¿la experiencia le transmite control y capacidad de auditoría sobre el artefacto final?
+5. ¿La edición de historias y criterios resulta lo bastante precisa para un contexto enterprise o siente que faltan señales, metadatos o estructura para una revisión rigurosa?
+
+**Preguntas de cierre:**
+
+6. ¿Considera que esta aplicación reduce el esfuerzo posterior a la reunión sin comprometer trazabilidad ni calidad documental?
+7. ¿Qué tan confiable le parece el equilibrio entre automatización e intervención humana que propone la plataforma?
+8. ¿Usaría este flujo como parte de un proceso formal de levantamiento de requisitos con stakeholders empresariales? ¿Qué tendría que mejorar para hacerlo viable?
+9. Si compara esta experiencia con su proceso actual de notas, grabaciones y documentación manual, ¿en qué parte observa la mayor mejora y en qué parte ve el mayor riesgo?
+
+En síntesis, el diseño de entrevistas propuesto permite validar el núcleo operacional de Reqs-AI desde dos perspectivas complementarias: la rapidez de ejecución requerida por un líder técnico de startup y la trazabilidad exigida por un analista de sistemas o producto en contexto enterprise. Ambos recorridos están construidos sobre funcionalidades actualmente disponibles en la aplicación web, con el fin de obtener evidencia realista y accionable sobre la propuesta de valor del producto.
 
 ### 7.3.2. Registro de Entrevistas
 
-En esta sección se debe registrar la información principal de cada entrevista realizada, incluyendo datos del entrevistado, fecha, modalidad, enlace de evidencia y resumen de hallazgos.
+En esta sección se debe registrar la información principal de cada entrevista realizada, incluyendo datos del entrevistado, perfil, fecha, modalidad, evidencia y principales hallazgos. El registro debe completarse únicamente con entrevistas efectivamente ejecutadas, evitando inventar participantes o resultados no validados.
 
-| Entrevistado           | Perfil                 | Fecha     | Modalidad | Evidencia                             | Principales hallazgos  |
-| ---------------------- | ---------------------- | --------- | --------- | ------------------------------------- | ---------------------- |
-| Pendiente de completar | Pendiente de completar | Pendiente | Pendiente | Pendiente de agregar enlace o captura | Pendiente de completar |
+| Entrevistado | Segmento | Perfil / Rol | Fecha | Modalidad | Evidencia | Principales hallazgos |
+|---|---|---|---|---|---|---|
+| Pendiente de completar | Líder Técnico de Startup | Pendiente | Pendiente | Virtual / Presencial | Pendiente de agregar enlace o captura | Pendiente de completar |
+| Pendiente de completar | Analista de Sistemas / Producto Enterprise | Pendiente | Pendiente | Virtual / Presencial | Pendiente de agregar enlace o captura | Pendiente de completar |
 
 ### 7.3.3. Evaluaciones según heurísticas
 
-En esta sección se presenta una matriz base para evaluar la solución según heurísticas de usabilidad, diseño inclusivo y arquitectura de información. La evaluación final debe completarse con evidencias reales de las vistas y entrevistas.
+En esta sección se presenta una matriz base para evaluar la solución según heurísticas de usabilidad, claridad de navegación, control del usuario y calidad del flujo de generación de requisitos. La evaluación final debe completarse con observaciones reales obtenidas durante las entrevistas y pruebas con usuarios.
 
-| Heurística evaluada                           | Hallazgo                                                                                                             | Severidad | Recomendación                                                            | Estado                   |
-| --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | --------- | ------------------------------------------------------------------------ | ------------------------ |
-| Visibilidad del estado del sistema            | La interfaz muestra estados en sesiones e historias, pero debe validarse con usuarios si son suficientemente claros. | Baja      | Mantener etiquetas de estado visibles y consistentes.                    | Pendiente de validación  |
-| Relación entre sistema y mundo real           | La organización por proyectos, sesiones e historias se alinea con flujos comunes de trabajo de software.             | Baja      | Mantener términos familiares para usuarios de gestión de requerimientos. | Pendiente de validación  |
-| Control y libertad del usuario                | Se evidencian acciones para gestionar sesiones, historias y ajustes.                                                 | Media     | Asegurar confirmaciones antes de acciones críticas como eliminar.        | Pendiente de validación  |
-| Consistencia y estándares                     | Las capturas muestran consistencia visual entre modo claro y oscuro.                                                 | Baja      | Mantener patrones de navegación, botones y estados entre vistas.         | Evidenciado parcialmente |
-| Prevención de errores                         | Se requiere validar mensajes y restricciones en formularios.                                                         | Media     | Agregar validaciones visibles antes de enviar formularios.               | Pendiente de validación  |
-| Reconocimiento antes que recuerdo             | La barra lateral y navegación ayudan a reconocer secciones principales.                                              | Baja      | Mantener navegación persistente en vistas internas.                      | Evidenciado parcialmente |
-| Flexibilidad y eficiencia de uso              | El selector de organización y accesos a proyectos facilitan el cambio de contexto.                                   | Baja      | Evaluar accesos rápidos para usuarios frecuentes.                        | Evidenciado parcialmente |
-| Diseño estético y minimalista                 | La UI mantiene diseño limpio, jerarquía clara y soporte dark/light.                                                  | Baja      | Evitar exceso de texto y priorizar acciones principales.                 | Evidenciado parcialmente |
-| Ayuda para reconocer y recuperarse de errores | No se adjuntó evidencia suficiente de pantallas de error.                                                            | Media     | Incluir mensajes claros de error, causa y acción recomendada.            | Pendiente de evidencia   |
-| Ayuda y documentación                         | La documentación técnica existe mediante Swagger/OpenAPI.                                                            | Baja      | Complementar con ayuda funcional para usuarios finales.                  | Evidenciado parcialmente |
+| Heurística evaluada | Hallazgo esperado a validar | Severidad inicial | Recomendación | Estado |
+|---|---|---|---|---|
+| Visibilidad del estado del sistema | Validar si el usuario entiende cuándo una sesión está activa, pausada, detenida o procesando sugerencias. | Media | Mantener estados visibles, etiquetas claras y feedback inmediato durante el flujo de discovery. | Pendiente de validación |
+| Relación entre sistema y mundo real | Validar si los términos workspace, proyecto, sesión, historia y criterio de aceptación son familiares para el usuario objetivo. | Baja | Mantener nomenclatura cercana al proceso real de levantamiento de requisitos. | Pendiente de validación |
+| Control y libertad del usuario | Validar si aprobar, rechazar o editar sugerencias antes de convertirlas en historias transmite control suficiente. | Media | Asegurar confirmaciones y posibilidad de corregir decisiones antes de publicar resultados. | Pendiente de validación |
+| Consistencia y estándares | Validar si la navegación, botones, estados y formularios son consistentes entre proyecto, sesiones, stories y settings. | Baja | Mantener patrones visuales y de interacción constantes en toda la aplicación. | Evidenciado parcialmente |
+| Prevención de errores | Validar si los formularios de configuración, glosario, restricciones e historias previenen errores de entrada. | Media | Agregar validaciones visibles, mensajes claros y restricciones antes de guardar. | Pendiente de validación |
+| Reconocimiento antes que recuerdo | Validar si la barra lateral, rutas y títulos permiten ubicarse sin memorizar pasos. | Baja | Mantener navegación persistente y encabezados claros por módulo. | Evidenciado parcialmente |
+| Flexibilidad y eficiencia de uso | Validar si usuarios avanzados pueden pasar rápido de sesión a historias sin fricción innecesaria. | Media | Incorporar accesos rápidos, filtros y acciones masivas para revisión de sugerencias. | Pendiente de validación |
+| Diseño estético y minimalista | Validar si la interfaz mantiene foco en las acciones principales sin sobrecargar la experiencia. | Baja | Priorizar información crítica y reducir elementos secundarios en flujos de alta presión. | Evidenciado parcialmente |
+| Ayuda para reconocer y recuperarse de errores | Validar si los errores de conexión, CORS, autenticación o carga de datos son comprensibles para el usuario. | Media | Mostrar causa probable del error y acción recomendada. | Pendiente de evidencia |
+| Ayuda y documentación | Validar si los usuarios entienden el flujo sin depender de documentación externa. | Baja | Complementar Swagger técnico con ayuda funcional dentro de la aplicación. | Pendiente de validación |
 
 ---
 
