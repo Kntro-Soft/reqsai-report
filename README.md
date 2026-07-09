@@ -2,42 +2,33 @@
     <div style="text-align: center; font-weight: bolder">
         <p>Universidad Peruana de Ciencias Aplicadas - Ingeniería de Software - 8 Ciclo</p>
         <img src="assets/brand/logo-upc.png" alt="logo of UPC"/>
-        <p>1ASI0732 - Arquitectura de Software Emergentes</p>
-        <p>Sección - 11821</p>
-        <p>Docente: Christian Luis De Los Rios Fernández</p>   
-        <p>Informe de Trabajo Final<p>
-        <p>Startup: Kntro-Soft</p>
-        <p>Producto: Reqs-AI</p>
+        <p>UNIVERSIDAD PERUANA DE CIENCIAS APLICADAS</p>
+        <p>INGENIERÍA DE SOFTWARE</p>
+        <p>CICLO 8</p>
+        <br>
+        <p>CURSO:</p>
+        <p>1ASI0728 – ARQUITECTURAS DE SOFTWARE EN TECNOLOGÍAS EMERGENTES</p>
+        <p>NRC: 11821</p>
+        <p>PROFESOR(A):</p>
+        <p>Christian Luis De Los Rios Fernández</p>
+        <br>
+        <p>INFORME DE TRABAJO FINAL</p>
+        <p>CICLO: 2026-10</p>
+        <br>
+        <p>STARTUP:</p>
+        <p>Kntro-Soft</p>
+        <p>PRODUCTO:</p>
+        <p>Reqs-AI</p>
+        <br>
+        <p>INTEGRANTES:</p>
+        <p>Gutiérrez Soto, Jhosepmyr Orlando - 202317638</p>
+        <p>Hernández Tuiro, Eric Ernesto - 20221C857</p>
+        <p>Ramirez Mestanza, Salim Ignacio - 20201E843</p>
+        <p>Varela Bustinza, Marcelo Alessandro - 202319668</p>
+        <p>Sulca Gonzales, Paul Fernando - 20221C486</p>
+        <br>
+        <p>JULIO - 2026</p>
     </div>
-    <div style="text-align: center; display: flex; flex-direction: column; align-items: center">
-        <h3 style="font-weight: bolder">Integrantes del equipo:</h3>
-        <table style="width: fit-content">
-            <tr>
-                <th style="text-align:start;">Estudiante</th>
-                <th style="text-align:center;">Código</th>
-            </tr>
-            <tr>
-                <td style="text-align:start;">Gutiérrez Soto, Jhosepmyr Orlando</td>
-                <td>202317638</td>
-            </tr>
-            <tr>
-                <td style="text-align:start;">Hernández Tuiro, Eric Ernesto</td>
-                <td>20221C857</td>
-            </tr>
-            <tr>
-                <td style="text-align:start;">Ramirez Mestanza, Salim Ignacio</td>
-                <td>20201E843</td>
-            </tr>
-            <tr>
-                <td style="text-align:start;">Varela Bustinza, Marcelo Alessandro</td>
-                <td>202319668</td>
-            <tr>
-              <td style="text-align:start;">Sulca Gonzales, Paul Fernando</td>
-              <td>20221C486</td>
-            </tr>
-        </table>
-    </div>
-    <p style="text-align: center">Abril 2026</p>
 </body>
 
 <div style="page-break-before: always"></div>
