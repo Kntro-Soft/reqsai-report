@@ -7238,7 +7238,7 @@ Se presenta a continuación el Sprint Planning correspondiente al segundo ciclo 
 
 A continuación se debe colocar la captura del tablero Jira correspondiente al Sprint 2:
 
-![Board del Sprint 2 en Jira](./assets/insights/sprint-planning-2.png)  
+![Board del Sprint 2 en Jira](./assets/insights/sprint-planning-1.png)  
 [Jira Board - Sprint 2](https://uni-ride.atlassian.net/jira/software/projects/REQ/boards/299)
 
 | Sprint # | Sprint 2 |
