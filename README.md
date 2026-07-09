@@ -7235,6 +7235,13 @@ Como aprendizaje principal, el Sprint permitió consolidar la integración entre
 
 ---
 
+### 7.2.2. Sprint 2
+
+Durante el segundo sprint del proyecto **Reqs-AI**, el equipo se enfocó en consolidar la solución como una plataforma desplegable en ambiente cloud, tomando como base los avances funcionales del Sprint 1. El trabajo se orientó a reforzar el backend `reqsai-api`, la aplicación web `reqsai-web`, la documentación técnica y el proceso de despliegue sobre AWS mediante una arquitectura basada en **Terraform**, **ECR**, **ECS Fargate**, **RDS**, **Application Load Balancer**, **S3**, **CloudFront** y configuración de despliegue mediante GitHub Actions con OIDC.
+
+El objetivo principal del Sprint fue dejar evidenciada la preparación y ejecución del despliegue productivo, validando que el backend pueda operar como servicio contenerizado, que el frontend pueda publicarse como aplicación estática distribuida por CDN, y que ambos componentes puedan comunicarse correctamente sin problemas de CORS.
+
+
 ## 7.3. Validation Interviews
 
 La sección de entrevistas de validación debe evidenciar el proceso usado para validar la solución con usuarios, especialistas o stakeholders relacionados con el producto. En el paquete recibido no se adjuntaron capturas, audios, transcripciones o registros de entrevistas; por ello, se deja la estructura base para completarla con la información real.
