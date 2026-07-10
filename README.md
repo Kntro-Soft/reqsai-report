@@ -8158,29 +8158,11 @@ Agrupar estos metadatos técnicos en un único bloque consolidado dentro de una 
 
 ## 7.4. Video About-the-Product
 
-En esta sección se debe incluir el video de presentación del producto, explicando el problema abordado, la solución propuesta, las funcionalidades principales, el público objetivo, la propuesta de valor y una demostración breve del funcionamiento.
-
-No se adjuntó enlace o archivo de video en el paquete recibido, por lo que se deja la estructura lista para completar.
-
-| Elemento del video        | Descripción                                                                                                                                            |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Título del video          | Reqs-AI: Plataforma para levantamiento inteligente de requerimientos                                                                                   |
-| Duración                  | Pendiente de completar                                                                                                                                 |
-| Enlace del video          | PENDIENTE_DE_AGREGAR_URL_DEL_VIDEO                                                                                                                     |
-| Participantes             | Pendiente de completar                                                                                                                                 |
-| Producto presentado       | Reqs-AI API y Web Application                                                                                                                          |
-| Funcionalidades mostradas | Login, organización, proyectos, sesiones de descubrimiento, historias de usuario, criterios de aceptación, documentación Swagger y despliegue backend. |
-
-**Guion sugerido para el video:**
-
-1. Presentar el problema: dificultad para transformar reuniones de requerimientos en historias de usuario claras y accionables.
-2. Presentar la solución: Reqs-AI como plataforma para organizar espacios de trabajo, proyectos, sesiones y backlog.
-3. Mostrar la Web Application: login, proyectos, miembros, sesiones, chat e historias.
-4. Mostrar los Web Services: Swagger/OpenAPI con endpoints de Discovery, User Stories y Acceptance Criteria.
-5. Mostrar el despliegue: Railway, PostgreSQL, logs y servicio activo.
-6. Cerrar con la propuesta de valor: reducir trabajo manual, mejorar trazabilidad y acelerar la generación de requerimientos.
+Enlace al video About The Team: [https://youtu.be/RPf5v-jJYlc](https://youtu.be/RPf5v-jJYlc)
 
 # Conclusiones
+
+## Conclusiones y Recomendaciones
 
 El equipo concluye que el problema abordado es real, recurrente y de alto impacto en el ciclo de vida del software: la ambigüedad en el levantamiento de requisitos y la sobrecarga de postprocesamiento generan retrabajo, retrasos y riesgo de construir funcionalidades incorrectas. La evidencia obtenida en entrevistas confirma un patrón consistente en ambos segmentos objetivo (Líder Técnico de Startup y Analista de Sistemas/Producto): transformar conversaciones en requisitos claros, trazables y accionables sigue siendo el principal cuello de botella.
 
@@ -8193,6 +8175,10 @@ Respecto a las hipótesis planteadas, el equipo considera que cuentan con valida
 La principal limitación actual del proyecto es que aún no se presenta evidencia completa de implementación, pruebas de campo y resultados longitudinales de adopción. En consecuencia, aunque la arquitectura y el diseño funcional están sólidamente fundamentados, todavía es necesario contrastar el comportamiento del sistema en escenarios productivos con usuarios reales y condiciones de carga, seguridad y dependencia de servicios externos de IA.
 
 Como siguientes pasos, se recomienda priorizar un MVP enfocado en el flujo crítico end-to-end (captura de reunión, síntesis guiada, generación de historias con criterios de aceptación y exportación a backlog), ejecutar pilotos controlados en startups y entornos enterprise, y definir un tablero de métricas para validar hipótesis de valor, eficiencia y confianza. Con ello, Reqs-AI podrá transitar de una solución bien diseñada en el plano estratégico a una plataforma validada en impacto operativo y escalabilidad de negocio.
+
+## Video About The Team
+
+Enlace al video About The Team: [https://youtu.be/6ZnpSvMzwR4](https://youtu.be/6ZnpSvMzwR4)
 
 # Bibliografía
 
