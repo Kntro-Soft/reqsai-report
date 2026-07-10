@@ -2,42 +2,33 @@
     <div style="text-align: center; font-weight: bolder">
         <p>Universidad Peruana de Ciencias Aplicadas - Ingeniería de Software - 8 Ciclo</p>
         <img src="assets/brand/logo-upc.png" alt="logo of UPC"/>
-        <p>1ASI0732 - Arquitectura de Software Emergentes</p>
-        <p>Sección - 11821</p>
-        <p>Docente: Christian Luis De Los Rios Fernández</p>   
-        <p>Informe de Trabajo Final<p>
-        <p>Startup: Kntro-Soft</p>
-        <p>Producto: Reqs-AI</p>
+        <p>UNIVERSIDAD PERUANA DE CIENCIAS APLICADAS</p>
+        <p>INGENIERÍA DE SOFTWARE</p>
+        <p>CICLO 8</p>
+        <br>
+        <p>CURSO:</p>
+        <p>1ASI0728 – ARQUITECTURAS DE SOFTWARE EN TECNOLOGÍAS EMERGENTES</p>
+        <p>NRC: 11821</p>
+        <p>PROFESOR(A):</p>
+        <p>Christian Luis De Los Rios Fernández</p>
+        <br>
+        <p>INFORME DE TRABAJO FINAL</p>
+        <p>CICLO: 2026-10</p>
+        <br>
+        <p>STARTUP:</p>
+        <p>Kntro-Soft</p>
+        <p>PRODUCTO:</p>
+        <p>Reqs-AI</p>
+        <br>
+        <p>INTEGRANTES:</p>
+        <p>Gutiérrez Soto, Jhosepmyr Orlando - 202317638</p>
+        <p>Hernández Tuiro, Eric Ernesto - 20221C857</p>
+        <p>Ramirez Mestanza, Salim Ignacio - 20201E843</p>
+        <p>Varela Bustinza, Marcelo Alessandro - 202319668</p>
+        <p>Sulca Gonzales, Paul Fernando - 20221C486</p>
+        <br>
+        <p>JULIO - 2026</p>
     </div>
-    <div style="text-align: center; display: flex; flex-direction: column; align-items: center">
-        <h3 style="font-weight: bolder">Integrantes del equipo:</h3>
-        <table style="width: fit-content">
-            <tr>
-                <th style="text-align:start;">Estudiante</th>
-                <th style="text-align:center;">Código</th>
-            </tr>
-            <tr>
-                <td style="text-align:start;">Gutiérrez Soto, Jhosepmyr Orlando</td>
-                <td>202317638</td>
-            </tr>
-            <tr>
-                <td style="text-align:start;">Hernández Tuiro, Eric Ernesto</td>
-                <td>20221C857</td>
-            </tr>
-            <tr>
-                <td style="text-align:start;">Ramirez Mestanza, Salim Ignacio</td>
-                <td>20201E843</td>
-            </tr>
-            <tr>
-                <td style="text-align:start;">Varela Bustinza, Marcelo Alessandro</td>
-                <td>202319668</td>
-            <tr>
-              <td style="text-align:start;">Sulca Gonzales, Paul Fernando</td>
-              <td>20221C486</td>
-            </tr>
-        </table>
-    </div>
-    <p style="text-align: center">Abril 2026</p>
 </body>
 
 <div style="page-break-before: always"></div>
@@ -211,15 +202,24 @@ TP:
     * [7.1.3. Source Code Style Guide & Conventions](#713-source-code-style-guide--conventions)
     * [7.1.4. Software Deployment Configuration](#714-software-deployment-configuration)
   * [7.2. Solution Implementation](#72-solution-implementation)
-    * [7.2.X. Sprint n](#72x-sprint-n)
-      * [7.2.X.1. Sprint Planning n](#72x1-sprint-planning-n)
-      * [7.2.X.2. Sprint Backlog n](#72x2-sprint-backlog-n)
-      * [7.2.X.3. Development Evidence for Sprint Review](#72x3-development-evidence-for-sprint-review)
-      * [7.2.X.4. Testing Suite Evidence for Sprint Review](#72x4-testing-suite-evidence-for-sprint-review)
-      * [7.2.X.5. Execution Evidence for Sprint Review](#72x5-execution-evidence-for-sprint-review)
-      * [7.2.X.6. Services Documentation Evidence for Sprint Review](#72x6-services-documentation-evidence-for-sprint-review)
-      * [7.2.X.7. Software Deployment Evidence for Sprint Review](#72x7-software-deployment-evidence-for-sprint-review)
-      * [7.2.X.8. Team Collaboration Insights during Sprint](#72x8-team-collaboration-insights-during-sprint)
+    * [7.2.1. Sprint n](#721-sprint-n)
+      * [7.2.1.1. Sprint Planning n](#7211-sprint-planning-n)
+      * [7.2.1.2. Sprint Backlog n](#7212-sprint-backlog-n)
+      * [7.2.1.3. Development Evidence for Sprint Review](#7213-development-evidence-for-sprint-review)
+      * [7.2.1.4. Testing Suite Evidence for Sprint Review](#7214-testing-suite-evidence-for-sprint-review)
+      * [7.2.1.5. E1ecution Evidence for Sprint Review](#7215-e1ecution-evidence-for-sprint-review)
+      * [7.2.1.6. Services Documentation Evidence for Sprint Review](#7216-services-documentation-evidence-for-sprint-review)
+      * [7.2.1.7. Software Deployment Evidence for Sprint Review](#7217-software-deployment-evidence-for-sprint-review)
+      * [7.2.1.8. Team Collaboration Insights during Sprint](#7218-team-collaboration-insights-during-sprint)
+    * [7.2.2. Sprint n](#722-sprint-n)
+      * [7.2.2.1. Sprint Planning n](#7221-sprint-planning-n)
+      * [7.2.2.2. Sprint Backlog n](#7222-sprint-backlog-n)
+      * [7.2.2.3. Development Evidence for Sprint Review](#7223-development-evidence-for-sprint-review)
+      * [7.2.2.4. Testing Suite Evidence for Sprint Review](#7224-testing-suite-evidence-for-sprint-review)
+      * [7.2.2.5. E2ecution Evidence for Sprint Review](#7225-e2ecution-evidence-for-sprint-review)
+      * [7.2.2.6. Services Documentation Evidence for Sprint Review](#7226-services-documentation-evidence-for-sprint-review)
+      * [7.2.2.7. Software Deployment Evidence for Sprint Review](#7227-software-deployment-evidence-for-sprint-review)
+      * [7.2.2.8. Team Collaboration Insights during Sprint](#7228-team-collaboration-insights-during-sprint)
   * [7.3. Validation Interviews](#73-validation-interviews)
     * [7.3.1. Diseño de Entrevistas](#731-diseño-de-entrevistas)
     * [7.3.2. Registro de Entrevistas](#732-registro-de-entrevistas)
@@ -242,10 +242,10 @@ El curso contribuye al cumplimiento del Student Outcome ABET:
 
 En el siguiente cuadro se describen las acciones realizadas y los enunciados de conclusiones por parte del grupo, los cuales permiten sustentar el haber alcanzado el logro del ABET – EAC - Student Outcome 3.
 
-| **Criterio específico**                                                                                                                                                                   | **Acciones realizadas**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | **Conclusiones**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| **Criterio específico** | **Acciones realizadas** | **Conclusiones** |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Comunica oralmente sus ideas y/o resultados con objetividad a público de diferentes especialidades y niveles jerárquicos, en el marco del desarrollo de un proyecto en ingeniería.**    | **TB1**<br>**Gutiérrez Soto, Jhosepmyr Orlando – 202317638**<br>Trabajé comunicando oralmente los aspectos generales del proyecto relacionados con el Capítulo I y parte del Capítulo IV. Expliqué la descripción de la startup, la propuesta de solución y los fundamentos estratégicos del producto, procurando presentar las ideas de manera clara, ordenada y comprensible para una audiencia académica.<br><br>**Hernández Tuiro, Eric Ernesto – 20221C857**<br>Trabajé comunicando oralmente los contenidos vinculados al Capítulo I y Capítulo IV. Presenté ideas relacionadas con el perfil de la solución, el enfoque estratégico del producto y las decisiones generales de diseño, utilizando un lenguaje objetivo y adecuado para explicar la relación entre la problemática identificada y la solución propuesta.<br><br>**Ramirez Mestanza, Salim Ignacio – 20201E843**<br>Trabajé comunicando oralmente los avances desarrollados en el Capítulo II, principalmente los resultados del análisis de requerimientos, entrevistas, competidores y hallazgos del proceso de need finding. Mi participación permitió explicar cómo se identificaron necesidades relevantes para orientar el desarrollo del producto.<br><br>**Varela Bustinza, Marcelo Alessandro – 202319668**<br>Trabajé comunicando oralmente los resultados correspondientes al Capítulo II, especialmente el análisis competitivo, las estrategias frente a competidores, el diseño y análisis de entrevistas, así como los principales hallazgos obtenidos sobre los usuarios. Busqué explicar la información de manera objetiva, conectando los resultados con la definición de requerimientos del proyecto.<br><br>**Sulca Gonzales, Paul Fernando – 20221C486**<br>Trabajé comunicando oralmente los contenidos del Capítulo III, relacionados con la especificación de requerimientos, user stories, product backlog e impact mapping. Expliqué cómo los hallazgos obtenidos en etapas anteriores se transformaron en requisitos y elementos priorizados para el desarrollo de la solución.<br><br>**TP**<br>**Gutiérrez Soto, Jhosepmyr Orlando – 202317638**<br>Trabajé comunicando oralmente mis ideas con objetividad al presentar la arquitectura y diseño de cada bounded context en el Capítulo V. Adapté mi lenguaje para que perfiles tanto técnicos, como desarrolladores, y de negocio, como stakeholders, comprendieran cómo los componentes tácticos resuelven los problemas del proyecto de ingeniería.<br><br>**Hernández Tuiro, Eric Ernesto – 20221C857**<br>Trabajé comunicando oralmente los resultados de la refactorización aplicada al Event Storming y sustenté los diagramas del Capítulo V. Expuse estas ideas con objetividad, asegurándome de que las decisiones de diseño arquitectónico fueran claras para una audiencia de diferentes niveles jerárquicos y especialidades.<br><br>**Ramirez Mestanza, Salim Ignacio – 20201E843**<br>Trabajé comunicando oralmente las especificaciones de la landing page y el diseño y estilos de la versión mobile, correspondientes al Capítulo VI. Presenté mis ideas de forma objetiva, demostrando cómo las decisiones de interfaz de usuario se alinean con los requerimientos técnicos y de ingeniería.<br><br>**Varela Bustinza, Marcelo Alessandro – 202319668**<br>Comuniqué oralmente los resultados del diseño UX/UI de la aplicación web de Reqs-AI, explicando el flujo completo desde la autenticación y creación del workspace hasta la gestión de proyectos, sesiones de descubrimiento, revisión de historias de usuario, integración con Jira, facturación y configuración del equipo. Además, sustenté la relación entre wireframes, wireflows y mock-ups, destacando cómo cada pantalla mantiene coherencia visual, navegación consistente y alineación con las funcionalidades principales del producto.<br><br>**Sulca Gonzales, Paul Fernando – 20221C486**<br>Trabajé comunicando oralmente la refactorización de las User Stories y del Product Backlog, además de sustentar partes del Capítulo V. Mantuve objetividad al explicar cómo las historias guían el desarrollo de la ingeniería, asegurando que el público de diferentes especialidades entendiera su impacto en la arquitectura.<br><br>**TB2**<br>**Gutiérrez Soto, Jhosepmyr Orlando – 202317638**<br>Trabajé comunicando oralmente los avances relacionados con la evidencia de desarrollo del Sprint Review, explicando las funcionalidades implementadas en el frontend y su relación con los flujos principales de la aplicación. Además, presenté parte de la evidencia de ejecución y despliegue del software, mostrando cómo los avances realizados permitieron validar el funcionamiento del producto en un entorno demostrable.<br><br>**Hernández Tuiro, Eric Ernesto – 20221C857**<br>Trabajé comunicando oralmente los avances del backend y la documentación de servicios para el Sprint Review. Expliqué la finalidad de los servicios desarrollados, la relación entre los endpoints y las funcionalidades del sistema, así como la forma en que el backend se integra con el frontend y la aplicación mobile. Mi participación permitió presentar información técnica de manera clara para audiencias con distintos niveles de conocimiento.<br><br>**Ramirez Mestanza, Salim Ignacio – 20201E843**<br>Trabajé comunicando oralmente los avances de la aplicación mobile, explicando las funcionalidades implementadas, los flujos principales y su relación con los requerimientos definidos para el sprint. Asimismo, sustenté parte de la Testing Suite Evidence y Execution Evidence for Sprint Review, presentando los resultados de las pruebas realizadas y la validación del funcionamiento de la aplicación desde la perspectiva del usuario final.<br><br>**Varela Bustinza, Marcelo Alessandro – 202319668**<br>Comuniqué oralmente los avances del frontend de la aplicación web, explicando las vistas, interacciones y flujos implementados durante el sprint. Además, sustenté las secciones relacionadas con Validation Interviews, incluyendo el diseño de entrevistas, el registro de entrevistas y las evaluaciones según heurísticas. También participé en la explicación del Video About-the-Product, destacando la propuesta de valor, las funcionalidades principales y los avances logrados en frontend, backend y mobile.<br><br>**Sulca Gonzales, Paul Fernando – 20221C486**<br>Trabajé comunicando oralmente la evidencia de colaboración del equipo durante el sprint, explicando la organización de tareas, la coordinación entre integrantes y el seguimiento de avances. Asimismo, sustenté información relacionada con testing, ejecución, documentación de servicios y despliegue, conectando estos elementos con el trabajo realizado en frontend, backend y mobile para presentar una solución más integrada durante el Sprint Review.                                                                              | **TB1**<br>Como equipo, se logró comunicar oralmente los avances del proyecto de manera clara, organizada y objetiva. Cada integrante explicó los resultados correspondientes a su participación, conectando los capítulos desarrollados con el propósito general de la solución. Asimismo, la exposición permitió adaptar el lenguaje técnico a una audiencia académica, integrando aspectos de negocio, usuarios, requerimientos y diseño de ingeniería.<br><br>**TP**<br>Como equipo en esta etapa, logramos sustentar oralmente decisiones arquitectónicas complejas y diseños de interfaz. Comunicamos con objetividad cómo el diseño táctico de los Bounded Contexts y las mejoras en UX/UI resuelven las necesidades del negocio. Adaptamos nuestra exposición para que tanto perfiles gerenciales, enfocados en el valor del producto, como técnicos, enfocados en patrones de ingeniería, comprendieran claramente la evolución y escalabilidad del sistema.<br><br>**TB2**<br>Como equipo, en TB2 logramos comunicar oralmente los avances del producto de forma clara, objetiva y organizada. La exposición permitió sustentar evidencias de desarrollo, testing, ejecución, documentación de servicios, despliegue de software, colaboración del equipo, entrevistas de validación, evaluación heurística y video del producto. Además, se comunicó el avance integral del sistema considerando frontend, backend y mobile, adaptando el lenguaje para que los resultados fueran comprensibles tanto para una audiencia técnica como para evaluadores académicos y stakeholders del proyecto.                                                                                         |
-| **Comunica en forma escrita ideas y/o resultados con objetividad a público de diferentes especialidades y niveles jerárquicos, en el marco del desarrollo de un proyecto en ingeniería.** | **TB1**<br>**Gutiérrez Soto, Jhosepmyr Orlando – 202317638**<br>Trabajé comunicando de forma escrita los contenidos relacionados con el Capítulo I y parte del Capítulo IV. Redacté información sobre el perfil de la startup, la propuesta de solución y los elementos estratégicos del diseño del producto, procurando mantener una estructura clara y una redacción adecuada para el contexto académico y de ingeniería.<br><br>**Hernández Tuiro, Eric Ernesto – 20221C857**<br>Trabajé comunicando de forma escrita los apartados vinculados al Capítulo I y Capítulo IV. Mi aporte se centró en organizar y redactar ideas sobre la solución propuesta, su relación con la problemática y los criterios estratégicos del producto, asegurando coherencia entre el enfoque del proyecto y las decisiones de diseño.<br><br>**Ramirez Mestanza, Salim Ignacio – 20201E843**<br>Trabajé comunicando de forma escrita los contenidos del Capítulo II, principalmente en los apartados de análisis de requerimientos, entrevistas, competidores, identificación de necesidades y lenguaje ubicuo. Mi aporte permitió documentar los hallazgos de manera ordenada y orientada a sustentar la definición de requerimientos.<br><br>**Varela Bustinza, Marcelo Alessandro – 202319668**<br>Trabajé comunicando de forma escrita los resultados del Capítulo II, incluyendo el análisis competitivo, estrategias frente a competidores, diseño y análisis de entrevistas, user personas, mapas de empatía y escenarios actuales. Mi trabajo contribuyó a presentar evidencia relevante sobre las necesidades del usuario y su relación con los requerimientos del producto.<br><br>**Sulca Gonzales, Paul Fernando – 20221C486**<br>Trabajé comunicando de forma escrita los contenidos del Capítulo III, enfocados en to-be scenario mapping, user stories, product backlog e impact mapping. Mi aporte permitió transformar los hallazgos del análisis en requisitos claros, priorizados y alineados con los objetivos del producto.<br><br>**TP**<br>**Gutiérrez Soto, Jhosepmyr Orlando – 202317638**<br>Trabajé comunicando en forma escrita los resultados del diseño táctico de cada bounded context en el Capítulo V. Redacté la estructura de las capas de dominio, aplicación e infraestructura manteniendo objetividad técnica, utilizando diagramas estándar para que equipos de diferentes especialidades puedan comprender la arquitectura.<br><br>**Hernández Tuiro, Eric Ernesto – 20221C857**<br>Trabajé comunicando en forma escrita las mejoras y la refactorización aplicadas al Event Storming, documentando objetivamente las decisiones tomadas. Apoyé en la redacción técnica del Capítulo V, asegurando que la documentación sea comprensible y útil tanto para desarrolladores como para evaluadores del proyecto.<br><br>**Ramirez Mestanza, Salim Ignacio – 20201E843**<br>Trabajé comunicando en forma escrita los elementos del Capítulo VI, especificando la landing page y el diseño y estilos de la versión mobile del app. Documenté estas decisiones de UX/UI con objetividad, estructurando la información de manera que sea fácilmente interpretable por equipos de distintas disciplinas.<br><br>**Varela Bustinza, Marcelo Alessandro – 202319668**<br>Comuniqué de forma escrita la documentación del Capítulo VI: Solution UX Design, desarrollando secciones relacionadas con style guidelines, information architecture, wireframes, wireflows y mock-ups de la web application. Redacté subtítulos y descripciones para cada imagen, organicé los recursos visuales con nombres consistentes y expliqué cómo cada pantalla representa una acción o estado funcional dentro del flujo de Reqs-AI. Este trabajo permitió evidenciar la evolución desde la estructura de baja fidelidad hasta la propuesta visual final de la plataforma.<br><br>**Sulca Gonzales, Paul Fernando – 20221C486**<br>Trabajé comunicando en forma escrita la refactorización de las User Stories y la actualización del Product Backlog. Redacté estos artefactos con objetividad técnica para que sirvan de puente claro entre las necesidades del negocio y la implementación en ingeniería, apoyando también en la documentación del Capítulo V.<br><br>**TB2**<br>**Gutiérrez Soto, Jhosepmyr Orlando – 202317638**<br>Trabajé comunicando de forma escrita los avances correspondientes a la Development Evidence for Sprint Review, documentando las funcionalidades implementadas en el frontend y organizando evidencias visuales del progreso realizado. Además, apoyé en la redacción de la Software Deployment Evidence for Sprint Review, describiendo los elementos necesarios para sustentar la puesta en ejecución del producto.<br><br>**Hernández Tuiro, Eric Ernesto – 20221C857**<br>Trabajé comunicando de forma escrita los avances del backend y la Services Documentation Evidence for Sprint Review. Redacté información sobre los servicios implementados, su propósito dentro del sistema, la relación con las funcionalidades principales y su integración con frontend y mobile. Mi aporte permitió que la documentación técnica sea entendible para desarrolladores, evaluadores y miembros del equipo con distintos niveles de especialización.<br><br>**Ramirez Mestanza, Salim Ignacio – 20201E843**<br>Trabajé comunicando de forma escrita los avances de la aplicación mobile y la Testing Suite Evidence for Sprint Review. Documenté escenarios de prueba, resultados obtenidos y evidencias de ejecución, relacionando cada validación con los flujos principales del producto. También apoyé en la organización de la Execution Evidence for Sprint Review, procurando que la información sea clara, verificable y alineada con los requerimientos definidos para el sprint.<br><br>**Varela Bustinza, Marcelo Alessandro – 202319668**<br>Comuniqué de forma escrita los avances del frontend web, registrando pantallas, flujos e interacciones implementadas durante el sprint. Además, desarrollé documentación relacionada con Validation Interviews, incluyendo el diseño de entrevistas, el registro de entrevistas realizadas y las evaluaciones según heurísticas. También apoyé en la sección Video About-the-Product, redactando información orientada a explicar la propuesta de valor, las funcionalidades principales y el estado actual del producto de manera comprensible para distintas audiencias.<br><br>**Sulca Gonzales, Paul Fernando – 20221C486**<br>Trabajé comunicando de forma escrita los resultados de colaboración del equipo durante el sprint, documentando la organización de tareas, la coordinación entre integrantes y los acuerdos de trabajo. Además, contribuí a la redacción de evidencias relacionadas con testing, ejecución, documentación de servicios y despliegue, asegurando que los avances de frontend, backend y mobile se presenten de manera ordenada y coherente con los objetivos del Sprint Review. | **TB1**<br>Como equipo, se logró comunicar por escrito las ideas, resultados y decisiones del proyecto de manera estructurada y objetiva. El documento integra información sobre negocio, usuarios, requerimientos y diseño estratégico, manteniendo una secuencia lógica entre los capítulos. Además, la redacción permitió presentar el proyecto de forma comprensible para audiencias con distintos niveles de conocimiento técnico.<br><br>**TP**<br>Para el entregable TP, el equipo demostró la capacidad de documentar formalmente la arquitectura de software, correspondiente al Capítulo V, y el diseño de la experiencia de usuario, correspondiente al Capítulo VI. Se estructuraron los modelos de dominio, diagramas tácticos y wireflows con estricta objetividad técnica. Esta documentación escrita permite que profesionales de diferentes especialidades, desde desarrolladores hasta líderes de proyecto, puedan entender las soluciones de ingeniería propuestas sin ambigüedades.<br><br>**TB2**<br>Como equipo, en TB2 logramos comunicar por escrito los avances del proyecto de manera objetiva, estructurada y verificable. La documentación permitió evidenciar el progreso del frontend, backend y mobile, así como las pruebas realizadas, la ejecución del sistema, la documentación de servicios, el despliegue de software, la colaboración del equipo, las entrevistas de validación, las evaluaciones heurísticas y el video del producto. Estos elementos fortalecen la presentación del proyecto ante audiencias de diferentes especialidades, ya que organizan la información técnica y funcional de forma clara y alineada con los objetivos de ingeniería. |
+| **Comunica oralmente sus ideas y/o resultados con objetividad a público de diferentes especialidades y niveles jerárquicos, en el marco del desarrollo de un proyecto en ingeniería.** | **TB1**<br>**Gutiérrez Soto, Jhosepmyr Orlando – 202317638**<br>Trabajé comunicando oralmente los aspectos generales del proyecto relacionados con el Capítulo I y parte del Capítulo IV. Expliqué la descripción de la startup, la propuesta de solución y los fundamentos estratégicos del producto, procurando presentar las ideas de manera clara, ordenada y comprensible para una audiencia académica.<br><br>**Hernández Tuiro, Eric Ernesto – 20221C857**<br>Trabajé comunicando oralmente los contenidos vinculados al Capítulo I y Capítulo IV. Presenté ideas relacionadas con el perfil de la solución, el enfoque estratégico del producto y las decisiones generales de diseño, utilizando un lenguaje objetivo y adecuado para explicar la relación entre la problemática identificada y la solución propuesta.<br><br>**Ramirez Mestanza, Salim Ignacio – 20201E843**<br>Trabajé comunicando oralmente los avances desarrollados en el Capítulo II, principalmente los resultados del análisis de requerimientos, entrevistas, competidores y hallazgos del proceso de need finding. Mi participación permitió explicar cómo se identificaron necesidades relevantes para orientar el desarrollo del producto.<br><br>**Varela Bustinza, Marcelo Alessandro – 202319668**<br>Trabajé comunicando oralmente los resultados correspondientes al Capítulo II, especialmente el análisis competitivo, las estrategias frente a competidores, el diseño y análisis de entrevistas, así como los principales hallazgos obtenidos sobre los usuarios. Busqué explicar la información de manera objetiva, conectando los resultados con la definición de requerimientos del proyecto.<br><br>**Sulca Gonzales, Paul Fernando – 20221C486**<br>Trabajé comunicando oralmente los contenidos del Capítulo III, relacionados con la especificación de requerimientos, user stories, product backlog e impact mapping. Expliqué cómo los hallazgos obtenidos en etapas anteriores se transformaron en requisitos y elementos priorizados para el desarrollo de la solución.<br><br>**TP**<br>**Gutiérrez Soto, Jhosepmyr Orlando – 202317638**<br>Trabajé comunicando oralmente mis ideas con objetividad al presentar la arquitectura y diseño de cada bounded context en el Capítulo V. Adapté mi lenguaje para que perfiles tanto técnicos, como desarrolladores, y de negocio, como stakeholders, comprendieran cómo los componentes tácticos resuelven los problemas del proyecto de ingeniería.<br><br>**Hernández Tuiro, Eric Ernesto – 20221C857**<br>Trabajé comunicando oralmente los resultados de la refactorización aplicada al Event Storming y sustenté los diagramas del Capítulo V. Expuse estas ideas con objetividad, asegurándome de que las decisiones de diseño arquitectónico fueran claras para una audiencia de diferentes niveles jerárquicos y especialidades.<br><br>**Ramirez Mestanza, Salim Ignacio – 20201E843**<br>Trabajé comunicando oralmente las especificaciones de la landing page y el diseño y estilos de la versión mobile, correspondientes al Capítulo VI. Presenté mis ideas de forma objetiva, demostrando cómo las decisiones de interfaz de usuario se alinean con los requerimientos técnicos y de ingeniería.<br><br>**Varela Bustinza, Marcelo Alessandro – 202319668**<br>Comuniqué oralmente los resultados del diseño UX/UI de la aplicación web de Reqs-AI, explicando el flujo completo desde la autenticación y creación del workspace hasta la gestión de proyectos, sesiones de descubrimiento, revisión de historias de usuario, integración con Jira, facturación y configuración del equipo. Además, sustenté la relación entre wireframes, wireflows y mock-ups, destacando cómo cada pantalla mantiene coherencia visual, navegación consistente y alineación con las funcionalidades principales del producto.<br><br>**Sulca Gonzales, Paul Fernando – 20221C486**<br>Trabajé comunicando oralmente la refactorización de las User Stories y del Product Backlog, además de sustentar partes del Capítulo V. Mantuve objetividad al explicar cómo las historias guían el desarrollo de la ingeniería, asegurando que el público de diferentes especialidades entendiera su impacto en la arquitectura.<br><br>**TB2**<br>**Gutiérrez Soto, Jhosepmyr Orlando – 202317638**<br>Trabajé comunicando oralmente los avances relacionados con la evidencia de desarrollo del Sprint Review, explicando las funcionalidades implementadas en el frontend y su relación con los flujos principales de la aplicación. Además, presenté parte de la evidencia de ejecución y despliegue del software, mostrando cómo los avances realizados permitieron validar el funcionamiento del producto en un entorno demostrable.<br><br>**Hernández Tuiro, Eric Ernesto – 20221C857**<br>Trabajé comunicando oralmente los avances del backend y la documentación de servicios para el Sprint Review. Expliqué la finalidad de los servicios desarrollados, la relación entre los endpoints y las funcionalidades del sistema, así como la forma en que el backend se integra con el frontend y la aplicación mobile. Mi participación permitió presentar información técnica de manera clara para audiencias con distintos niveles de conocimiento.<br><br>**Ramirez Mestanza, Salim Ignacio – 20201E843**<br>Trabajé comunicando oralmente los avances de la aplicación mobile, explicando las funcionalidades implementadas, los flujos principales y su relación con los requerimientos definidos para el sprint. Asimismo, sustenté parte de la Testing Suite Evidence y Execution Evidence for Sprint Review, presentando los resultados de las pruebas realizadas y la validación del funcionamiento de la aplicación desde la perspectiva del usuario final.<br><br>**Varela Bustinza, Marcelo Alessandro – 202319668**<br>Comuniqué oralmente los avances del frontend de la aplicación web, explicando las vistas, interacciones y flujos implementados durante el sprint. Además, sustenté las secciones relacionadas con Validation Interviews, incluyendo el diseño de entrevistas, el registro de entrevistas y las evaluaciones según heurísticas. También participé en la explicación del Video About-the-Product, destacando la propuesta de valor, las funcionalidades principales y los avances logrados en frontend, backend y mobile.<br><br>**Sulca Gonzales, Paul Fernando – 20221C486**<br>Trabajé comunicando oralmente la evidencia de colaboración del equipo durante el sprint, explicando la organización de tareas, la coordinación entre integrantes y el seguimiento de avances. Asimismo, sustenté información relacionada con testing, ejecución, documentación de servicios y despliegue, conectando estos elementos con el trabajo realizado en frontend, backend y mobile para presentar una solución más integrada durante el Sprint Review.<br><br>**TF1**<br>**Gutiérrez Soto, Jhosepmyr Orlando – 202317638**<br>Trabajé comunicando oralmente los avances finales relacionados con la evidencia de desarrollo y despliegue del producto, explicando cómo las funcionalidades implementadas en la aplicación web se integran con el backend y permiten demostrar un flujo operativo más completo. Además, sustenté la importancia del despliegue en la nube para presentar Reqs-AI como una solución preparada para validación en un entorno más cercano a producción.<br><br>**Hernández Tuiro, Eric Ernesto – 20221C857**<br>Trabajé comunicando oralmente la consolidación del backend, la documentación de servicios y los elementos técnicos del despliegue. Expliqué cómo los endpoints, la base de datos, la configuración de infraestructura y los servicios cloud se relacionan con la operación del sistema, utilizando un lenguaje comprensible tanto para perfiles técnicos como para evaluadores del proyecto.<br><br>**Ramirez Mestanza, Salim Ignacio – 20201E843**<br>Trabajé comunicando oralmente los avances finales de la aplicación mobile y la evidencia de pruebas, explicando los flujos principales desde la perspectiva del usuario final. También sustenté cómo las pruebas realizadas y la ejecución de la aplicación permiten validar la estabilidad de las funcionalidades desarrolladas y su relación con los requerimientos del producto.<br><br>**Varela Bustinza, Marcelo Alessandro – 202319668**<br>Comuniqué oralmente los avances finales del frontend web y las secciones de Validation Interviews, explicando el diseño de entrevistas, el registro de entrevistas y las evaluaciones según heurísticas. Además, sustenté la actualización de la documentación del Sprint 2 y la evidencia de deployment, destacando cómo el flujo de Reqs-AI, las pantallas implementadas y la validación con usuarios permiten demostrar el valor del producto ante diferentes audiencias.<br><br>**Sulca Gonzales, Paul Fernando – 20221C486**<br>Trabajé comunicando oralmente la integración final de evidencias del Sprint, incluyendo colaboración del equipo, testing, ejecución, servicios y despliegue. Expliqué cómo la coordinación entre frontend, backend y mobile permitió cerrar el entregable de forma ordenada, conectando los resultados técnicos con los objetivos del Sprint Review y del informe final. | **TB1**<br>Como equipo, se logró comunicar oralmente los avances del proyecto de manera clara, organizada y objetiva. Cada integrante explicó los resultados correspondientes a su participación, conectando los capítulos desarrollados con el propósito general de la solución. Asimismo, la exposición permitió adaptar el lenguaje técnico a una audiencia académica, integrando aspectos de negocio, usuarios, requerimientos y diseño de ingeniería.<br><br>**TP**<br>Como equipo en esta etapa, logramos sustentar oralmente decisiones arquitectónicas complejas y diseños de interfaz. Comunicamos con objetividad cómo el diseño táctico de los Bounded Contexts y las mejoras en UX/UI resuelven las necesidades del negocio. Adaptamos nuestra exposición para que tanto perfiles gerenciales, enfocados en el valor del producto, como técnicos, enfocados en patrones de ingeniería, comprendieran claramente la evolución y escalabilidad del sistema.<br><br>**TB2**<br>Como equipo, en TB2 logramos comunicar oralmente los avances del producto de forma clara, objetiva y organizada. La exposición permitió sustentar evidencias de desarrollo, testing, ejecución, documentación de servicios, despliegue de software, colaboración del equipo, entrevistas de validación, evaluación heurística y video del producto. Además, se comunicó el avance integral del sistema considerando frontend, backend y mobile, adaptando el lenguaje para que los resultados fueran comprensibles tanto para una audiencia técnica como para evaluadores académicos y stakeholders del proyecto.<br><br>**TF1**<br>Como equipo, en TF1 logramos comunicar oralmente la evolución final del proyecto de manera clara, objetiva y articulada. La sustentación permitió integrar evidencias de desarrollo, testing, ejecución, documentación de servicios, despliegue en la nube, colaboración del equipo, entrevistas de validación y evaluaciones heurísticas. Asimismo, se explicó el avance del producto desde una perspectiva integral, relacionando frontend, backend, mobile e infraestructura para que la propuesta sea comprensible tanto para audiencias técnicas como para evaluadores académicos y stakeholders. |
+| **Comunica en forma escrita ideas y/o resultados con objetividad a público de diferentes especialidades y niveles jerárquicos, en el marco del desarrollo de un proyecto en ingeniería.** | **TB1**<br>**Gutiérrez Soto, Jhosepmyr Orlando – 202317638**<br>Trabajé comunicando de forma escrita los contenidos relacionados con el Capítulo I y parte del Capítulo IV. Redacté información sobre el perfil de la startup, la propuesta de solución y los elementos estratégicos del diseño del producto, procurando mantener una estructura clara y una redacción adecuada para el contexto académico y de ingeniería.<br><br>**Hernández Tuiro, Eric Ernesto – 20221C857**<br>Trabajé comunicando de forma escrita los apartados vinculados al Capítulo I y Capítulo IV. Mi aporte se centró en organizar y redactar ideas sobre la solución propuesta, su relación con la problemática y los criterios estratégicos del producto, asegurando coherencia entre el enfoque del proyecto y las decisiones de diseño.<br><br>**Ramirez Mestanza, Salim Ignacio – 20201E843**<br>Trabajé comunicando de forma escrita los contenidos del Capítulo II, principalmente en los apartados de análisis de requerimientos, entrevistas, competidores, identificación de necesidades y lenguaje ubicuo. Mi aporte permitió documentar los hallazgos de manera ordenada y orientada a sustentar la definición de requerimientos.<br><br>**Varela Bustinza, Marcelo Alessandro – 202319668**<br>Trabajé comunicando de forma escrita los resultados del Capítulo II, incluyendo el análisis competitivo, estrategias frente a competidores, diseño y análisis de entrevistas, user personas, mapas de empatía y escenarios actuales. Mi trabajo contribuyó a presentar evidencia relevante sobre las necesidades del usuario y su relación con los requerimientos del producto.<br><br>**Sulca Gonzales, Paul Fernando – 20221C486**<br>Trabajé comunicando de forma escrita los contenidos del Capítulo III, enfocados en to-be scenario mapping, user stories, product backlog e impact mapping. Mi aporte permitió transformar los hallazgos del análisis en requisitos claros, priorizados y alineados con los objetivos del producto.<br><br>**TP**<br>**Gutiérrez Soto, Jhosepmyr Orlando – 202317638**<br>Trabajé comunicando en forma escrita los resultados del diseño táctico de cada bounded context en el Capítulo V. Redacté la estructura de las capas de dominio, aplicación e infraestructura manteniendo objetividad técnica, utilizando diagramas estándar para que equipos de diferentes especialidades puedan comprender la arquitectura.<br><br>**Hernández Tuiro, Eric Ernesto – 20221C857**<br>Trabajé comunicando en forma escrita las mejoras y la refactorización aplicadas al Event Storming, documentando objetivamente las decisiones tomadas. Apoyé en la redacción técnica del Capítulo V, asegurando que la documentación sea comprensible y útil tanto para desarrolladores como para evaluadores del proyecto.<br><br>**Ramirez Mestanza, Salim Ignacio – 20201E843**<br>Trabajé comunicando en forma escrita los elementos del Capítulo VI, especificando la landing page y el diseño y estilos de la versión mobile del app. Documenté estas decisiones de UX/UI con objetividad, estructurando la información de manera que sea fácilmente interpretable por equipos de distintas disciplinas.<br><br>**Varela Bustinza, Marcelo Alessandro – 202319668**<br>Comuniqué de forma escrita la documentación del Capítulo VI: Solution UX Design, desarrollando secciones relacionadas con style guidelines, information architecture, wireframes, wireflows y mock-ups de la web application. Redacté subtítulos y descripciones para cada imagen, organicé los recursos visuales con nombres consistentes y expliqué cómo cada pantalla representa una acción o estado funcional dentro del flujo de Reqs-AI. Este trabajo permitió evidenciar la evolución desde la estructura de baja fidelidad hasta la propuesta visual final de la plataforma.<br><br>**Sulca Gonzales, Paul Fernando – 20221C486**<br>Trabajé comunicando en forma escrita la refactorización de las User Stories y la actualización del Product Backlog. Redacté estos artefactos con objetividad técnica para que sirvan de puente claro entre las necesidades del negocio y la implementación en ingeniería, apoyando también en la documentación del Capítulo V.<br><br>**TB2**<br>**Gutiérrez Soto, Jhosepmyr Orlando – 202317638**<br>Trabajé comunicando de forma escrita los avances correspondientes a la Development Evidence for Sprint Review, documentando las funcionalidades implementadas en el frontend y organizando evidencias visuales del progreso realizado. Además, apoyé en la redacción de la Software Deployment Evidence for Sprint Review, describiendo los elementos necesarios para sustentar la puesta en ejecución del producto.<br><br>**Hernández Tuiro, Eric Ernesto – 20221C857**<br>Trabajé comunicando de forma escrita los avances del backend y la Services Documentation Evidence for Sprint Review. Redacté información sobre los servicios implementados, su propósito dentro del sistema, la relación con las funcionalidades principales y su integración con frontend y mobile. Mi aporte permitió que la documentación técnica sea entendible para desarrolladores, evaluadores y miembros del equipo con distintos niveles de especialización.<br><br>**Ramirez Mestanza, Salim Ignacio – 20201E843**<br>Trabajé comunicando de forma escrita los avances de la aplicación mobile y la Testing Suite Evidence for Sprint Review. Documenté escenarios de prueba, resultados obtenidos y evidencias de ejecución, relacionando cada validación con los flujos principales del producto. También apoyé en la organización de la Execution Evidence for Sprint Review, procurando que la información sea clara, verificable y alineada con los requerimientos definidos para el sprint.<br><br>**Varela Bustinza, Marcelo Alessandro – 202319668**<br>Comuniqué de forma escrita los avances del frontend web, registrando pantallas, flujos e interacciones implementadas durante el sprint. Además, desarrollé documentación relacionada con Validation Interviews, incluyendo el diseño de entrevistas, el registro de entrevistas realizadas y las evaluaciones según heurísticas. También apoyé en la sección Video About-the-Product, redactando información orientada a explicar la propuesta de valor, las funcionalidades principales y el estado actual del producto de manera comprensible para distintas audiencias.<br><br>**Sulca Gonzales, Paul Fernando – 20221C486**<br>Trabajé comunicando de forma escrita los resultados de colaboración del equipo durante el sprint, documentando la organización de tareas, la coordinación entre integrantes y los acuerdos de trabajo. Además, contribuí a la redacción de evidencias relacionadas con testing, ejecución, documentación de servicios y despliegue, asegurando que los avances de frontend, backend y mobile se presenten de manera ordenada y coherente con los objetivos del Sprint Review.<br><br>**TF1**<br>**Gutiérrez Soto, Jhosepmyr Orlando – 202317638**<br>Trabajé comunicando de forma escrita los avances finales relacionados con la evidencia de desarrollo y despliegue del software. Documenté funcionalidades implementadas, evidencias visuales y elementos necesarios para explicar cómo el producto pasó de una versión demostrable a una solución con soporte de infraestructura cloud para su validación final.<br><br>**Hernández Tuiro, Eric Ernesto – 20221C857**<br>Trabajé comunicando de forma escrita la consolidación del backend, la documentación de servicios y la evidencia técnica del deployment. Redacté información sobre endpoints, integración con frontend, configuración de servicios cloud, base de datos y componentes de infraestructura, procurando que la documentación sea clara para desarrolladores, evaluadores y perfiles no especializados.<br><br>**Ramirez Mestanza, Salim Ignacio – 20201E843**<br>Trabajé comunicando de forma escrita los avances finales de la aplicación mobile, los escenarios de prueba y las evidencias de ejecución. Organicé la información de manera verificable, relacionando las pruebas realizadas con los flujos principales del producto y con los requerimientos definidos para el cierre del proyecto.<br><br>**Varela Bustinza, Marcelo Alessandro – 202319668**<br>Comuniqué de forma escrita la actualización de las secciones de Validation Interviews, incluyendo el diseño de entrevistas, registro de entrevistas y evaluaciones según heurísticas. Además, apoyé en la documentación del Sprint 2 y en la incorporación de evidencias de deployment, organizando capturas, descripciones y textos para que el informe final presente de manera clara el avance del frontend, la validación de experiencia y el estado funcional de Reqs-AI.<br><br>**Sulca Gonzales, Paul Fernando – 20221C486**<br>Trabajé comunicando de forma escrita la integración final de evidencias de colaboración, testing, ejecución, servicios y despliegue. Documenté la coordinación del equipo, los acuerdos de trabajo y la relación entre los avances de frontend, backend y mobile, asegurando que el informe final mantenga una estructura coherente, verificable y alineada con los objetivos del curso. | **TB1**<br>Como equipo, se logró comunicar por escrito las ideas, resultados y decisiones del proyecto de manera estructurada y objetiva. El documento integra información sobre negocio, usuarios, requerimientos y diseño estratégico, manteniendo una secuencia lógica entre los capítulos. Además, la redacción permitió presentar el proyecto de forma comprensible para audiencias con distintos niveles de conocimiento técnico.<br><br>**TP**<br>Para el entregable TP, el equipo demostró la capacidad de documentar formalmente la arquitectura de software, correspondiente al Capítulo V, y el diseño de la experiencia de usuario, correspondiente al Capítulo VI. Se estructuraron los modelos de dominio, diagramas tácticos y wireflows con estricta objetividad técnica. Esta documentación escrita permite que profesionales de diferentes especialidades, desde desarrolladores hasta líderes de proyecto, puedan entender las soluciones de ingeniería propuestas sin ambigüedades.<br><br>**TB2**<br>Como equipo, en TB2 logramos comunicar por escrito los avances del proyecto de manera objetiva, estructurada y verificable. La documentación permitió evidenciar el progreso del frontend, backend y mobile, así como las pruebas realizadas, la ejecución del sistema, la documentación de servicios, el despliegue de software, la colaboración del equipo, las entrevistas de validación, las evaluaciones heurísticas y el video del producto. Estos elementos fortalecen la presentación del proyecto ante audiencias de diferentes especialidades, ya que organizan la información técnica y funcional de forma clara y alineada con los objetivos de ingeniería.<br><br>**TF1**<br>Como equipo, en TF1 logramos comunicar por escrito el cierre del proyecto de manera objetiva, organizada y sustentada con evidencias. La documentación integró avances de frontend, backend, mobile, testing, ejecución, documentación de servicios, despliegue cloud, colaboración del equipo, entrevistas de validación y evaluaciones heurísticas. Esto permitió presentar el producto con mayor nivel de madurez, manteniendo una redacción comprensible para audiencias técnicas, académicas y de negocio. |
 
 <div style="page-break-before: always"></div>
 
@@ -7183,6 +7183,42 @@ La captura muestra que el servicio `reqsai-api` quedó activo y con estado **Dep
 
 La captura evidencia logs del backend desplegado, incluyendo el inicio de la aplicación, registro del endpoint WebSocket y confirmación de ejecución del servicio en producción.
 
+##### Despliegue de la Landing Page en Vercel
+
+Adicionalmente, durante este Sprint se ejecutó el despliegue de la **Landing Page** (`reqsai-landing`) utilizando la plataforma **Vercel**, integrada directamente con el repositorio de GitHub bajo la organización **Kntro-Soft**. El proceso abarcó la instalación de la aplicación de Vercel en la cuenta, la importación del repositorio, la generación del despliegue de producción y la validación del sitio publicado.
+
+El despliegue de la landing evidencia los siguientes avances:
+
+* Instalación e integración de la aplicación **Vercel** con la cuenta de GitHub.
+* Importación del repositorio `reqsai-landing` desde la organización **Kntro-Soft**.
+* Generación automática del despliegue de producción a partir de la rama `main`.
+* Publicación del sitio en el dominio `reqsai-landing.vercel.app` con estado **Ready**.
+* Validación del sitio publicado y correcta renderización de la Landing Page.
+
+###### Evidencia de instalación de Vercel
+
+![Instalación de la aplicación Vercel en GitHub](assets/deployment/landing-deploy-1.png)
+
+La captura muestra la instalación de la aplicación **Vercel** sobre la cuenta de GitHub, paso necesario para habilitar la integración y el despliegue continuo del repositorio.
+
+###### Evidencia de importación del repositorio
+
+![Importación del repositorio reqsai-landing en Vercel](assets/deployment/landing-deploy-2.png)
+
+La captura evidencia el proceso de creación de un nuevo proyecto en Vercel, donde se importa el repositorio `reqsai-landing` de la organización **Kntro-Soft** para iniciar el despliegue.
+
+###### Evidencia de despliegue de producción exitoso
+
+![Despliegue de producción de reqsai-landing en Vercel](assets/deployment/landing-deploy-3.png)
+
+La captura muestra el panel de **Production Deployment** en Vercel, con el proyecto `reqsai-landing` en estado **Ready**, publicado en el dominio `reqsai-landing.vercel.app` a partir de la rama `main` (merge del pull request de la release `v1.1.0`).
+
+###### Evidencia del sitio publicado
+
+![Landing Page publicada en reqsai-landing.vercel.app](assets/deployment/landing-deploy-4.png)
+
+La captura evidencia la Landing Page ya publicada y accesible en `reqsai-landing.vercel.app`, mostrando su correcta renderización con la propuesta de valor de **Reqs AI**.
+
 ##### Commits relacionados con deployment
 
 | Repository            | Branch  | Commit Id | Commit Message                                                                                                                        | Commit Message Body                                                                | Commited on (Date) |
@@ -7235,59 +7271,888 @@ Como aprendizaje principal, el Sprint permitió consolidar la integración entre
 
 ---
 
+### 7.2.2. Sprint 2
+
+Durante el segundo sprint del proyecto **Reqs-AI**, el equipo se enfocó en consolidar la solución como una plataforma desplegable en ambiente cloud, tomando como base los avances funcionales del Sprint 1. El trabajo se orientó a reforzar el backend `reqsai-api`, la aplicación web `reqsai-web`, la documentación técnica y el proceso de despliegue sobre AWS mediante una arquitectura basada en **Terraform**, **ECR**, **ECS Fargate**, **RDS**, **Application Load Balancer**, **S3**, **CloudFront** y configuración de despliegue mediante GitHub Actions con OIDC.
+
+El objetivo principal del Sprint fue dejar evidenciada la preparación y ejecución del despliegue productivo, validando que el backend pueda operar como servicio contenerizado, que el frontend pueda publicarse como aplicación estática distribuida por CDN, y que ambos componentes puedan comunicarse correctamente sin problemas de CORS.
+
+#### 7.2.2.1. Sprint Planning 2
+
+Se presenta a continuación el Sprint Planning correspondiente al segundo ciclo del proyecto, tomando como referencia el avance funcional logrado en el Sprint anterior y priorizando la estabilización técnica, pruebas, documentación y despliegue de la solución.
+
+A continuación se debe colocar la captura del tablero Jira correspondiente al Sprint 2:
+
+![Board del Sprint 2 en Jira](./assets/insights/sprint-planning-1.png)  
+[Jira Board - Sprint 2](https://uni-ride.atlassian.net/jira/software/projects/REQ/boards/299)
+
+| Sprint # | Sprint 2 |
+|---|---|
+| **Sprint Planning Background** | |
+| Date | 2026-06-22 |
+| Time | 08:00 PM |
+| Location | Reunión virtual mediante Discord |
+| Prepared By | Sulca Gonzales, Paul Fernando |
+| Attendees (to planning meeting) | Gutiérrez Soto, Jhosepmyr Orlando / Hernández Tuiro, Eric Ernesto / Ramirez Mestanza, Salim Ignacio / Varela Bustinza, Marcelo Alejandro / Sulca Gonzales, Paul Fernando |
+| **Sprint n - 1 Review Summary** | En el Sprint 1 se implementó la base funcional de Reqs-AI: autenticación, gestión de organizaciones, workspaces, proyectos, sesiones de discovery, historias de usuario, criterios de aceptación y primeras capacidades de asistencia con IA. |
+| **Sprint n - 1 Retrospective Summary** | Se identificó la necesidad de reforzar la evidencia técnica, mejorar la documentación del despliegue, organizar capturas por producto y validar la integración entre frontend y backend en un entorno cloud. |
+| **Sprint Goal & User Stories** | |
+| Sprint 2 Goal | Consolidar la solución Reqs-AI mediante pruebas, documentación y despliegue cloud, evidenciando infraestructura AWS, backend contenerizado, frontend publicado por CDN e integración funcional entre ambos componentes. |
+| Sprint 2 Velocity | 48 |
+| Sum of Story Points | 48 |
+
+<br>
+
+#### 7.2.2.2. Sprint Backlog 2
+
+El objetivo de este Sprint fue estabilizar la solución y preparar su operación en un entorno cloud. Para ello, se priorizaron historias técnicas relacionadas con infraestructura, despliegue, documentación, pruebas de integración y verificación del flujo frontend-backend.
+
+<div style="font-size:80%; overflow-x:auto;">
+  <table border="1" cellspacing="0" cellpadding="5">
+    <thead>
+      <tr>
+        <th colspan="2">Sprint #</th>
+        <th colspan="6">Sprint 2</th>
+      </tr>
+      <tr>
+        <th colspan="2">User Story / Technical Story</th>
+        <th colspan="6">Work-Item / Task</th>
+      </tr>
+      <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Estimation (Hours)</th>
+        <th>Assigned To</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td rowspan="2">TS01</td>
+        <td rowspan="2">Preparación de entorno cloud</td>
+        <td>TS01-a</td>
+        <td>Instalar herramientas CLI</td>
+        <td>Instalar y validar AWS CLI y Terraform CLI para administrar infraestructura desde local.</td>
+        <td>3</td>
+        <td>Jhosepmyr Gutiérrez</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td>TS01-b</td>
+        <td>Configurar credenciales AWS</td>
+        <td>Crear usuario IAM, generar Access Key y configurar el perfil local `reqsai-infra`.</td>
+        <td>3</td>
+        <td>Jhosepmyr Gutiérrez</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td rowspan="2">TS02</td>
+        <td rowspan="2">Infraestructura base con Terraform</td>
+        <td>TS02-a</td>
+        <td>Configurar bootstrap</td>
+        <td>Preparar el bootstrap para estado remoto y base de despliegue con Terraform.</td>
+        <td>4</td>
+        <td>Eric Hernández</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td>TS02-b</td>
+        <td>Crear recursos de red</td>
+        <td>Crear VPC, Internet Gateway, subnets públicas, privadas, subnets de base de datos, NAT Gateway, Elastic IP, DB Subnet Group y tablas de ruteo.</td>
+        <td>8</td>
+        <td>Eric Hernández</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td rowspan="2">TS03</td>
+        <td rowspan="2">Despliegue backend</td>
+        <td>TS03-a</td>
+        <td>Configurar ECR y ECS Fargate</td>
+        <td>Crear repositorio Docker ECR, clúster ECS Fargate y base para ejecutar el backend contenerizado.</td>
+        <td>6</td>
+        <td>Salim Ramirez</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td>TS03-b</td>
+        <td>Configurar Task Definition y ECS Service</td>
+        <td>Crear definición de tarea, servicio ECS del backend y validar ejecución del contenedor.</td>
+        <td>6</td>
+        <td>Salim Ramirez</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td rowspan="2">TS04</td>
+        <td rowspan="2">Servicios administrados y seguridad</td>
+        <td>TS04-a</td>
+        <td>Configurar RDS, Secrets e IAM Roles</td>
+        <td>Crear base de datos RDS, registrar secretos de aplicación y definir roles IAM requeridos por ECS y GitHub Actions.</td>
+        <td>8</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td>TS04-b</td>
+        <td>Configurar Security Groups y ALB</td>
+        <td>Definir reglas de firewall, Application Load Balancer y exposición controlada del backend.</td>
+        <td>6</td>
+        <td>Paul Sulca</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td rowspan="2">TS05</td>
+        <td rowspan="2">Despliegue frontend</td>
+        <td>TS05-a</td>
+        <td>Configurar S3 y CloudFront</td>
+        <td>Crear bucket para archivos estáticos y distribución CDN para publicar la aplicación web.</td>
+        <td>5</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+      <tr>
+        <td>TS05-b</td>
+        <td>Sincronizar frontend y validar CORS</td>
+        <td>Subir los archivos del frontend, validar acceso por CloudFront y comprobar conexión con backend sin errores de CORS.</td>
+        <td>5</td>
+        <td>Marcelo Varela</td>
+        <td>Done</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<br>
+
+#### 7.2.2.3. Development Evidence for Sprint Review
+
+Durante este Sprint se continuó con la consolidación técnica de los productos digitales de Reqs-AI. El backend `reqsai-api` mantuvo el núcleo funcional relacionado con IAM, Workspace y Discovery, mientras que la aplicación web `reqsai-web` fue preparada para operar en un entorno desplegado. Adicionalmente, el equipo incorporó evidencias de infraestructura y configuración productiva para asegurar que el producto pueda ser ejecutado fuera del entorno local.
+
+En relación con los productos de la solución, el avance evidenciado se resume de la siguiente manera:
+
+| Producto de la solución | Estado según evidencia recibida | Observación |
+|---|---|---|
+| Landing Page | Sin evidencia visual adjunta | No se adjuntaron capturas específicas de Landing Page en este paquete. |
+| Web Applications | Evidenciado | Se evidencia despliegue del frontend mediante S3 y CloudFront, además de conexión con backend sin problemas de CORS. |
+| Web Services | Evidenciado | Se evidencia despliegue del backend mediante ECR, ECS Fargate, Task Definition, ECS Service, ALB, RDS, Secrets e IAM Roles. |
+| Mobile Applications | Sin evidencia visual adjunta | No se adjuntaron capturas, APK o build mobile para este Sprint. |
+| Otros | Evidenciado | Se evidencia infraestructura como código, configuración cloud, OIDC para GitHub Actions y documentación de despliegue. |
+
+**Tabla de commits relacionados con implementación**
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Commited on (Date) |
+|---|---|---|---|---|---|
+| Kntro-Soft/reqsai-api | develop | b5ea23f | feat: introduce Create Organization vertical slice, API versioning, and test enhancements | Se implementó el flujo de creación de organizaciones, versionado de API y soporte inicial de pruebas para el contexto Workspace. | 14/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 2a4ef5b | feat: add REST API contract and implementation for discovery session creation | Se implementó el contrato REST y la creación de sesiones de descubrimiento. | 14/06/2026 |
+| Kntro-Soft/reqsai-api | develop | c161841 | feat: implement REST controller and API contract for manual user story creation under a project | Se implementó la creación manual de historias de usuario dentro de un proyecto. | 15/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 8a92089 | feat: add Create User Story flow with embedding-based duplicate detection | Se agregó el flujo de creación de historias de usuario con detección de duplicados basada en embeddings. | 15/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 7dd60a3 | feat: add GET endpoints for sessions and user stories in discovery scope | Se agregaron endpoints de consulta para sesiones e historias de usuario. | 15/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 62335d8 | feat: add REST API for session transcript operations | Se implementaron operaciones REST para transcripciones de sesiones. | 17/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 531b84c | feat: implement STT to LLM pipeline and enhance AI provider handling | Se integró el flujo STT a LLM para transcripción y generación de requerimientos. | 17/06/2026 |
+| Kntro-Soft/reqsai-api | develop | b4d2c98 | feat: implement pause, resume, and stop recording REST endpoints | Se implementaron endpoints para pausar, reanudar y detener grabaciones. | 17/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 8c0c1c2 | Merge pull request #19 from Kntro-Soft/feature/workspace-project-context | Se integró contexto de proyecto, glosario y restricciones. | 20/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 6206d08 | Merge pull request #23 from Kntro-Soft/feature/discovery-realtime-suggestions | Se integraron sugerencias en tiempo real para historias de usuario. | 20/06/2026 |
+
+#### 7.2.2.4. Testing Suite Evidence for Sprint Review
+
+Durante este Sprint se mantuvo el enfoque de pruebas automatizadas para el backend `reqsai-api`, complementándolo con validaciones técnicas de despliegue. El alcance de testing incluye pruebas unitarias, pruebas de integración, pruebas de arquitectura, preparación de pruebas E2E para frontend y smoke testing sobre el ambiente cloud desplegado.
+
+No se evidencia el uso de archivos BDD `.feature` en Gherkin para este Sprint; por ello, el alcance de testing reportado se centra en pruebas técnicas implementadas y verificaciones manuales controladas sobre la infraestructura desplegada.
+
+**Relación de tests diseñados**
+
+| Tipo de test | Clase, módulo o comportamiento relacionado | User Story / Technical Story relacionada | Estado de evidencia |
+|---|---|---|---|
+| Unit Test | Entidades y value objects de Workspace | Creación y configuración de organización/workspace | Evidenciado por commits |
+| Unit Test | `DiscoverySession` y ciclo de vida de grabación | Crear, pausar, reanudar, detener y reiniciar sesiones | Evidenciado por commits |
+| Unit Test | `UserStory` y criterios de aceptación | Crear historias y gestionar criterios | Evidenciado por commits |
+| Unit Test | Servicios de procesamiento STT a LLM | Procesar transcripción y generar historias con IA | Evidenciado por commits |
+| Integration Test | Endpoints de sesiones, proyectos e historias | Consulta y gestión de recursos Discovery | Evidenciado por commits |
+| Integration Test | Flujo de creación de historias de usuario | Crear historia y validar persistencia | Evidenciado por commits |
+| Integration Test | Procesamiento y recuperación de transcripciones | Procesar transcript y consultar resultados | Evidenciado por commits |
+| Architecture Test | Reglas de arquitectura y dependencias | Validar separación modular y dependencias | Evidenciado por commits |
+| E2E Setup | Configuración base de Playwright en `reqsai-web` | Validación futura de flujos web | Evidenciado parcialmente |
+| Deployment Smoke Test | Validación de backend, frontend y conexión CORS | Despliegue cloud Sprint 2 | Evidenciado por capturas |
+
+**Testing de deployment**
+
+| Validación | Resultado esperado | Resultado observado | Estado |
+|---|---|---|---|
+| Validar AWS CLI y Terraform CLI | Las herramientas deben responder con versión instalada | Se evidencia instalación y verificación local | Passed |
+| Validar creación de infraestructura base | Terraform debe crear red, subnets, tablas de ruteo y recursos asociados | Se evidencia lista de recursos de red creados | Passed |
+| Validar repositorio ECR | Debe existir repositorio para imagen Docker del backend | Se evidencia creación de ECR | Passed |
+| Validar ECS Fargate | El backend debe poder ejecutarse como servicio contenerizado | Se evidencia creación de ECS Fargate, Task Definition y ECS Service | Passed |
+| Validar base de datos y secretos | RDS y Secrets Manager deben estar disponibles para el backend | Se evidencia creación de RDS y secrets | Passed |
+| Validar ALB y security groups | El backend debe exponerse de forma controlada | Se evidencia configuración de firewall y load balancer | Passed |
+| Validar frontend estático | La aplicación web debe estar disponible por CloudFront | Se evidencia frontend desplegado | Passed |
+| Validar integración frontend-backend | El frontend debe conectarse al backend sin problemas de CORS | Se evidencia conexión sin problemas de CORS | Passed |
+
+![Backend desplegado](assets/deployment/sprint-2/30_backend_deployed_successfully.png)
+
+![Frontend desplegado y conectado al backend](assets/deployment/sprint-2/37_frontend_deployed_and_cors_ok.png)
+
+#### 7.2.2.5. Execution Evidence for Sprint Review
+
+La evidencia de ejecución del Sprint 2 demuestra que la solución fue preparada para operar en un entorno cloud. El backend fue desplegado como servicio contenerizado en AWS ECS Fargate, apoyado por ECR para almacenamiento de imágenes, RDS para persistencia, Secrets Manager para configuración sensible, IAM Roles para permisos de ejecución y Application Load Balancer para exposición controlada. Por su parte, el frontend fue publicado mediante S3 y CloudFront, permitiendo acceder a la interfaz web desde una URL pública de distribución.
+
+**Evidencias principales de ejecución:**
+
+| Evidencia | Descripción | Captura |
+|---|---|---|
+| Backend desplegado | Se evidencia que el servicio backend quedó publicado y operativo. | `30_backend_deployed_successfully.png` |
+| Servicio ECS | Se evidencia configuración y creación del ECS Service del backend. | `27_ecs_service_backend_config.png`, `28_ecs_service_backend_created.png` |
+| Frontend desplegado | Se evidencia pantalla de login de Reqs-AI publicada mediante CloudFront. | `37_frontend_deployed_and_cors_ok.png` |
+| Integración CORS | Se evidencia que el frontend se comunica con backend sin problemas de CORS. | `37_frontend_deployed_and_cors_ok.png` |
+| Variables y pipeline | Se evidencia configuración de OIDC y variables de repositorio para despliegue. | `38_github_oidc_provider_config.png`, `40_github_repository_variables_backend_frontend.png` |
+
+![ECS Service para backend](assets/deployment/sprint-2/28_ecs_service_backend_created.png)
+
+![Frontend por CloudFront](assets/deployment/sprint-2/37_frontend_deployed_and_cors_ok.png)
+
+#### 7.2.2.6. Services Documentation Evidence for Sprint Review
+
+Durante el Sprint 2 se mantuvo la documentación de servicios del backend mediante contratos REST y Swagger/OpenAPI. Esta documentación permite revisar los endpoints disponibles para autenticación, workspace, proyectos, sesiones de discovery, transcripciones, historias de usuario y criterios de aceptación.
+
+La documentación de servicios se complementa con la evidencia de despliegue, ya que el backend no solo queda definido a nivel contractual, sino también preparado para operar en un ambiente cloud con variables, secretos, base de datos y exposición controlada.
+
+##### Endpoints documentados
+
+| Grupo de endpoints | Descripción | Estado |
+|---|---|---|
+| IAM / Auth | Registro, login, verificación de correo, recuperación y cambio de contraseña. | Documentado |
+| Workspace / Organizations | Creación y gestión de organizaciones y workspaces. | Documentado |
+| Projects | Creación, consulta y configuración de proyectos. | Documentado |
+| Discovery Sessions | Creación, consulta y ciclo de vida de sesiones de discovery. | Documentado |
+| Transcripts | Operaciones para registrar, procesar y consultar transcripciones. | Documentado |
+| User Stories | Creación manual y asistida de historias de usuario. | Documentado |
+| Acceptance Criteria | Gestión de criterios de aceptación asociados a historias. | Documentado |
+| Realtime Suggestions | Sugerencias en tiempo real generadas a partir de la sesión. | Documentado |
+
+##### Commits relacionados con documentación de servicios
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Commited on (Date) |
+|---|---|---|---|---|---|
+| Kntro-Soft/reqsai-api | develop | 855c8ba | chore: add `DEPLOYMENT.md` to document deployment architecture, pipelines, and configuration | Se agregó documentación de arquitectura y proceso de despliegue. | 09/06/2026 |
+| Kntro-Soft/reqsai-api | develop | daede8f | chore: add Spring profile configurations, AI abstraction setup, and comprehensive documentation for local and production environments | Se agregaron perfiles Spring para ejecución local y producción. | 12/06/2026 |
+| Kntro-Soft/reqsai-web | develop | de154c4 | chore: add deployment guide for Reqs-AI frontend with S3, CloudFront, and Docker instructions | Se agregó guía de despliegue del frontend con S3, CloudFront y Docker. | 19/06/2026 |
+
+#### 7.2.2.7. Software Deployment Evidence for Sprint Review
+
+Durante este Sprint se ejecutó y documentó el despliegue de Reqs-AI sobre AWS. A diferencia del Sprint anterior, donde la evidencia se centraba en una preparación inicial y despliegue backend, en este Sprint se evidencia un flujo cloud más completo: configuración local de herramientas, creación de usuario IAM, configuración de perfil AWS, bootstrap de Terraform, creación de red, repositorio ECR, ECS Fargate, security groups, Application Load Balancer, RDS, Secrets Manager, IAM Roles, Task Definition, ECS Service, publicación del frontend por S3/CloudFront y conexión frontend-backend sin problemas de CORS.
+
+El despliegue evidencia los siguientes avances:
+
+* Instalación y validación de AWS CLI y Terraform CLI.
+* Creación de usuario IAM y Access Key para despliegue.
+* Configuración local del perfil `reqsai-infra`.
+* Configuración de bootstrap y entorno `production`.
+* Creación de red cloud: VPC, Internet Gateway, subnets públicas, privadas y de base de datos, NAT Gateway, Elastic IP, DB Subnet Group y tablas de ruteo.
+* Creación de repositorio Docker en ECR.
+* Configuración y creación de ECS Fargate.
+* Configuración de security groups y Application Load Balancer.
+* Configuración de RDS y Secrets Manager.
+* Configuración de IAM Roles para ejecución y despliegue.
+* Creación de Task Definition y ECS Service para backend.
+* Validación de backend desplegado.
+* Configuración de S3 y CloudFront para frontend.
+* Sincronización manual del frontend.
+* Validación de frontend desplegado y conectado al backend sin problemas de CORS.
+* Configuración de OIDC provider, roles, políticas y variables de repositorio para GitHub Actions.
+
+##### Preparación del entorno local
+
+![Instalación de AWS CLI y comandos de Terraform](assets/deployment/sprint-2/01_aws_cli_install_and_terraform_commands.png)
+
+![Evidencia de Terraform CLI](assets/deployment/sprint-2/02_terraform_cli_install_evidence.png)
+
+##### Configuración de acceso AWS e IAM
+
+![Creación de usuario IAM con Access Key](assets/deployment/sprint-2/03_iam_user_access_key_step.png)
+
+![Credenciales de seguridad IAM](assets/deployment/sprint-2/05_iam_security_credentials_console.png)
+
+![Access Key creada](assets/deployment/sprint-2/06_iam_access_key_created.png)
+
+![Configuración de perfil AWS y bootstrap](assets/deployment/sprint-2/07_aws_configure_profile_and_bootstrap.png)
+
+##### Configuración de infraestructura base
+
+![Bootstrap de Terraform](assets/deployment/sprint-2/08_terraform_bootstrap_code.png)
+
+![Entorno production y red](assets/deployment/sprint-2/09_production_environment_and_network_config.png)
+
+![Recursos de red creados](assets/deployment/sprint-2/10_network_resources_created.png)
+
+##### Configuración de backend en AWS
+
+![Configuración de repositorio ECR](assets/deployment/sprint-2/11_ecr_repository_config.png)
+
+![Repositorio ECR creado](assets/deployment/sprint-2/12_ecr_repository_created.png)
+
+![Configuración de ECS Fargate](assets/deployment/sprint-2/13_ecs_fargate_config.png)
+
+![ECS Fargate creado](assets/deployment/sprint-2/14_ecs_fargate_created.png)
+
+![Configuración de security groups](assets/deployment/sprint-2/15_security_groups_config.png)
+
+![Security groups creados](assets/deployment/sprint-2/16_security_groups_created.png)
+
+![Configuración de Application Load Balancer](assets/deployment/sprint-2/17_application_load_balancer_config.png)
+
+![Application Load Balancer creado](assets/deployment/sprint-2/18_application_load_balancer_created.png)
+
+##### Configuración de base de datos, secretos y roles
+
+![Configuración de RDS](assets/deployment/sprint-2/19_rds_config.png)
+
+![RDS creado](assets/deployment/sprint-2/20_rds_created.png)
+
+![Configuración de secrets](assets/deployment/sprint-2/21_secrets_config.png)
+
+![Secrets creados](assets/deployment/sprint-2/22_secrets_created.png)
+
+![Configuración de IAM Roles](assets/deployment/sprint-2/23_iam_roles_config.png)
+
+![IAM Roles creados](assets/deployment/sprint-2/24_iam_roles_created.png)
+
+##### Task Definition y ECS Service del backend
+
+![Configuración de Task Definition](assets/deployment/sprint-2/25_task_definition_config.png)
+
+![Task Definition creada](assets/deployment/sprint-2/26_task_definition_created.png)
+
+![Configuración de ECS Service para backend](assets/deployment/sprint-2/27_ecs_service_backend_config.png)
+
+![ECS Service para backend creado](assets/deployment/sprint-2/28_ecs_service_backend_created.png)
+
+![Logs de despliegue backend](assets/deployment/sprint-2/29_ecs_service_backend_deploy_logs.png)
+
+![Backend desplegado](assets/deployment/sprint-2/30_backend_deployed_successfully.png)
+
+##### Despliegue del frontend con S3 y CloudFront
+
+![Configuración de S3 y CloudFront](assets/deployment/sprint-2/32_s3_cloudfront_config.png)
+
+![S3 y CloudFront creados](assets/deployment/sprint-2/33_s3_cloudfront_created.png)
+
+![Frontend inicial sin contenido](assets/deployment/sprint-2/34_frontend_empty_cloudfront.png)
+
+![Sincronización manual del frontend](assets/deployment/sprint-2/35_frontend_manual_sync.png)
+
+![Verificación de sincronización frontend](assets/deployment/sprint-2/36_frontend_sync_verification.png)
+
+![Frontend desplegado y conectado al backend](assets/deployment/sprint-2/37_frontend_deployed_and_cors_ok.png)
+
+##### Configuración de despliegue con GitHub Actions y OIDC
+
+![Configuración de OIDC provider](assets/deployment/sprint-2/38_github_oidc_provider_config.png)
+
+![OIDC provider creado](assets/deployment/sprint-2/39_github_oidc_provider_created.png)
+
+![Variables de repositorio backend y frontend](assets/deployment/sprint-2/40_github_repository_variables_backend_frontend.png)
+
+![Resultado de workflow de despliegue](assets/deployment/sprint-2/41_github_actions_deploy_result.png)
+
+##### Commits relacionados con deployment
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Commited on (Date) |
+|---|---|---|---|---|---|
+| Kntro-Soft/reqsai-api | develop | f811bc6 | chore: add `Dockerfile` and `.dockerignore` for containerized application builds and runtime | Se agregaron archivos Docker para construir y ejecutar el backend en contenedores. | 09/06/2026 |
+| Kntro-Soft/reqsai-api | develop | ac8da2a | chore: add `compose.yaml` for service orchestration with profiles for core and app environments | Se agregó Compose para orquestación de servicios en entornos core y app. | 09/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 5592ac1 | chore: add `.env.example` with default configurations for local development setup | Se agregó plantilla de variables de entorno para configuración local. | 09/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 855c8ba | chore: add `DEPLOYMENT.md` to document deployment architecture, pipelines, and configuration | Se agregó documentación de arquitectura y proceso de despliegue. | 09/06/2026 |
+| Kntro-Soft/reqsai-api | develop | f073e85 | chore: add GitHub Actions workflows for CI, CodeQL analysis, and ECS deploy | Se agregaron workflows para CI, análisis CodeQL y base de despliegue ECS. | 12/06/2026 |
+| Kntro-Soft/reqsai-api | develop | daede8f | chore: add Spring profile configurations, AI abstraction setup, and comprehensive documentation for local and production environments | Se agregaron perfiles Spring para ejecución local y producción. | 12/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 78c7694 | feat(infrastructure): add WhisperLive container setup for streaming STT | Se agregó configuración de contenedor para WhisperLive y STT en streaming. | 19/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 52de132 | feat(docker): update default timezone in Dockerfile to UTC | Se ajustó la zona horaria del Dockerfile a UTC. | 20/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 93923c4 | fix(docker/config): ensure audit timestamps use UTC timezone | Se corrigió la configuración de timestamps para consistencia en despliegue. | 20/06/2026 |
+| Kntro-Soft/reqsai-web | develop | b04a34d | chore: add Docker setup for frontend development and production deployment | Se agregó configuración Docker para desarrollo y producción del frontend. | 19/06/2026 |
+| Kntro-Soft/reqsai-web | develop | e4e4534 | chore: add nginx configuration for Angular app SPA deployment | Se agregó configuración Nginx para servir la aplicación Angular como SPA. | 19/06/2026 |
+| Kntro-Soft/reqsai-web | develop | 4e86cc1 | chore: add .dockerignore for optimized Docker builds | Se agregó `.dockerignore` para optimizar builds Docker del frontend. | 19/06/2026 |
+| Kntro-Soft/reqsai-web | develop | 76aadeb | chore: add environment configuration for production and development | Se agregaron configuraciones de ambiente para desarrollo y producción. | 19/06/2026 |
+| Kntro-Soft/reqsai-web | develop | dcdfbbe | chore: add GitHub Actions workflows for CI, CodeQL analysis, and deployment | Se agregaron workflows de CI, CodeQL y deployment para el frontend. | 19/06/2026 |
+| Kntro-Soft/reqsai-web | develop | de154c4 | chore: add deployment guide for Reqs-AI frontend with S3, CloudFront, and Docker instructions | Se agregó guía de despliegue del frontend con S3, CloudFront y Docker. | 19/06/2026 |
+
+#### 7.2.2.8. Team Collaboration Insights during Sprint
+
+Durante este Sprint, el equipo mantuvo una estrategia de colaboración basada en ramas, pull requests e integración progresiva sobre `develop`. El trabajo se organizó por frentes técnicos: backend, frontend, infraestructura, documentación y despliegue. Esto permitió separar responsabilidades, reducir conflictos y mantener trazabilidad de los cambios integrados.
+
+La colaboración se evidencia principalmente en los merge commits de pull requests. Estos muestran que el equipo integró avances de manera progresiva, revisando funcionalidades por rama antes de incorporarlas al flujo principal de desarrollo.
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Commited on (Date) |
+|---|---|---|---|---|---|
+| Kntro-Soft/reqsai-api | develop | 456b9e8 | Merge pull request #1 from Kntro-Soft/feature/project-foundation | Se integró la base del proyecto backend. | 12/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 9998210 | Merge pull request #2 from Kntro-Soft/feature/workspace-create-organization | Se integró la creación de organizaciones. | 14/06/2026 |
+| Kntro-Soft/reqsai-api | develop | d39beeb | Merge pull request #3 from Kntro-Soft/feature/discovery-create-session | Se integró la creación de sesiones de descubrimiento. | 15/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 1364da1 | Merge pull request #4 from Kntro-Soft/feature/discovery-create-user-story | Se integró la creación de historias de usuario. | 15/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 8dd18dc | Merge pull request #5 from Kntro-Soft/feature/discovery-get-resources | Se integraron endpoints de consulta para recursos Discovery. | 15/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 3078083 | Merge pull request #6 from Kntro-Soft/feature/discovery-process-transcript | Se integró el procesamiento de transcripciones. | 17/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 45692c4 | Merge pull request #8 from Kntro-Soft/feature/discovery-session-lifecycle | Se integró el ciclo de vida de sesiones de descubrimiento. | 18/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 3a0aa6f | Merge pull request #11 from Kntro-Soft/feature/tooling-quality-gates | Se integraron herramientas de calidad y CI. | 18/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 57dbe82 | Merge pull request #12 from Kntro-Soft/feature/workspace-create-project | Se integró la creación de proyectos. | 19/06/2026 |
+| Kntro-Soft/reqsai-api | develop | b6d91cb | Merge pull request #13 from Kntro-Soft/feature/workspace-project-management | Se integró la gestión de proyectos. | 19/06/2026 |
+| Kntro-Soft/reqsai-api | develop | bcbbe81 | Merge pull request #15 from Kntro-Soft/feature/discovery-manage-acceptance-criteria | Se integró la gestión de criterios de aceptación. | 20/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 9c7f57e | Merge pull request #17 from Kntro-Soft/feature/discovery-recording | Se integró funcionalidad de grabación y transcripción. | 20/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 8c0c1c2 | Merge pull request #19 from Kntro-Soft/feature/workspace-project-context | Se integró contexto de proyecto, glosario y restricciones. | 20/06/2026 |
+| Kntro-Soft/reqsai-api | develop | d5c2c98 | Merge pull request #22 from Kntro-Soft/feature/iam-auth | Se integraron mejoras de IAM y autenticación. | 20/06/2026 |
+| Kntro-Soft/reqsai-api | develop | 6206d08 | Merge pull request #23 from Kntro-Soft/feature/discovery-realtime-suggestions | Se integraron sugerencias en tiempo real para historias de usuario. | 20/06/2026 |
+| Kntro-Soft/reqsai-web | develop | 43fecb7 | Merge pull request #1 from Kntro-Soft/feature/project-foundation | Se integró la base inicial del frontend. | 19/06/2026 |
+| Kntro-Soft/reqsai-web | develop | 0539912 | Merge pull request #3 from Kntro-Soft/feature/project-logo | Se integró el logo y branding de Reqs-AI. | 20/06/2026 |
+
+Como aprendizaje principal, el Sprint permitió consolidar la integración entre backend, frontend, documentación y despliegue cloud. También permitió identificar la importancia de mantener evidencias visuales organizadas, separar ramas por funcionalidad y documentar pasos técnicos críticos para facilitar la revisión del avance del producto.
+
+---
+
 ## 7.3. Validation Interviews
 
-La sección de entrevistas de validación debe evidenciar el proceso usado para validar la solución con usuarios, especialistas o stakeholders relacionados con el producto. En el paquete recibido no se adjuntaron capturas, audios, transcripciones o registros de entrevistas; por ello, se deja la estructura base para completarla con la información real.
+En esta sección se presenta el diseño de entrevistas de validación para **Reqs-AI**, plataforma SaaS B2B orientada a transformar sesiones de discovery en artefactos de requisitos listos para delivery. El propósito de estas entrevistas es evaluar la experiencia de uso, la claridad del flujo, la utilidad percibida de la asistencia con IA y la capacidad de la aplicación para apoyar la generación de requerimientos trazables y accionables.
+
+Para este entregable, el alcance se limita a la **aplicación web actual disponible en el repositorio**. En consecuencia, no se valida una landing page comercial, ya que dicho artefacto no se encuentra implementado de forma visible en la evidencia disponible. Asimismo, se excluyen del diseño las integraciones aún no operativas o señaladas como pendientes, especialmente la integración con Jira y la sección de Integrations. Los apartados de **Registro de Entrevistas** y **Evaluaciones según heurísticas** se dejan estructurados para completar con la evidencia real de las sesiones ejecutadas.
 
 ### 7.3.1. Diseño de Entrevistas
 
-El diseño de entrevistas debe explicar el objetivo de la validación, el perfil de los entrevistados, los criterios de selección, el guion de preguntas y el propósito de cada pregunta.
+Para validar la propuesta de valor y la experiencia de uso de Reqs-AI, se diseñaron entrevistas semiestructuradas dirigidas a dos segmentos principales del producto: **Líder Técnico de Startup** y **Analista de Sistemas / Producto Enterprise**. Aunque ambos segmentos comparten el núcleo del flujo de negocio, cada uno interactúa con la plataforma desde prioridades distintas. El primero busca velocidad, reducción de fricción y utilidad inmediata para pasar de reunión a sprint; el segundo busca trazabilidad, control, estandarización y calidad de los artefactos generados.
 
-| Elemento                  | Descripción                                                                                                                                                                                              |
-| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Objetivo de la entrevista | Validar si la propuesta de Reqs-AI ayuda a organizar sesiones de levantamiento de requerimientos, transformar conversaciones en historias de usuario y facilitar el análisis de criterios de aceptación. |
-| Tipo de entrevista        | Entrevista semiestructurada de validación del producto.                                                                                                                                                  |
-| Perfil de entrevistados   | Product owners, analistas funcionales, miembros de equipos de desarrollo, docentes o stakeholders relacionados con levantamiento de requerimientos.                                                      |
-| Criterios de selección    | Personas con experiencia o participación en definición de requerimientos, gestión de proyectos de software o revisión de historias de usuario.                                                           |
-| Duración estimada         | 10 a 20 minutos por entrevista.                                                                                                                                                                          |
-| Modalidad                 | Virtual o presencial, según disponibilidad del entrevistado.                                                                                                                                             |
+Las entrevistas están planteadas sobre funcionalidades efectivamente presentes en la aplicación web actual, incluyendo autenticación, workspace, proyectos, configuración del contexto técnico, glosario, restricciones, sesiones de discovery, historial y gestión de historias de usuario.
 
-**Guion de entrevista propuesto**
+#### A. Segmento: Líder Técnico de Startup
 
-| N.º | Pregunta                                                                                                          | Propósito                                     |
-| --- | ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| 1   | ¿Cómo realizan actualmente el levantamiento y registro de requerimientos en un proyecto?                          | Identificar el proceso actual del usuario.    |
-| 2   | ¿Qué problemas suelen aparecer al convertir reuniones o conversaciones en historias de usuario?                   | Detectar dolores y oportunidades de mejora.   |
-| 3   | ¿Considera útil una herramienta que transcriba sesiones y sugiera historias de usuario automáticamente? ¿Por qué? | Validar la utilidad percibida de la solución. |
-| 4   | ¿Qué información mínima debería mostrar una historia de usuario para que sea útil en un backlog?                  | Identificar criterios funcionales esperados.  |
-| 5   | ¿Qué tan importante sería revisar, aprobar o rechazar historias generadas antes de agregarlas al backlog?         | Validar el flujo de control y revisión.       |
-| 6   | ¿La organización por workspace, proyectos, sesiones e historias le resulta clara?                                 | Validar la arquitectura de información.       |
-| 7   | ¿Qué mejoras sugeriría para que la herramienta sea más fácil de usar?                                             | Recoger oportunidades de mejora.              |
+**Objetivos de la sesión:**
+
+* Validar si el flujo de acceso, entrada al workspace y navegación inicial hacia el proyecto resulta claro y suficientemente ágil para un usuario con presión por velocidad de ejecución.
+* Evaluar si la configuración del contexto técnico del proyecto permite capturar rápidamente stack, arquitectura y dominio sin fricción innecesaria.
+* Comprobar si el módulo de discovery en vivo y la revisión de sugerencias con IA ayudan a convertir una conversación en historias utilizables para planificación técnica.
+* Identificar puntos de fricción, ruido cognitivo o pasos redundantes que afecten la transición entre reunión, validación y backlog.
+
+**Artefactos a evaluar:** Aplicación Web.
+
+**User Flows del Segmento a Validar:**
+
+```text
+[Flujo 1: Acceso y Setup Inicial]
+Sign In -> Organización / Workspace -> Lista de Proyectos -> Ingreso a Proyecto.
+
+[Flujo 2: Configuración de Contexto Técnico]
+Proyecto -> Settings del Proyecto -> Configuración de stack, arquitectura y dominio.
+
+[Flujo 3: Discovery en Vivo y Decisión Rápida]
+Proyecto -> Sessions -> Iniciar sesión -> Pausar / Reanudar / Detener -> Revisar sugerencias -> Aprobar / Rechazar -> Stories.
+```
+
+**Guía de Tareas y Escenarios:**
+
+1. **Escenario de acceso y orientación inicial:** “Usted acaba de ingresar a Reqs-AI porque necesita preparar una reunión de discovery con un cliente que se realizará hoy. Inicie sesión, ubique su workspace y acceda al proyecto en el que trabajará con su equipo.”
+2. **Tarea de configuración técnica:** “Antes de iniciar la sesión, complete o revise la información técnica base del proyecto. Diríjase a la configuración del proyecto e identifique dónde registraría el stack, la arquitectura y el dominio del sistema para dar mejor contexto a la IA.”
+3. **Tarea de discovery y decisión operativa:** “Ahora imagine que ya está conduciendo la reunión. Ingrese al módulo de sesiones, inicie una sesión de discovery, revise las sugerencias generadas por el sistema y decida cuáles aprobaría o descartaría para convertirlas en historias útiles para su siguiente sprint.”
+
+**Preguntas durante la interacción:**
+
+1. Al iniciar sesión y entrar al workspace, ¿le resultó evidente cómo llegar al proyecto en el que iba a trabajar o tuvo que pensar demasiado en la ruta?
+2. En la configuración del proyecto, ¿la captura del contexto técnico le parece suficientemente rápida para un entorno de startup o siente que le interrumpe el ritmo?
+3. Mientras revisa las sugerencias de la sesión en vivo, ¿percibe que la IA le muestra señal útil o demasiado ruido que tendría que filtrar manualmente?
+4. Al aprobar o rechazar sugerencias, ¿le queda claro qué impacto tendrá esa decisión sobre las historias del proyecto y el backlog resultante?
+5. ¿La transición entre sesión de discovery e historias le transmite una sensación de continuidad operacional o siente que cambia demasiado de contexto?
+
+**Preguntas de cierre:**
+
+6. En comparación con su proceso actual, ¿cree que esta aplicación le ahorraría tiempo real entre la reunión y la planificación del sprint? ¿Por qué?
+7. ¿Qué parte del flujo sintió más lenta, innecesaria o poco alineada con una operación de alta velocidad?
+8. ¿Confiaría en usar estas sugerencias como base para discutir tareas técnicas con su equipo el mismo día de la reunión?
+9. Si tuviera que resumir la utilidad del producto para un equipo pequeño de ingeniería, ¿qué valor principal destacaría y qué objeción mantendría?
+
+#### B. Segmento: Analista de Sistemas / Producto Enterprise
+
+**Objetivos de la sesión:**
+
+* Validar si la estructura del workspace y del proyecto permite comprender con claridad dónde se encuentra la información relevante para la ingeniería de requisitos.
+* Evaluar si el uso de glosario, restricciones y datos del proyecto apoya la construcción de trazabilidad y consistencia semántica.
+* Comprobar si el flujo de historial, revisión de sugerencias, edición de historias y criterios de aceptación soporta una revisión humana rigurosa antes de publicar resultados.
+* Identificar riesgos de ambigüedad, pérdida de control, falta de auditabilidad o debilidades en la precisión de historias y criterios.
+
+**Artefactos a evaluar:** Aplicación Web.
+
+**User Flows del Segmento a Validar:**
+
+```text
+[Flujo 1: Acceso y Comprensión del Proyecto]
+Sign In -> Workspace -> Lista de Proyectos -> Overview del Proyecto.
+
+[Flujo 2: Curación del Contexto]
+Proyecto -> Project Info / Settings -> Glossary -> Constraints.
+
+[Flujo 3: Revisión Analítica de Resultados]
+Proyecto -> Sessions / History -> Cola de sugerencias -> Stories -> Story Detail -> Revisión de criterios de aceptación.
+```
+
+**Guía de Tareas y Escenarios:**
+
+1. **Escenario de acceso y entendimiento del entorno:** “Usted ha recibido la responsabilidad de analizar un proyecto ya creado dentro de Reqs-AI. Inicie sesión, entre al workspace correspondiente y localice el proyecto para comprender rápidamente su estructura general y el contexto disponible.”
+2. **Tarea de curación del contexto:** “Antes de revisar resultados generados por IA, navegue por la información del proyecto, el glosario y las restricciones técnicas. Identifique dónde registraría o verificaría términos clave del negocio y reglas relevantes para reducir ambigüedad en futuras sesiones.”
+3. **Tarea de revisión y refinamiento de artefactos:** “Acceda a las sesiones del proyecto o a su historial, revise las sugerencias pendientes y luego entre a las historias generadas para editar una de ellas y comprobar si los criterios de aceptación le permiten una validación suficientemente precisa antes de llevarla a backlog.”
+
+**Preguntas durante la interacción:**
+
+1. Al ingresar al proyecto, ¿la estructura de navegación le ayudó a entender dónde se ubican el contexto, las sesiones y las historias, o le pareció dispersa?
+2. En las secciones de glosario y restricciones, ¿siente que el producto le da mecanismos suficientes para reducir ambigüedad y mantener consistencia terminológica?
+3. Al revisar el historial o las sugerencias generadas por IA, ¿le queda claro qué proviene de la sesión y qué ya fue validado o descartado por una persona?
+4. Cuando entra al detalle de una historia y revisa sus criterios de aceptación, ¿la experiencia le transmite control y capacidad de auditoría sobre el artefacto final?
+5. ¿La edición de historias y criterios resulta lo bastante precisa para un contexto enterprise o siente que faltan señales, metadatos o estructura para una revisión rigurosa?
+
+**Preguntas de cierre:**
+
+6. ¿Considera que esta aplicación reduce el esfuerzo posterior a la reunión sin comprometer trazabilidad ni calidad documental?
+7. ¿Qué tan confiable le parece el equilibrio entre automatización e intervención humana que propone la plataforma?
+8. ¿Usaría este flujo como parte de un proceso formal de levantamiento de requisitos con stakeholders empresariales? ¿Qué tendría que mejorar para hacerlo viable?
+9. Si compara esta experiencia con su proceso actual de notas, grabaciones y documentación manual, ¿en qué parte observa la mayor mejora y en qué parte ve el mayor riesgo?
+
+En síntesis, el diseño de entrevistas propuesto permite validar el núcleo operacional de Reqs-AI desde dos perspectivas complementarias: la rapidez de ejecución requerida por un líder técnico de startup y la trazabilidad exigida por un analista de sistemas o producto en contexto enterprise. Ambos recorridos están construidos sobre funcionalidades actualmente disponibles en la aplicación web, con el fin de obtener evidencia realista y accionable sobre la propuesta de valor del producto.
 
 ### 7.3.2. Registro de Entrevistas
 
-En esta sección se debe registrar la información principal de cada entrevista realizada, incluyendo datos del entrevistado, fecha, modalidad, enlace de evidencia y resumen de hallazgos.
+En esta sección se presenta el registro de entrevistas de validación realizadas para evaluar la percepción de usuarios potenciales frente a la plataforma Reqs-AI. Las entrevistas fueron organizadas según los segmentos objetivo del producto: Líder Técnico de Startup y Analista de Sistemas / Producto Enterprise, lo que permite validar la experiencia técnica, operacional y de ingeniería del sistema.
 
-| Entrevistado           | Perfil                 | Fecha     | Modalidad | Evidencia                             | Principales hallazgos  |
-| ---------------------- | ---------------------- | --------- | --------- | ------------------------------------- | ---------------------- |
-| Pendiente de completar | Pendiente de completar | Pendiente | Pendiente | Pendiente de agregar enlace o captura | Pendiente de completar |
+**Link Video - Entrevistas:** [Ver en Microsoft Stream](https://upcedupe-my.sharepoint.com/:v:/g/personal/u20221c486_upc_edu_pe/IQD6yVXP8w9pT7E5sFhIS9cCAf8SF08UcbLxgb8laMoX6e0?e=ICgvBb&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D)
+
+---
+
+#### Segmento: Analista de Sistemas / Producto Enterprise
+
+##### Entrevista 1: Ronald Peralta
+
+| Atributo                | Detalle                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+|-------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Nombre**              | Ronald Peralta                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| **Edad**                | 22                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| **Sexo**                | Masculino                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| **Distrito**            | Santiago de Surco                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| **Ocupación**           | Líder técnico                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| **Fecha de entrevista** | 2026-07-09                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| **Timing**              | 00:00:00 - 00:08:56                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| **Video**               | [Ver en Microsoft Stream](https://upcedupe-my.sharepoint.com/:v:/g/personal/u20221c486_upc_edu_pe/IQD6yVXP8w9pT7E5sFhIS9cCAf8SF08UcbLxgb8laMoX6e0?e=ICgvBb&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D)                                                                                                                                                                                                                                                                                                                                                          |
+| **Captura**             | ![Captura entrevista Ronald](assets/interviews/validation/analist.png)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| **Resumen**             | Ronald Peralta evaluó la plataforma desde una perspectiva de orden y trazabilidad. Señaló que la estructura de navegación es muy ordenada y cómoda para acceder a sesiones e historias de usuario. Destacó que las secciones de glosario y restricciones son útiles para reducir la repetición y la ambigüedad en el proceso de desarrollo. En cuanto a las sugerencias de la IA, indicó que el sistema separa adecuadamente lo provisto por la sesión de lo validado por humanos, aunque sugirió mejorar la distinción visual. Consideró que los criterios de aceptación y la edición de historias están bien estructurados para un contexto corporativo, manifestando confianza en el balance de la automatización. |
+
+##### Entrevista 2: Manuel Gonzales
+
+| Atributo                | Detalle                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+|-------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Nombre**              | Manuel Gonzales                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| **Edad**                | 25                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| **Sexo**                | Masculino                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| **Distrito**            | Santiago de Surco                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| **Ocupación**           | Analista de Sistemas                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| **Fecha de entrevista** | 2026-07-09                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| **Timing**              | 00:08:56 - 00:18:44                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| **Video**               | [Ver en Microsoft Stream](https://upcedupe-my.sharepoint.com/:v:/g/personal/u20221c486_upc_edu_pe/IQD6yVXP8w9pT7E5sFhIS9cCAf8SF08UcbLxgb8laMoX6e0?e=2MdZp5&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6NTM2Ljc4fX0%3D)                                                                                                                                                                                                                                                                                                                           |
+| **Captura**             | ![Captura entrevista Manuel](assets/interviews/validation/analist-2.png)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| **Resumen**             | El entrevistado, Manuel González, evaluó positivamente el flujo de inicio de sesión y el acceso a la organización, destacando que la interfaz es muy adecuada, limpia y bien implementada visualmente. Respecto a la funcionalidad central de captura de requisitos por voz, valoró significativamente que la inteligencia artificial diferencie correctamente a ambos interlocutores en la transcripción, además de resaltar la alta calidad y precisión de las historias de usuario automáticas generadas en formato Gherkin con sus respectivos criterios de aceptación. Finalmente, consideró excelente la distribución del menú y la sección de historias, enfatizando que la opción de editar es indispensable para complementar el aporte de la IA con el criterio humano. |
+
+##### Entrevista 3: Daniel Franco
+
+| Atributo                | Detalle                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+|-------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Nombre**              | Daniel Franco                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| **Edad**                | 30                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| **Sexo**                | Masculino                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| **Distrito**            | Santiago de Surco                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| **Ocupación**           | Analista de Sistemas                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| **Fecha de entrevista** | 2026-07-09                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| **Timing**              | 00:18:44 - 00:31:09                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| **Video**               | [Ver en Microsoft Stream](https://upcedupe-my.sharepoint.com/:v:/g/personal/u20221c486_upc_edu_pe/IQD6yVXP8w9pT7E5sFhIS9cCAf8SF08UcbLxgb8laMoX6e0?e=6gxi2s&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6MTEyNS4yOH19)                                                                                                                                                                                                                                                                                                                          |
+| **Captura**             | ![Captura entrevista Daniel](assets/interviews/validation/analist-3.png)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| **Resumen**             | Daniel Franco validó la plataforma enfocándose en la trazabilidad y la rigurosidad del análisis. Valoró positivamente la estructura lógica del proyecto (resumen, captura, historias, glosario, restricciones, ajustes), destacando que las secciones de glosario y restricciones son ideales para reducir la ambigüedad y orientar con precisión la generación de la IA. Indicó que la plataforma brinda control suficiente para curar historias antes de subirlas al backlog, ahorrando tiempo en el procesamiento de reuniones. Como sugerencias, propuso soportar sintaxis Gherkin (Given-When-Then) y la integración nativa con Jira/Azure DevOps. |
+
+---
+
+#### Segmento: Líder Técnico de Startup
+
+##### Entrevista 1: Gabriel Reyna
+
+| Atributo                | Detalle                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+|-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Nombre**              | Gabriel Reyna                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| **Edad**                | 22                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| **Sexo**                | Masculino                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| **Distrito**            | Barranco                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| **Ocupación**           | Desarrollador full stack (Líder Técnico de Startup)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| **Fecha de entrevista** | 2026-07-09                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| **Timing**              | 00:31:09 - 00:39:54                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| **Video**               | [Ver en Microsoft Stream](https://upcedupe-my.sharepoint.com/:v:/g/personal/u20221c486_upc_edu_pe/IQD6yVXP8w9pT7E5sFhIS9cCAf8SF08UcbLxgb8laMoX6e0?e=TeY9WG&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6MTg3MC4zOX19)                                                                                                                                                                                                                                                                                                                           |
+| **Captura**             | ![Captura entrevista Gabriel](assets/interviews/validation/leader.png)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| **Resumen**             | Gabriel Reyna evaluó el flujo de la aplicación web de Reqs-AI. Destacó que el acceso al workspace y la navegación son sumamente evidentes y claros, mostrando los proyectos de manera eficiente. Sobre la captura de contexto técnico, señaló que es rápida y suficiente para que la IA funcione correctamente sin sobrecargar al usuario de información. Mencionó que las sugerencias en vivo generadas por IA funcionan de manera correcta, grabando y reconociendo la voz de forma precisa sin ruido innecesario. Aunque sugirió que la adición manual de términos del glosario o configuraciones de arquitectura podrían agruparse u ofrecerse de manera opcional para no interrumpir el flujo rápido, concluyó que la aplicación ahorra tiempo real en la planificación de sprints y la organización del backlog. |
+
+##### Entrevista 2: Diego Meléndez
+
+| Atributo                | Detalle                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+|-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Nombre**              | Diego Meléndez                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| **Edad**                | 28                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| **Sexo**                | Masculino                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| **Distrito**            | Surquillo                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| **Ocupación**           | Líder Técnico                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| **Fecha de entrevista** | 2026-07-08                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| **Timing**              | 00:39:54 - 00:51:32                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| **Video**               | [Ver en Microsoft Stream](https://upcedupe-my.sharepoint.com/:v:/g/personal/u20221c486_upc_edu_pe/IQD6yVXP8w9pT7E5sFhIS9cCAf8SF08UcbLxgb8laMoX6e0?e=OZe7Ht&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6MjM5NC40M319)                                                                                                                                                                                                                                                                                                                           |
+| **Captura**             | ![Captura entrevista Diego](assets/interviews/validation/leader-2.png)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| **Resumen**             | El entrevistado, Diego Meléndez, calificó la plataforma REX AI como un sistema intuitivo y de fácil navegación. Destacó la simplicidad del flujo de registro y configuración del proyecto, sugiriendo únicamente que campos como el lenguaje de programación sean opcionales al inicio. Respecto a la función principal de captura por audio, se mostró muy sorprendido y satisfecho por la rapidez con la que la IA estructuró correctamente una historia de usuario basada en una breve explicación. Sin embargo, observó que la interfaz presenta espacios muy reducidos para leer el texto generado. Por último, consideró de gran utilidad las herramientas de restricciones y el glosario para gestionar tecnicismos. |
+
+##### Entrevista 3: Daniela Martínez
+
+| Atributo                | Detalle                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+|-------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Nombre**              | Daniela Martínez                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| **Edad**                | 23                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| **Sexo**                | Femenino                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| **Distrito**            | San Miguel                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| **Ocupación**           | Desarrolladora backend y apoyo en levantamiento de requerimientos (Líder Técnico de Startup)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| **Fecha de entrevista** | 2026-07-09                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| **Timing**              | 00:51:32 - 01:03:36                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| **Video**               | [Ver en Microsoft Stream](https://upcedupe-my.sharepoint.com/:v:/g/personal/u20221c486_upc_edu_pe/IQD6yVXP8w9pT7E5sFhIS9cCAf8SF08UcbLxgb8laMoX6e0?e=4sl67I&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6MzA5Mi4xMn19)                                                                                                                                                                                                                                                                                                                           |
+| **Captura**             | ![Captura entrevista Daniela](assets/interviews/validation/leader-3.png)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| **Resumen**             | Daniela Martínez evaluó el flujo de la aplicación web y destacó que el acceso al workspace y la navegación inicial son muy ágiles y rápidos, requiriendo mínima configuración para empezar a trabajar. En cuanto a la captura del contexto técnico (stack, arquitectura, dominio), señaló que es rápida y no interrumpe el ritmo en un entorno de startup. Respecto al discovery en vivo y las sugerencias de la IA, valoró la precisión de los detalles generados para desglosar requisitos, concluyendo que la herramienta reduce drásticamente el tiempo de análisis post-reunión y agiliza la planificación de sprints (sprint planning). Recomendó mantener la validación humana para las sugerencias de la IA. |
 
 ### 7.3.3. Evaluaciones según heurísticas
 
-En esta sección se presenta una matriz base para evaluar la solución según heurísticas de usabilidad, diseño inclusivo y arquitectura de información. La evaluación final debe completarse con evidencias reales de las vistas y entrevistas.
+#### UX Heuristics & Principles Evaluation
+#### Usability – Inclusive Design – Information Architecture
 
-| Heurística evaluada                           | Hallazgo                                                                                                             | Severidad | Recomendación                                                            | Estado                   |
-| --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | --------- | ------------------------------------------------------------------------ | ------------------------ |
-| Visibilidad del estado del sistema            | La interfaz muestra estados en sesiones e historias, pero debe validarse con usuarios si son suficientemente claros. | Baja      | Mantener etiquetas de estado visibles y consistentes.                    | Pendiente de validación  |
-| Relación entre sistema y mundo real           | La organización por proyectos, sesiones e historias se alinea con flujos comunes de trabajo de software.             | Baja      | Mantener términos familiares para usuarios de gestión de requerimientos. | Pendiente de validación  |
-| Control y libertad del usuario                | Se evidencian acciones para gestionar sesiones, historias y ajustes.                                                 | Media     | Asegurar confirmaciones antes de acciones críticas como eliminar.        | Pendiente de validación  |
-| Consistencia y estándares                     | Las capturas muestran consistencia visual entre modo claro y oscuro.                                                 | Baja      | Mantener patrones de navegación, botones y estados entre vistas.         | Evidenciado parcialmente |
-| Prevención de errores                         | Se requiere validar mensajes y restricciones en formularios.                                                         | Media     | Agregar validaciones visibles antes de enviar formularios.               | Pendiente de validación  |
-| Reconocimiento antes que recuerdo             | La barra lateral y navegación ayudan a reconocer secciones principales.                                              | Baja      | Mantener navegación persistente en vistas internas.                      | Evidenciado parcialmente |
-| Flexibilidad y eficiencia de uso              | El selector de organización y accesos a proyectos facilitan el cambio de contexto.                                   | Baja      | Evaluar accesos rápidos para usuarios frecuentes.                        | Evidenciado parcialmente |
-| Diseño estético y minimalista                 | La UI mantiene diseño limpio, jerarquía clara y soporte dark/light.                                                  | Baja      | Evitar exceso de texto y priorizar acciones principales.                 | Evidenciado parcialmente |
-| Ayuda para reconocer y recuperarse de errores | No se adjuntó evidencia suficiente de pantallas de error.                                                            | Media     | Incluir mensajes claros de error, causa y acción recomendada.            | Pendiente de evidencia   |
-| Ayuda y documentación                         | La documentación técnica existe mediante Swagger/OpenAPI.                                                            | Baja      | Complementar con ayuda funcional para usuarios finales.                  | Evidenciado parcialmente |
+**CARRERA** : Ingeniería de Software
+
+**CURSO** : Arquitecturas de Software Emergentes
+
+**NRC** : 11821
+
+**PROFESOR** : Christian Luis De Los Rios Fernandez
+
+**AUDITOR** : Kntro-Soft
+
+**CLIENTES** : Diego Melendez, Daniela Martínez, Manuel Gonzales, Daniel Franco
+
+#### SITE o APP A EVALUAR:
+
+**Reqs-AI**
+
+#### TAREAS A EVALUAR:
+
+El alcance de esta evaluación incluye la revisión de usabilidad de las siguientes tareas:
+
+1. Flujo completo del Onboarding
+2. Gestión del proyectos
+3. Grabación y captura
+4. Historias de usuario
+5. Glosario
+6. Restricciones
+
+#### FUERA DE ALCANCE:
+
+No están incluidas en esta versión de la evaluación las siguientes tareas:
+
+1. Gestión avanzada o edición del estado de la suscripción.
+2. Recuperación de contraseña.
+3. Modificación avanzada de la organización.
+4. Recuperación de contraseña.
+5. Reportes de bugs.
+6. Configuración explícita de i18n y modo oscuro/claro en la versión móvil actual.
+
+#### ESCALA DE SEVERIDAD:
+
+| Nivel | Descripción                                                                                                                                                                     |
+|-------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1     | **Problema superficial**: puede ser fácilmente superado por el usuario o ocurre con muy poca frecuencia. No necesita ser arreglado a menos que exista disponibilidad de tiempo. |
+| 2     | **Problema menor**: puede ocurrir con cierta frecuencia o ser un poco más difícil de superar. Se le debería asignar una prioridad baja para el siguiente release.               |
+| 3     | **Problema mayor**: ocurre frecuentemente o los usuarios no son capaces de resolverlo fácilmente. Es importante corregirlo y asignarle prioridad alta.                          |
+| 4     | **Problema muy grave**: error de gran impacto que impide al usuario continuar con el uso de la herramienta. Debe corregirse antes del lanzamiento.                              |
+
+#### TABLA RESUMEN:
+
+| #  | Problema                                                                                   | Escala de severidad | Heurística / Principio Violado                                               |
+|----|--------------------------------------------------------------------------------------------|---------------------|------------------------------------------------------------------------------|
+| 1  | Uso de terminología técnica compleja para perfiles no especializados                       | 2                   | Relación entre el sistema y el mundo real                                    |
+| 2  | Identificación genérica de interlocutores en la transcripción de voz                       | 2                   | Relación entre el sistema y el mundo real / Flexibilidad y eficiencia de uso |
+| 3  | Fricción operativa en el flujo de captura remota de audio                                  | 3                   | Flexibilidad y eficiencia de uso                                             |
+| 4  | Falta de claridad en la distinción de campos opcionales durante la creación del proyecto   | 2                   | Flexibilidad y eficiencia de uso / Prevención de errores                     |
+| 5  | Deficiencia en el dimensionamiento y legibilidad de las historias de usuario generadas     | 2                   | Estética y diseño minimalista                                                |
+| 6  | Ausencia de estado de carga o procesamiento durante la generación en tiempo real de la IA  | 2                   | Visibilidad del estado del sistema                                           |
+| 7  | Saturación cognitiva por acumulación de elementos de distinta naturaleza en un solo feed   | 2                   | Estética y diseño minimalista / Arquitectura de información                  |
+| 8  | Restricción del entorno operativo a interacciones estrictamente presenciales               | 3                   | Flexibilidad y eficiencia de uso / Relación entre el sistema y el mundo real |
+| 9  | Ambigüedad en el criterio de ordenamiento y jerarquía de las historias de usuario listadas | 2                   | Visibilidad del estado del sistema                                           |
+| 10 | Limitación estructural de las historias de usuario para entornos de nivel Enterprise       | 2                   | Flexibilidad y eficiencia de uso / Relación entre el sistema y el mundo real |
+| 11 | Incertidumbre y falta de trazabilidad sobre la fiabilidad del contenido generado por la IA | 2                   | Visibilidad del estado del sistema / Prevención de errores                   |
+| 12 | Falta de contraste y diferenciación visual entre módulos del flujo de trabajo              | 2                   | Visibilidad del estado del sistema / Estética y diseño minimalista           |
+| 13 | Fricción operativa por el ingreso fragmentado y repetitivo de metadatos técnicos           | 2                   | Flexibilidad y eficiencia de uso                                             |
+
+**DESCRIPCIÓN DE PROBLEMAS:**
+
+**PROBLEMA #1: Ausencia de estado de carga o procesamiento durante la generación en tiempo real de la IA**
+
+**Severidad:** 2  
+**Heurística violada:** Visibilidad del estado del sistema
+
+**Problema:**  
+Durante el proceso de entrevista en vivo, el sistema presenta una demora perceptible mientras la inteligencia artificial analiza el audio, formula preguntas aclaratorias y redacta la historia de usuario estructurada. Al no existir un indicador visual activo (como una animación de carga, un esqueleto de marcador de posición o un indicador de escritura), el usuario experimenta incertidumbre respecto a si la aplicación sigue procesando o si se ha congelado temporalmente.
+
+![problema-1](assets/interviews/heuristics/problema-1.png)
+
+**Recomendación:**  
+Implementar un indicador visual dinámico en la interfaz de captura (por ejemplo, una animación de tres puntos suspensivos parpadeantes o un texto que indique "La IA está procesando...") para mantener al usuario informado sobre las operaciones internas del sistema y reducir la latencia percibida.
+
+**PROBLEMA #2: Saturación cognitiva por acumulación de elementos de distinta naturaleza en un solo feed**
+
+**Severidad:** 2  
+**Heurística violada:** Estética y diseño minimalista / Arquitectura de información
+
+**Problema:**  
+El sistema concentra la transcripción literal del diálogo, las preguntas sugeridas por la IA para guiar al entrevistador y las propuestas formales de historias de usuario dentro de un mismo espacio o contenedor similar a un chat. Mezclar elementos de soporte interactivo temporal (preguntas guía) con registros históricos (transcripción) y entregables finales (historias) genera desorden visual y dificulta que el líder técnico escanee la pantalla de forma eficiente.
+
+![problema-2](assets/interviews/heuristics/problema-2.png)
+
+**Recomendación:**  
+Rediseñar la pantalla de captura segmentando la información por su propósito operativo: mantener una columna limpia para el flujo de transcripción de voz, un panel lateral o flotante secundario para las sugerencias de preguntas en tiempo real, y un contenedor independiente para la previsualización y aceptación de las historias de usuario.
+
+**PROBLEMA #3: Uso de terminología técnica compleja para perfiles no especializados**
+
+**Severidad:** 2  
+**Heurística violada:** Relación entre el sistema y el mundo real
+
+**Problema:**  
+Durante la navegación por los módulos de "Glosario", "Restricciones" y la visualización de las historias generadas de manera automática en formato Gherkin, se identificó que el sistema utiliza un lenguaje técnico muy especializado de la ingeniería de software. Esto puede representar una barrera de comprensión o causar confusión para los usuarios finales pertenecientes a perfiles administrativos o clientes del segmento Enterprise que no dominen dichos conceptos.
+
+![problema-3](assets/interviews/heuristics/problema-3.png)
+
+**Recomendación:**  
+Incorporar tooltips descriptivos o pequeños iconos de ayuda informativa `(?)` junto a los términos y formatos técnicos complejos. Esto permitirá ofrecer explicaciones sencillas o ejemplos prácticos sin saturar la interfaz principal.
+
+**PROBLEMA #4: Identificación genérica de interlocutores en la transcripción de voz**
+
+**Severidad:** 2  
+**Heurística violada:** Relación entre el sistema y el mundo real / Flexibilidad y eficiencia de uso
+
+**Problema:**  
+En la funcionalidad central de captura de requisitos por voz, la IA separa de manera óptima las intervenciones de los participantes, pero les asigna etiquetas genéricas automatizadas como "usuario 1" y "usuario 2". Al revisar el historial de la transcripción, esto obliga al usuario a realizar un esfuerzo cognitivo extra para asociar mentalmente cada etiqueta con el participante real de la reunión.
+
+![problema-4](assets/interviews/heuristics/problema-4.png)
+
+**Recomendación:**  
+Permita la edición o renombrado directo de las etiquetas de los interlocutores desde la misma pantalla de transcripción, o posibilite la vinculación automática de estas etiquetas con los nombres de los miembros del equipo que ya se encuentran registrados en la organización.
+
+**PROBLEMA #5: Fricción operativa en el flujo de captura remota de audio**
+
+**Severidad:** 3  
+**Heurística violada:** Flexibilidad y eficiencia de uso
+
+**Problema:**  
+Para efectuar la captura de audio y procesamiento de requisitos en entornos remotos de videoconferencia (como Zoom), se requiere un flujo de trabajo externo complejo donde los participantes deben silenciarse en la plataforma principal y realizar una llamada telefónica paralela. Esto evidencia la falta de un mecanismo nativo para capturar el audio del sistema o de la pestaña del navegador, generando una alta fricción en escenarios de trabajo a distancia cotidianos.
+
+![problema-5](assets/interviews/heuristics/problema-5.png)
+
+**Recomendación:**  
+Implementar soporte para la captura nativa de audio del sistema (compartir audio de la pestaña o ventana del navegador) o desarrollar una integración directa (mediante un bot asistente o extensión) compatible con las principales herramientas de videoconferencia del mercado como Zoom, Microsoft Teams o Google Meet.
+
+**PROBLEMA #6: Falta de claridad en la distinción de campos opcionales durante la creación del proyecto**
+
+**Severidad:** 2
+**Heurística violada:** Flexibilidad y eficiencia de uso / Prevención de errores
+
+**Problema:**  
+Durante el despliegue del formulario para registrar un nuevo proyecto, se solicita información técnica especializada como el lenguaje de programación, la base de datos y el tipo de arquitectura. El sistema no explicita visualmente cuáles de estos campos son opcionales, lo que genera confusión e incertidumbre en el usuario si se encuentra en una etapa inicial del diseño donde aún no define dichos componentes.
+
+![problema-6](assets/interviews/heuristics/problema-6.png)
+
+**Recomendación:**  
+Añadir una aclaración visual explícita (como la palabra "Opcional") al lado de cada campo no obligatorio, permitiendo que el líder técnico avance fluidamente y edite estos parámetros en los ajustes avanzados posteriormente.
+
+**PROBLEMA #7: Deficiencia en el dimensionamiento y legibilidad de las historias de usuario generadas**
+
+**Severidad:** 2
+**Heurística violada:** Estética y diseño minimalista
+
+**Problema:**  
+Una vez que la inteligencia artificial procesa el audio y genera la estructura formal de la historia de usuario, los espacios y campos destinados a mostrar el bloque de texto consolidado son excesivamente reducidos. Esto provoca que la información se visualice muy junta y apretada, afectando negativamente la legibilidad y obligando al usuario a realizar un esfuerzo visual innecesario para revisar el contenido.
+
+![problema-7](assets/interviews/heuristics/problema-7.png)
+
+**Recomendación:**  
+Incrementar el espaciado (padding) de los contenedores de texto, ajustar el tamaño de la fuente a un estándar cómodo de lectura y configurar los campos de visualización para que se expandan dinámicamente según la extensión del texto redactado por la IA.
+
+**PROBLEMA #8: Restricción del entorno operativo a interacciones estrictamente presenciales**
+
+**Severidad:** 3
+**Heurística violada:** Flexibilidad y eficiencia de uso / Relación entre el sistema y el mundo real
+
+**Problema:**  
+El sistema se encuentra limitado en su versión actual a un enfoque operativo netamente presencial, careciendo de soporte nativo para capturar e interactuar de forma directa con plataformas de reuniones virtuales. Esto genera una alta fricción en el flujo de trabajo diario de un analista de sistemas, forzándolo a implementar simulaciones complejas e incómodas (como realizar llamadas paralelas por canales externos) para lograr que la herramienta escuche y procese el diálogo remoto.
+
+![problema-8](assets/interviews/heuristics/problema-8.png)
+
+**Recomendación:**  
+Desarrollar soporte técnico para la captura de audio interna del sistema (compartir el audio de una pestaña o ventana del navegador) o integrar de forma nativa la extensión del servicio dentro de los flujos de herramientas de videoconferencia corporativa.
+
+**PROBLEMA #9: Ambigüedad en el criterio de ordenamiento y jerarquía de las historias de usuario listadas**
+
+**Severidad:** 2
+**Heurística violada:** Visibilidad del estado del sistema
+
+**Problema:**  
+En la vista o sección donde se despliega el listado consolidado de las historias de usuario generadas, la interfaz no comunica visualmente el criterio utilizado para organizar las tarjetas. Esta ausencia de orden explícito obliga al analista a deducir o suponer de manera empírica bajo qué lógica se estructuran (por ejemplo, asumiendo un orden de prioridad o cronología), afectando la claridad operativa en proyectos con una alta densidad de requisitos.
+
+![problema-9](assets/interviews/heuristics/problema-9.png)
+
+**Recomendación:**  
+Incorporar selectores de ordenamiento explícitos y visibles (tales como "Más recientes", "Por Prioridad", o "Por Módulo") junto con indicadores visuales claros dentro de cada tarjeta para explicitar de forma transparente la jerarquía de los elementos documentados.
+
+**PROBLEMA #10: Limitación estructural de las historias de usuario para entornos de nivel Enterprise**
+
+**Severidad:** 2
+**Heurística violada:** Flexibilidad y eficiencia de uso / Relación entre el sistema y el mundo real
+
+**Problema:**  
+Al revisar el módulo de visualización y edición de requisitos, la plataforma solo proporciona los campos estructurales básicos de una historia de usuario tradicional (título, rol, acción, beneficio y criterios de aceptación). El líder técnico entrevistado resalta que este formato plano solo cubre una "etapa inicial o intermedia" del proceso real de levantamiento , resultando insuficiente para las necesidades de un entorno Enterprise riguroso que demanda metadatos complejos como gestión de prioridades, estados del ciclo de vida del requisito o mapeo de componentes técnicos.
+
+![problema-10](assets/interviews/heuristics/problema-10.png)
+
+**Recomendación:**  
+Incorporar paneles expandibles de configuración avanzada dentro de cada historia de usuario, permitiendo a los equipos de nivel corporativo asignar etiquetas personalizadas, estados de flujo (Backlog, En Revisión, Aprobado), nivel de prioridad (p. ej., método MoSCoW) y componentes del sistema afectados.
+
+**PROBLEMA #11: Incertidumbre y falta de trazabilidad sobre la fiabilidad del contenido generado por la IA**
+
+**Severidad:** 2
+**Heurística violada:** Visibilidad del estado del sistema / Prevención de errores
+
+**Problema:**  
+Una vez procesado el audio, la herramienta entrega los artefactos finales consolidados de manera directa, pero no ofrece ninguna señal sobre el nivel de certeza del algoritmo ni referencias visuales hacia la transcripción de origen. Esta opacidad en el procesamiento automático siembra dudas en el líder técnico sobre "qué tan confiable es la información que se entrega" , induciendo a un esfuerzo cognitivo de sospecha y forzando una validación humana rigurosa y a ciegas para descartar posibles alucinaciones del modelo de lenguaje.
+
+![problema-11](assets/interviews/heuristics/problema-11.png)
+
+**Recomendación:**  
+Implementar un sistema de trazabilidad interactiva mediante un código de colores o enlaces directos (hipervínculos) que conecten partes de la historia de usuario generada con el fragmento de la transcripción textual del que fue extraída, acompañado de un indicador discreto de confianza (p. ej., "92% de precisión").
+
+**PROBLEMA #12: Falta de contraste y diferenciación visual entre módulos del flujo de trabajo**
+
+**Severidad:** 2
+**Heurística violada:** Visibilidad del estado del sistema / Estética y diseño minimalista
+
+**Problema:**  
+Durante la transición operacional entre la sesión de Discovery y el módulo de historias de usuario, la interfaz mantiene un diseño tan plano y homogéneo que el analista experimenta una sensación de monotonía visual donde "todo se ve un poco igual". La falta de un contraste claro o de señalizaciones gráficas distintivas dificulta que el usuario reconozca de un vistazo en qué zona o etapa específica del sistema se encuentra interactuando.
+
+![problema-12](assets/interviews/heuristics/problema-12.png)
+
+**Recomendación:**  
+Introducir variaciones sutiles pero efectivas en la jerarquía visual de los módulos; por ejemplo, utilizar banners superiores con esquemas de color ligeramente diferenciados, incluir iconografía temática exclusiva para cada sección y resaltar de forma más evidente la opción activa en el menú lateral.
+
+**PROBLEMA #13: Fricción operativa por el ingreso fragmentado y repetitivo de metadatos técnicos**
+
+**Severidad:** 2
+**Heurística violada:** Flexibilidad y eficiencia de uso
+
+**Problema:**  
+El flujo actual obliga al analista a registrar elementos como la arquitectura, el dominio y el lenguaje agregando los términos "uno por uno" a través de múltiples pasos o campos obligatorios. Esta fragmentación genera un esfuerzo operativo innecesario y ralentiza el ritmo de trabajo en entornos de alta velocidad, especialmente porque en muchos casos estos parámetros se sobreentienden o se repiten de un proyecto a otro.
+
+![problema-13](assets/interviews/heuristics/problema-13.png)
+
+**Recomendación:**  
+Agrupar estos metadatos técnicos en un único bloque consolidado dentro de una tarjeta o sección unificada, y transformarlos en opciones avanzadas y opcionales en lugar de requisitos estrictos de configuración inicial, permitiendo acelerar la creación del entorno de trabajo.
 
 ---
 

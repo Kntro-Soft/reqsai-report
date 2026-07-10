@@ -12,6 +12,9 @@ jobs:
     permissions:
       contents: write
 
+    env:
+      REPORT_NAME: ${{ vars.REPORT_NAME || 'ReqsAI-Report' }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -39,31 +42,63 @@ jobs:
             --pdf-options '{"format":"A4","margin":{"top":"20mm","right":"20mm","bottom":"20mm","left":"20mm"},"printBackground":true}' \
             --launch-options '{"args":["--no-sandbox","--disable-setuid-sandbox"]}' \
             --basedir .
-          mv README.pdf ReqsAI-Report.pdf
+          mv README.pdf "${REPORT_NAME}.pdf"
 
-      - name: Upload artifact
-        id: upload
+      - name: Upload PDF artifact
+        id: upload-pdf
         uses: actions/upload-artifact@v7
         with:
-          name: ReqsAI-Report-PDF
-          path: ReqsAI-Report.pdf
+          name: ${{ env.REPORT_NAME }}-PDF
+          path: ${{ env.REPORT_NAME }}.pdf
+          retention-days: 90
+
+      - name: Install pandoc
+        run: sudo apt-get install -y -qq pandoc
+
+      - name: Generate Word document
+        run: pandoc README.md -o "${REPORT_NAME}.docx"
+
+      - name: Upload Word artifact
+        id: upload-docx
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ env.REPORT_NAME }}-DOCX
+          path: ${{ env.REPORT_NAME }}.docx
+          retention-days: 90
+
+      - name: Create ZIP bundle
+        run: zip -j "${REPORT_NAME}.zip" "${REPORT_NAME}.pdf" "${REPORT_NAME}.docx"
+
+      - name: Upload ZIP artifact
+        id: upload-zip
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ env.REPORT_NAME }}-ZIP
+          path: ${{ env.REPORT_NAME }}.zip
           retention-days: 90
 
       - name: Job summary
         run: |
-          echo "## ReqsAI Report — PDF generado" >> $GITHUB_STEP_SUMMARY
+          echo "## ReqsAI Report — documentos generados" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| | |" >> $GITHUB_STEP_SUMMARY
           echo "|---|---|" >> $GITHUB_STEP_SUMMARY
           echo "| **Commit** | \`${{ github.sha }}\` |" >> $GITHUB_STEP_SUMMARY
           echo "| **Branch** | \`${{ github.ref_name }}\` |" >> $GITHUB_STEP_SUMMARY
           echo "| **Fecha** | $(date +'%Y-%m-%d %H:%M UTC') |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Tamaño** | $(du -sh ReqsAI-Report.pdf | cut -f1) |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Tamaño PDF** | $(du -sh "${REPORT_NAME}.pdf" | cut -f1) |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Tamaño Word** | $(du -sh "${REPORT_NAME}.docx" | cut -f1) |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Tamaño ZIP** | $(du -sh "${REPORT_NAME}.zip" | cut -f1) |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### [Descargar PDF](${{ steps.upload.outputs.artifact-url }})" >> $GITHUB_STEP_SUMMARY
+          echo "### [Descargar PDF](${{ steps.upload-pdf.outputs.artifact-url }})" >> $GITHUB_STEP_SUMMARY
+          echo "### [Descargar Word](${{ steps.upload-docx.outputs.artifact-url }})" >> $GITHUB_STEP_SUMMARY
+          echo "### [Descargar ZIP](${{ steps.upload-zip.outputs.artifact-url }})" >> $GITHUB_STEP_SUMMARY
 
       - name: Attach to release (if tagged)
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v3
         with:
-          files: ReqsAI-Report.pdf
+          files: |
+            ${{ env.REPORT_NAME }}.pdf
+            ${{ env.REPORT_NAME }}.docx
+            ${{ env.REPORT_NAME }}.zip
