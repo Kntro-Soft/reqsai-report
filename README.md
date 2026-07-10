@@ -7933,6 +7933,19 @@ Durante la navegación por los módulos de "Glosario", "Restricciones" y la visu
 **Recomendación:**  
 Incorporar tooltips descriptivos o pequeños iconos de ayuda informativa `(?)` junto a los términos y formatos técnicos complejos. Esto permitirá ofrecer explicaciones sencillas o ejemplos prácticos sin saturar la interfaz principal.
 
+**PROBLEMA #4: Identificación genérica de interlocutores en la transcripción de voz**
+
+**Severidad:** 2  
+**Heurística violada:** Relación entre el sistema y el mundo real / Flexibilidad y eficiencia de uso
+
+**Problema:**  
+En la funcionalidad central de captura de requisitos por voz, la IA separa de manera óptima las intervenciones de los participantes, pero les asigna etiquetas genéricas automatizadas como "usuario 1" y "usuario 2". Al revisar el historial de la transcripción, esto obliga al usuario a realizar un esfuerzo cognitivo extra para asociar mentalmente cada etiqueta con el participante real de la reunión.
+
+![problema-4](assets/interviews/heuristics/problema-4.png)
+
+**Recomendación:**  
+Permita la edición o renombrado directo de las etiquetas de los interlocutores desde la misma pantalla de transcripción, o posibilite la vinculación automática de estas etiquetas con los nombres de los miembros del equipo que ya se encuentran registrados en la organización.
+
 ---
 
 ## 7.4. Video About-the-Product
