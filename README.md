@@ -202,15 +202,24 @@ TP:
     * [7.1.3. Source Code Style Guide & Conventions](#713-source-code-style-guide--conventions)
     * [7.1.4. Software Deployment Configuration](#714-software-deployment-configuration)
   * [7.2. Solution Implementation](#72-solution-implementation)
-    * [7.2.X. Sprint n](#72x-sprint-n)
-      * [7.2.X.1. Sprint Planning n](#72x1-sprint-planning-n)
-      * [7.2.X.2. Sprint Backlog n](#72x2-sprint-backlog-n)
-      * [7.2.X.3. Development Evidence for Sprint Review](#72x3-development-evidence-for-sprint-review)
-      * [7.2.X.4. Testing Suite Evidence for Sprint Review](#72x4-testing-suite-evidence-for-sprint-review)
-      * [7.2.X.5. Execution Evidence for Sprint Review](#72x5-execution-evidence-for-sprint-review)
-      * [7.2.X.6. Services Documentation Evidence for Sprint Review](#72x6-services-documentation-evidence-for-sprint-review)
-      * [7.2.X.7. Software Deployment Evidence for Sprint Review](#72x7-software-deployment-evidence-for-sprint-review)
-      * [7.2.X.8. Team Collaboration Insights during Sprint](#72x8-team-collaboration-insights-during-sprint)
+    * [7.2.1. Sprint n](#721-sprint-n)
+      * [7.2.1.1. Sprint Planning n](#7211-sprint-planning-n)
+      * [7.2.1.2. Sprint Backlog n](#7212-sprint-backlog-n)
+      * [7.2.1.3. Development Evidence for Sprint Review](#7213-development-evidence-for-sprint-review)
+      * [7.2.1.4. Testing Suite Evidence for Sprint Review](#7214-testing-suite-evidence-for-sprint-review)
+      * [7.2.1.5. E1ecution Evidence for Sprint Review](#7215-e1ecution-evidence-for-sprint-review)
+      * [7.2.1.6. Services Documentation Evidence for Sprint Review](#7216-services-documentation-evidence-for-sprint-review)
+      * [7.2.1.7. Software Deployment Evidence for Sprint Review](#7217-software-deployment-evidence-for-sprint-review)
+      * [7.2.1.8. Team Collaboration Insights during Sprint](#7218-team-collaboration-insights-during-sprint)
+    * [7.2.2. Sprint n](#722-sprint-n)
+      * [7.2.2.1. Sprint Planning n](#7221-sprint-planning-n)
+      * [7.2.2.2. Sprint Backlog n](#7222-sprint-backlog-n)
+      * [7.2.2.3. Development Evidence for Sprint Review](#7223-development-evidence-for-sprint-review)
+      * [7.2.2.4. Testing Suite Evidence for Sprint Review](#7224-testing-suite-evidence-for-sprint-review)
+      * [7.2.2.5. E2ecution Evidence for Sprint Review](#7225-e2ecution-evidence-for-sprint-review)
+      * [7.2.2.6. Services Documentation Evidence for Sprint Review](#7226-services-documentation-evidence-for-sprint-review)
+      * [7.2.2.7. Software Deployment Evidence for Sprint Review](#7227-software-deployment-evidence-for-sprint-review)
+      * [7.2.2.8. Team Collaboration Insights during Sprint](#7228-team-collaboration-insights-during-sprint)
   * [7.3. Validation Interviews](#73-validation-interviews)
     * [7.3.1. Diseño de Entrevistas](#731-diseño-de-entrevistas)
     * [7.3.2. Registro de Entrevistas](#732-registro-de-entrevistas)
@@ -7173,6 +7182,42 @@ La captura muestra que el servicio `reqsai-api` quedó activo y con estado **Dep
 ![Railway deploy logs active](assets/deployment/railway_deploy_logs_active.jpeg)
 
 La captura evidencia logs del backend desplegado, incluyendo el inicio de la aplicación, registro del endpoint WebSocket y confirmación de ejecución del servicio en producción.
+
+##### Despliegue de la Landing Page en Vercel
+
+Adicionalmente, durante este Sprint se ejecutó el despliegue de la **Landing Page** (`reqsai-landing`) utilizando la plataforma **Vercel**, integrada directamente con el repositorio de GitHub bajo la organización **Kntro-Soft**. El proceso abarcó la instalación de la aplicación de Vercel en la cuenta, la importación del repositorio, la generación del despliegue de producción y la validación del sitio publicado.
+
+El despliegue de la landing evidencia los siguientes avances:
+
+* Instalación e integración de la aplicación **Vercel** con la cuenta de GitHub.
+* Importación del repositorio `reqsai-landing` desde la organización **Kntro-Soft**.
+* Generación automática del despliegue de producción a partir de la rama `main`.
+* Publicación del sitio en el dominio `reqsai-landing.vercel.app` con estado **Ready**.
+* Validación del sitio publicado y correcta renderización de la Landing Page.
+
+###### Evidencia de instalación de Vercel
+
+![Instalación de la aplicación Vercel en GitHub](assets/deployment/landing-deploy-1.png)
+
+La captura muestra la instalación de la aplicación **Vercel** sobre la cuenta de GitHub, paso necesario para habilitar la integración y el despliegue continuo del repositorio.
+
+###### Evidencia de importación del repositorio
+
+![Importación del repositorio reqsai-landing en Vercel](assets/deployment/landing-deploy-2.png)
+
+La captura evidencia el proceso de creación de un nuevo proyecto en Vercel, donde se importa el repositorio `reqsai-landing` de la organización **Kntro-Soft** para iniciar el despliegue.
+
+###### Evidencia de despliegue de producción exitoso
+
+![Despliegue de producción de reqsai-landing en Vercel](assets/deployment/landing-deploy-3.png)
+
+La captura muestra el panel de **Production Deployment** en Vercel, con el proyecto `reqsai-landing` en estado **Ready**, publicado en el dominio `reqsai-landing.vercel.app` a partir de la rama `main` (merge del pull request de la release `v1.1.0`).
+
+###### Evidencia del sitio publicado
+
+![Landing Page publicada en reqsai-landing.vercel.app](assets/deployment/landing-deploy-4.png)
+
+La captura evidencia la Landing Page ya publicada y accesible en `reqsai-landing.vercel.app`, mostrando su correcta renderización con la propuesta de valor de **Reqs AI**.
 
 ##### Commits relacionados con deployment
 
