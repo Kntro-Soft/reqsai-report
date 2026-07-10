@@ -7183,6 +7183,42 @@ La captura muestra que el servicio `reqsai-api` quedó activo y con estado **Dep
 
 La captura evidencia logs del backend desplegado, incluyendo el inicio de la aplicación, registro del endpoint WebSocket y confirmación de ejecución del servicio en producción.
 
+##### Despliegue de la Landing Page en Vercel
+
+Adicionalmente, durante este Sprint se ejecutó el despliegue de la **Landing Page** (`reqsai-landing`) utilizando la plataforma **Vercel**, integrada directamente con el repositorio de GitHub bajo la organización **Kntro-Soft**. El proceso abarcó la instalación de la aplicación de Vercel en la cuenta, la importación del repositorio, la generación del despliegue de producción y la validación del sitio publicado.
+
+El despliegue de la landing evidencia los siguientes avances:
+
+* Instalación e integración de la aplicación **Vercel** con la cuenta de GitHub.
+* Importación del repositorio `reqsai-landing` desde la organización **Kntro-Soft**.
+* Generación automática del despliegue de producción a partir de la rama `main`.
+* Publicación del sitio en el dominio `reqsai-landing.vercel.app` con estado **Ready**.
+* Validación del sitio publicado y correcta renderización de la Landing Page.
+
+###### Evidencia de instalación de Vercel
+
+![Instalación de la aplicación Vercel en GitHub](assets/deployment/landing-deploy-1.png)
+
+La captura muestra la instalación de la aplicación **Vercel** sobre la cuenta de GitHub, paso necesario para habilitar la integración y el despliegue continuo del repositorio.
+
+###### Evidencia de importación del repositorio
+
+![Importación del repositorio reqsai-landing en Vercel](assets/deployment/landing-deploy-2.png)
+
+La captura evidencia el proceso de creación de un nuevo proyecto en Vercel, donde se importa el repositorio `reqsai-landing` de la organización **Kntro-Soft** para iniciar el despliegue.
+
+###### Evidencia de despliegue de producción exitoso
+
+![Despliegue de producción de reqsai-landing en Vercel](assets/deployment/landing-deploy-3.png)
+
+La captura muestra el panel de **Production Deployment** en Vercel, con el proyecto `reqsai-landing` en estado **Ready**, publicado en el dominio `reqsai-landing.vercel.app` a partir de la rama `main` (merge del pull request de la release `v1.1.0`).
+
+###### Evidencia del sitio publicado
+
+![Landing Page publicada en reqsai-landing.vercel.app](assets/deployment/landing-deploy-4.png)
+
+La captura evidencia la Landing Page ya publicada y accesible en `reqsai-landing.vercel.app`, mostrando su correcta renderización con la propuesta de valor de **Reqs AI**.
+
 ##### Commits relacionados con deployment
 
 | Repository            | Branch  | Commit Id | Commit Message                                                                                                                        | Commit Message Body                                                                | Commited on (Date) |
