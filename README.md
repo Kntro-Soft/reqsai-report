@@ -1,7 +1,7 @@
 <body>
     <div style="text-align: center; font-weight: bolder">
         <p>Universidad Peruana de Ciencias Aplicadas - Ingeniería de Software - 8 Ciclo</p>
-        <img src="assets/brand/logo-upc.png" alt="logo of UPC"/>
+        <img src="assets/brand/logo-upc.png" alt="logo of UPC" style="width: 20%; height: auto;"/>
         <p>UNIVERSIDAD PERUANA DE CIENCIAS APLICADAS</p>
         <p>INGENIERÍA DE SOFTWARE</p>
         <p>CICLO 8</p>
