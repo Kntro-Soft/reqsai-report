@@ -7907,6 +7907,19 @@ Durante el proceso de entrevista en vivo, el sistema presenta una demora percept
 **Recomendación:**  
 Implementar un indicador visual dinámico en la interfaz de captura (por ejemplo, una animación de tres puntos suspensivos parpadeantes o un texto que indique "La IA está procesando...") para mantener al usuario informado sobre las operaciones internas del sistema y reducir la latencia percibida.
 
+**PROBLEMA #2: Saturación cognitiva por acumulación de elementos de distinta naturaleza en un solo feed**
+
+**Severidad:** 2  
+**Heurística violada:** Estética y diseño minimalista / Arquitectura de información
+
+**Problema:**  
+El sistema concentra la transcripción literal del diálogo, las preguntas sugeridas por la IA para guiar al entrevistador y las propuestas formales de historias de usuario dentro de un mismo espacio o contenedor similar a un chat. Mezclar elementos de soporte interactivo temporal (preguntas guía) con registros históricos (transcripción) y entregables finales (historias) genera desorden visual y dificulta que el líder técnico escanee la pantalla de forma eficiente.
+
+![problema-2](assets/interviews/heuristics/problema-2.png)
+
+**Recomendación:**  
+Rediseñar la pantalla de captura segmentando la información por su propósito operativo: mantener una columna limpia para el flujo de transcripción de voz, un panel lateral o flotante secundario para las sugerencias de preguntas en tiempo real, y un contenedor independiente para la previsualización y aceptación de las historias de usuario.
+
 ---
 
 ## 7.4. Video About-the-Product
