@@ -7998,6 +7998,19 @@ El sistema se encuentra limitado en su versión actual a un enfoque operativo ne
 **Recomendación:**  
 Desarrollar soporte técnico para la captura de audio interna del sistema (compartir el audio de una pestaña o ventana del navegador) o integrar de forma nativa la extensión del servicio dentro de los flujos de herramientas de videoconferencia corporativa.
 
+**PROBLEMA #9: Ambigüedad en el criterio de ordenamiento y jerarquía de las historias de usuario listadas**
+
+**Severidad:** 2
+**Heurística violada:** Visibilidad del estado del sistema
+
+**Problema:**  
+En la vista o sección donde se despliega el listado consolidado de las historias de usuario generadas, la interfaz no comunica visualmente el criterio utilizado para organizar las tarjetas. Esta ausencia de orden explícito obliga al analista a deducir o suponer de manera empírica bajo qué lógica se estructuran (por ejemplo, asumiendo un orden de prioridad o cronología), afectando la claridad operativa en proyectos con una alta densidad de requisitos.
+
+![problema-9](assets/interviews/heuristics/problema-9.png)
+
+**Recomendación:**  
+Incorporar selectores de ordenamiento explícitos y visibles (tales como "Más recientes", "Por Prioridad", o "Por Módulo") junto con indicadores visuales claros dentro de cada tarjeta para explicitar de forma transparente la jerarquía de los elementos documentados.
+
 ---
 
 ## 7.4. Video About-the-Product
