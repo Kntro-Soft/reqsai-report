@@ -8029,6 +8029,19 @@ Al revisar el módulo de visualización y edición de requisitos, la plataforma 
 **Recomendación:**  
 Incorporar paneles expandibles de configuración avanzada dentro de cada historia de usuario, permitiendo a los equipos de nivel corporativo asignar etiquetas personalizadas, estados de flujo (Backlog, En Revisión, Aprobado), nivel de prioridad (p. ej., método MoSCoW) y componentes del sistema afectados.
 
+**PROBLEMA #11: Incertidumbre y falta de trazabilidad sobre la fiabilidad del contenido generado por la IA**
+
+**Severidad:** 2
+**Heurística violada:** Visibilidad del estado del sistema / Prevención de errores
+
+**Problema:**  
+Una vez procesado el audio, la herramienta entrega los artefactos finales consolidados de manera directa, pero no ofrece ninguna señal sobre el nivel de certeza del algoritmo ni referencias visuales hacia la transcripción de origen. Esta opacidad en el procesamiento automático siembra dudas en el líder técnico sobre "qué tan confiable es la información que se entrega" , induciendo a un esfuerzo cognitivo de sospecha y forzando una validación humana rigurosa y a ciegas para descartar posibles alucinaciones del modelo de lenguaje.
+
+![problema-11](assets/interviews/heuristics/problema-11.png)
+
+**Recomendación:**  
+Implementar un sistema de trazabilidad interactiva mediante un código de colores o enlaces directos (hipervínculos) que conecten partes de la historia de usuario generada con el fragmento de la transcripción textual del que fue extraída, acompañado de un indicador discreto de confianza (p. ej., "92% de precisión").
+
 ---
 
 ## 7.4. Video About-the-Product
