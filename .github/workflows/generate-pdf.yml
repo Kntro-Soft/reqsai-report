@@ -55,8 +55,13 @@ jobs:
       - name: Install pandoc
         run: sudo apt-get install -y -qq pandoc
 
+      - name: Render full HTML for Word conversion
+        run: |
+          md-to-pdf README.md --as-html --basedir .
+          mv README.html report-source.html
+
       - name: Generate Word document
-        run: pandoc README.md -o "${REPORT_NAME}.docx"
+        run: pandoc report-source.html -o "${REPORT_NAME}.docx"
 
       - name: Upload Word artifact
         id: upload-docx
