@@ -8042,6 +8042,19 @@ Una vez procesado el audio, la herramienta entrega los artefactos finales consol
 **Recomendación:**  
 Implementar un sistema de trazabilidad interactiva mediante un código de colores o enlaces directos (hipervínculos) que conecten partes de la historia de usuario generada con el fragmento de la transcripción textual del que fue extraída, acompañado de un indicador discreto de confianza (p. ej., "92% de precisión").
 
+**PROBLEMA #12: Falta de contraste y diferenciación visual entre módulos del flujo de trabajo**
+
+**Severidad:** 2
+**Heurística violada:** Visibilidad del estado del sistema / Estética y diseño minimalista
+
+**Problema:**  
+Durante la transición operacional entre la sesión de Discovery y el módulo de historias de usuario, la interfaz mantiene un diseño tan plano y homogéneo que el analista experimenta una sensación de monotonía visual donde "todo se ve un poco igual". La falta de un contraste claro o de señalizaciones gráficas distintivas dificulta que el usuario reconozca de un vistazo en qué zona o etapa específica del sistema se encuentra interactuando.
+
+![problema-12](assets/interviews/heuristics/problema-12.png)
+
+**Recomendación:**  
+Introducir variaciones sutiles pero efectivas en la jerarquía visual de los módulos; por ejemplo, utilizar banners superiores con esquemas de color ligeramente diferenciados, incluir iconografía temática exclusiva para cada sección y resaltar de forma más evidente la opción activa en el menú lateral.
+
 ---
 
 ## 7.4. Video About-the-Product
