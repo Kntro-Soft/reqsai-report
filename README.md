@@ -8055,6 +8055,19 @@ Durante la transición operacional entre la sesión de Discovery y el módulo de
 **Recomendación:**  
 Introducir variaciones sutiles pero efectivas en la jerarquía visual de los módulos; por ejemplo, utilizar banners superiores con esquemas de color ligeramente diferenciados, incluir iconografía temática exclusiva para cada sección y resaltar de forma más evidente la opción activa en el menú lateral.
 
+**PROBLEMA #13: Fricción operativa por el ingreso fragmentado y repetitivo de metadatos técnicos**
+
+**Severidad:** 2
+**Heurística violada:** Flexibilidad y eficiencia de uso
+
+**Problema:**  
+El flujo actual obliga al analista a registrar elementos como la arquitectura, el dominio y el lenguaje agregando los términos "uno por uno" a través de múltiples pasos o campos obligatorios. Esta fragmentación genera un esfuerzo operativo innecesario y ralentiza el ritmo de trabajo en entornos de alta velocidad, especialmente porque en muchos casos estos parámetros se sobreentienden o se repiten de un proyecto a otro.
+
+![problema-13](assets/interviews/heuristics/problema-13.png)
+
+**Recomendación:**  
+Agrupar estos metadatos técnicos en un único bloque consolidado dentro de una tarjeta o sección unificada, y transformarlos en opciones avanzadas y opcionales en lugar de requisitos estrictos de configuración inicial, permitiendo acelerar la creación del entorno de trabajo.
+
 ---
 
 ## 7.4. Video About-the-Product
