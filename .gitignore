@@ -44,3 +44,6 @@ desktop.ini
 !/.idea/.gitignore
 !/.idea/ReqsAI-Report.iml
 !/.idea/vcs.xml
+
+# Word style template used by the report-generation pipeline (not a generated file)
+!/.github/templates/word-reference-template.docx

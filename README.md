@@ -1,7 +1,7 @@
 <body>
     <div style="text-align: center; font-weight: bolder">
         <p>Universidad Peruana de Ciencias Aplicadas - Ingeniería de Software - 8 Ciclo</p>
-        <img src="assets/brand/logo-upc.png" alt="logo of UPC"/>
+        <img src="assets/brand/logo-upc.png" alt="logo of UPC" style="width: 20%; height: auto;"/>
         <p>UNIVERSIDAD PERUANA DE CIENCIAS APLICADAS</p>
         <p>INGENIERÍA DE SOFTWARE</p>
         <p>CICLO 8</p>
@@ -1763,24 +1763,31 @@ La infraestructura de despliegue se divide en los entornos de cliente, la red de
     *   **Dispositivos físicos (iOS/Android):** Dentro opera el *Flutter Engine*, entorno encargado de ejecutar la aplicación mobile.
     *   **Computadoras de los usuarios:** Utilizan un navegador web como nodo de ejecución para renderizar la aplicación web (Angular).
 
-2.  **Entorno de Nube - Red Perimetral (AWS Edge Location):**
-    Para garantizar baja latencia y alta seguridad antes de que el tráfico llegue a los servidores principales, se utilizan los nodos Edge de AWS distribuidos globalmente.
-    *   **Amazon CloudFront (CDN & Reverse Proxy):** Actúa como el primer punto de contacto (Proxy Inverso). Almacena en caché los archivos estáticos de la Web App en ubicaciones cercanas al usuario para cargas instantáneas, y enruta de forma segura y eficiente el tráfico dinámico hacia la región principal de AWS.
+2.  **Entorno Global - DNS y Red Perimetral (AWS Global):**
+    El dominio propio (`tamci.app`) y la distribución de contenido son servicios globales de AWS, sin una región específica asociada.
+    *   **Amazon Route 53:** Aloja la zona DNS de `tamci.app`. El subdominio `app.tamci.app` resuelve hacia la distribución de CloudFront (tráfico real de usuarios); el subdominio `api.tamci.app` resuelve hacia el Application Load Balancer, pero únicamente como *origen técnico* de CloudFront — no es alcanzable directamente desde internet (ver Security Groups más abajo).
+    *   **AWS Certificate Manager (ACM):** Emite y renueva automáticamente los certificados TLS gratuitos para `api.tamci.app` y `app.tamci.app`.
+    *   **Amazon CloudFront (CDN & Reverse Proxy):** Actúa como el único punto de contacto público de toda la plataforma. Sirve los archivos estáticos de la Web App (Angular) desde un bucket S3 privado, y enruta el tráfico dinámico (`/api/*`, `/ws/*`) hacia el backend en la región `us-east-1`. Una **CloudFront Function** ejecutada en el edge rechaza (HTTP 403) cualquier petición cuyo encabezado `Host` no sea `app.tamci.app`, bloqueando así el dominio genérico `*.cloudfront.net` que AWS asigna por defecto.
 
 3.  **Entorno de Nube - Procesamiento (AWS North America — us-east-1, Virginia):**
-    La lógica de negocio se aloja en la región de AWS North America, elegida por su alta disponibilidad y ecosistema completo de servicios administrados.
-    *   **AWS API Gateway:** Recibe el tráfico dinámico desde CloudFront (web) y directamente desde la app móvil, funcionando como orquestador de peticiones REST y WebSocket hacia el backend.
-    *   **ECS Cluster (AWS ECS + Fargate):** El backend se despliega como un contenedor Docker en **AWS ECS con Fargate** (serverless containers). Fargate abstrae completamente la gestión de servidores EC2 subyacentes, provisionando cómputo bajo demanda con autoescalado automático. La task definition del ECS define dos contenedores en la misma unidad de ejecución: el **ReqsAI Backend Service** (Java 25 + Spring Boot 4) y el **Grafana Alloy** como sidecar de observabilidad.
-    *   **Observability Server (AWS EC2 + Docker Compose):** Una instancia EC2 dedicada ejecuta el stack de observabilidad completo mediante Docker Compose: **Prometheus** (almacén de métricas, consultado con PromQL), **Loki** (agregación de logs, consultado con LogQL), **Tempo** (trazas distribuidas, consultado con TraceQL) y **Grafana** (dashboard unificado que visualiza las tres fuentes). Grafana Alloy, corriendo como sidecar en el ECS Cluster, colecta las métricas del endpoint `/actuator/prometheus`, logs del stdout del contenedor y trazas OTLP, enviándolos al servidor de observabilidad mediante push.
+    La lógica de negocio se aloja en una VPC dedicada dentro de la región AWS North America, elegida por su alta disponibilidad y ecosistema completo de servicios administrados. La VPC segmenta el tráfico en subredes públicas, privadas y de base de datos, cada una protegida por *Security Groups* que solo confían en la capa inmediatamente anterior.
+    *   **Application Load Balancer (subred pública):** Termina TLS con el certificado de `api.tamci.app` y reenvía el tráfico HTTP al backend. Su Security Group **solo acepta conexiones desde el rango de IPs administrado de CloudFront** (AWS Managed Prefix List) — ni la propia URL del balanceador ni ningún otro origen pueden alcanzarlo directamente.
+    *   **ECS Cluster (subred privada, AWS ECS + Fargate):** El backend se despliega como un único contenedor Docker en **AWS ECS con Fargate** (serverless containers, 1 vCPU / 2 GB), sin contenedores adicionales de observabilidad en la misma tarea. Fargate abstrae completamente la gestión de servidores EC2 subyacentes, provisionando cómputo bajo demanda. Su Security Group solo acepta tráfico proveniente del ALB.
+    *   **NAT Gateway (subred pública):** Permite que las tareas de ECS, alojadas en subred privada, realicen llamadas salientes hacia APIs externas (LLM, STT, SMTP) y descarguen la imagen Docker desde ECR, sin exponer las tareas directamente a internet.
 
-4.  **Entorno de Nube - Persistencia (AWS RDS):**
-    *   **AWS RDS (PostgreSQL + pgvector):** La base de datos principal se gestiona completamente en **Amazon RDS**, el servicio de base de datos relacional administrado de AWS. Se utiliza **PostgreSQL** con la extensión **pgvector** habilitada, esencial para el almacenamiento de embeddings vectoriales que alimentan el motor RAG. RDS provee backups automáticos, failover multi-AZ y actualizaciones de parches sin downtime.
+4.  **Entorno de Nube - Persistencia (subred de base de datos):**
+    *   **AWS RDS (PostgreSQL + pgvector):** La base de datos principal se gestiona completamente en **Amazon RDS** (`db.t4g.micro`, single-AZ, almacenamiento cifrado), con la extensión **pgvector** habilitada para el almacenamiento de embeddings vectoriales que alimentan el motor RAG. Su Security Group solo acepta conexiones desde las tareas de ECS.
+
+5.  **Servicios administrados de soporte (sin infraestructura propia):**
+    *   **Amazon ECR:** Registro privado de las imágenes Docker del backend, actualizado en cada despliegue por el pipeline de CI/CD.
+    *   **AWS Secrets Manager:** Almacena las llaves de firma JWT, las credenciales SMTP, las API keys de los proveedores de IA (Deepgram, OpenAI) y la contraseña maestra de RDS (autogenerada y rotada por el propio servicio). El backend los lee al arrancar, inyectados como variables de entorno por ECS — nunca quedan en texto plano en la Task Definition.
+    *   **Amazon CloudWatch Logs:** Recibe los logs de aplicación (stdout/stderr) del contenedor vía el driver `awslogs`.
 
 **Comunicación e Interacción de Nodos**
 
-*   **App Web:** El navegador carga el SPA Angular desde **CloudFront** (Edge Location más cercano). Las llamadas de API del SPA viajan CloudFront → API Gateway → ECS Backend.
-*   **App Móvil:** La app Flutter instalada en el dispositivo del usuario realiza llamadas HTTPS **directamente la API Gateway**, sin pasar por CloudFront, ya que no es una aplicación web servida desde CDN.
-*   **Observabilidad:** Grafana Alloy (sidecar en ECS) colecta continuamente métricas, logs y trazas del backend y los envía al Observability Server en EC2. Grafana consulta Prometheus, Loki y Tempo para mostrar el estado del sistema en tiempo real.
+*   **App Web:** El navegador carga el SPA Angular desde **CloudFront** (Edge Location más cercano, dominio `app.tamci.app`). Las llamadas de API del SPA usan rutas relativas (`/api/*`, `/ws/*`) que el propio CloudFront reenvía al ALB bajo el mismo origen — el frontend nunca necesita conocer una URL de backend distinta.
+*   **App Móvil:** La app Flutter también dirige sus llamadas a través de **CloudFront** (`app.tamci.app/api`, `/ws`); a diferencia del diseño original, el Security Group del ALB ya no permite tráfico directo desde ningún cliente que no sea CloudFront, por lo que ninguna llamada puede saltarse el edge.
+*   **Observabilidad:** El backend escribe sus logs a **Amazon CloudWatch Logs**; no existe un stack de observabilidad autoadministrado (Prometheus/Loki/Tempo/Grafana) en esta iteración de la infraestructura.
 *   **Persistencia:** El backend se conecta a **AWS RDS** via JDBC/JPA para todas las operaciones transaccionales de los 5 Bounded Contexts.
 
 # Capítulo V: Tactical-Level Software Design
@@ -6270,7 +6277,8 @@ Para garantizar el despliegue automático, escalable y seguro de cada uno de los
 | **Web Application (Angular)** | **AWS S3 + CloudFront** | Distribución global de la Single Page Application (SPA), almacenamiento seguro de compilados y redirección de APIs. | [https://aws.amazon.com/cloudfront](https://aws.amazon.com/cloudfront) |
 | **Backend Service (Spring Boot)** | **AWS ECS + Fargate** | Despliegue serverless de la API modularizada en contenedores Docker y orquestación de recursos de cómputo. | [https://aws.amazon.com/ecs](https://aws.amazon.com/ecs) |
 | **Database (PostgreSQL)** | **AWS RDS** | Base de datos relacional administrada para almacenar datos transaccionales, de tenants y embeddings vectoriales (pgvector). | [https://aws.amazon.com/rds](https://aws.amazon.com/rds) |
-| **Observability (Grafana Stack)** | **AWS EC2 + Docker Compose** | Instancia dedicada para almacenar y consultar logs (Loki), métricas (Prometheus) y trazas (Tempo) de la infraestructura. | [https://aws.amazon.com/ec2](https://aws.amazon.com/ec2) |
+| **DNS y certificados (tamci.app)** | **AWS Route 53 + ACM** | Zona DNS del dominio propio y certificados TLS gratuitos autorenovables para el ALB y CloudFront. | [https://aws.amazon.com/route53](https://aws.amazon.com/route53) |
+| **Logs de aplicación** | **Amazon CloudWatch Logs** | Recolección de logs de stdout/stderr del contenedor del backend vía el driver `awslogs`. | [https://aws.amazon.com/cloudwatch](https://aws.amazon.com/cloudwatch) |
 
 <br>
 
@@ -6282,12 +6290,13 @@ Para garantizar el despliegue automático, escalable y seguro de cada uno de los
 *   Se configura una distribución en **Amazon CloudFront** que sirve de CDN. Se establece una política de Control de Acceso de Origen (OAC) para bloquear el acceso público directo a S3, obligando a los usuarios a acceder a través de CloudFront.
 *   Se configuran reglas de redirección de errores en CloudFront de modo que cualquier error HTTP 404 sea redirigido a `/index.html` con un código HTTP 200, garantizando el correcto funcionamiento del enrutamiento del lado del cliente del SPA.
 *   Se asocia un dominio personalizado y certificados SSL/TLS gratuitos administrados por **AWS Certificate Manager (ACM)** para brindar HTTPS.
+*   Para el Aplicativo Web, la distribución de CloudFront agrega el Application Load Balancer del backend como un segundo origen, enrutando las rutas `/api/*` y `/ws/*` hacia él (sin caché) — así el SPA llama al backend con rutas relativas, bajo el mismo origen, sin necesidad de configurar CORS. Una **CloudFront Function** ejecutada en el edge rechaza cualquier petición cuyo encabezado `Host` no sea el dominio propio, bloqueando el acceso vía el dominio genérico `*.cloudfront.net`.
 
 **2. Backend Service (AWS ECS con Fargate)**
 *   Se define un `Dockerfile` multietapa para compilar el backend modular con Java 25 y Spring Boot 4, creando una imagen Docker ligera optimizada para producción.
-*   Al realizar un merge en la rama `main`, un pipeline de CI/CD en **GitHub Actions** ejecuta las pruebas automatizadas, empaqueta la imagen Docker y la sube al repositorio privado en **Amazon ECR (Elastic Container Registry)**.
-*   Se configura una **Task Definition** en AWS ECS que define los parámetros de ejecución. Esta especifica dos contenedores que operan conjuntamente en la misma tarea (patrón sidecar): el contenedor de la aplicación backend Reqs-AI (expuesto en el puerto 8080) y el agente **Grafana Alloy** para la recolección de logs, métricas y trazas distribuidas.
-*   La tarea se ejecuta de manera serverless en **AWS Fargate** asignando CPU y memoria virtual dinámicamente y protegiendo el servicio mediante un Balanceador de Carga de Aplicación (ALB) asociado al AWS API Gateway.
+*   Al realizar un merge en la rama `main`, un pipeline de CI/CD en **GitHub Actions** (autenticado vía OIDC, sin llaves de AWS de larga duración) ejecuta las pruebas automatizadas, empaqueta la imagen Docker y la sube al repositorio privado en **Amazon ECR (Elastic Container Registry)**.
+*   Se configura una **Task Definition** en AWS ECS con un único contenedor (1 vCPU / 2 GB) para la aplicación backend Reqs-AI, expuesto en el puerto 8080. Las variables de entorno no sensibles (URLs, nombres de proveedor) se definen en texto plano en la Task Definition; los secretos (llaves JWT, credenciales SMTP, API keys de IA, contraseña de RDS) se inyectan en tiempo de arranque desde **AWS Secrets Manager**, referenciados por su ARN.
+*   La tarea se ejecuta de manera serverless en **AWS Fargate** dentro de una subred privada, protegida por un **Application Load Balancer** cuyo Security Group solo acepta tráfico proveniente del rango de IPs administrado de **Amazon CloudFront** — no existe una ruta de acceso directa al backend desde internet.
 
 **3. Base de Datos Relacional y Multitenancy (AWS RDS)**
 *   Se provisiona una instancia relacional de **PostgreSQL** administrada a través de **AWS RDS** dentro de subredes privadas.
@@ -8158,29 +8167,11 @@ Agrupar estos metadatos técnicos en un único bloque consolidado dentro de una 
 
 ## 7.4. Video About-the-Product
 
-En esta sección se debe incluir el video de presentación del producto, explicando el problema abordado, la solución propuesta, las funcionalidades principales, el público objetivo, la propuesta de valor y una demostración breve del funcionamiento.
-
-No se adjuntó enlace o archivo de video en el paquete recibido, por lo que se deja la estructura lista para completar.
-
-| Elemento del video        | Descripción                                                                                                                                            |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Título del video          | Reqs-AI: Plataforma para levantamiento inteligente de requerimientos                                                                                   |
-| Duración                  | Pendiente de completar                                                                                                                                 |
-| Enlace del video          | PENDIENTE_DE_AGREGAR_URL_DEL_VIDEO                                                                                                                     |
-| Participantes             | Pendiente de completar                                                                                                                                 |
-| Producto presentado       | Reqs-AI API y Web Application                                                                                                                          |
-| Funcionalidades mostradas | Login, organización, proyectos, sesiones de descubrimiento, historias de usuario, criterios de aceptación, documentación Swagger y despliegue backend. |
-
-**Guion sugerido para el video:**
-
-1. Presentar el problema: dificultad para transformar reuniones de requerimientos en historias de usuario claras y accionables.
-2. Presentar la solución: Reqs-AI como plataforma para organizar espacios de trabajo, proyectos, sesiones y backlog.
-3. Mostrar la Web Application: login, proyectos, miembros, sesiones, chat e historias.
-4. Mostrar los Web Services: Swagger/OpenAPI con endpoints de Discovery, User Stories y Acceptance Criteria.
-5. Mostrar el despliegue: Railway, PostgreSQL, logs y servicio activo.
-6. Cerrar con la propuesta de valor: reducir trabajo manual, mejorar trazabilidad y acelerar la generación de requerimientos.
+Enlace al video About The Team: [https://youtu.be/RPf5v-jJYlc](https://youtu.be/RPf5v-jJYlc)
 
 # Conclusiones
+
+## Conclusiones y Recomendaciones
 
 El equipo concluye que el problema abordado es real, recurrente y de alto impacto en el ciclo de vida del software: la ambigüedad en el levantamiento de requisitos y la sobrecarga de postprocesamiento generan retrabajo, retrasos y riesgo de construir funcionalidades incorrectas. La evidencia obtenida en entrevistas confirma un patrón consistente en ambos segmentos objetivo (Líder Técnico de Startup y Analista de Sistemas/Producto): transformar conversaciones en requisitos claros, trazables y accionables sigue siendo el principal cuello de botella.
 
@@ -8193,6 +8184,10 @@ Respecto a las hipótesis planteadas, el equipo considera que cuentan con valida
 La principal limitación actual del proyecto es que aún no se presenta evidencia completa de implementación, pruebas de campo y resultados longitudinales de adopción. En consecuencia, aunque la arquitectura y el diseño funcional están sólidamente fundamentados, todavía es necesario contrastar el comportamiento del sistema en escenarios productivos con usuarios reales y condiciones de carga, seguridad y dependencia de servicios externos de IA.
 
 Como siguientes pasos, se recomienda priorizar un MVP enfocado en el flujo crítico end-to-end (captura de reunión, síntesis guiada, generación de historias con criterios de aceptación y exportación a backlog), ejecutar pilotos controlados en startups y entornos enterprise, y definir un tablero de métricas para validar hipótesis de valor, eficiencia y confianza. Con ello, Reqs-AI podrá transitar de una solución bien diseñada en el plano estratégico a una plataforma validada en impacto operativo y escalabilidad de negocio.
+
+## Video About The Team
+
+Enlace al video About The Team: [https://youtu.be/6ZnpSvMzwR4](https://youtu.be/6ZnpSvMzwR4)
 
 # Bibliografía
 
