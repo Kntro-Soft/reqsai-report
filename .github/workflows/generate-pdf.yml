@@ -66,6 +66,17 @@ jobs:
           path: ${{ env.REPORT_NAME }}.docx
           retention-days: 90
 
+      - name: Create ZIP bundle
+        run: zip -j "${REPORT_NAME}.zip" "${REPORT_NAME}.pdf" "${REPORT_NAME}.docx"
+
+      - name: Upload ZIP artifact
+        id: upload-zip
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ env.REPORT_NAME }}-ZIP
+          path: ${{ env.REPORT_NAME }}.zip
+          retention-days: 90
+
       - name: Job summary
         run: |
           echo "## ReqsAI Report — PDF generado" >> $GITHUB_STEP_SUMMARY
