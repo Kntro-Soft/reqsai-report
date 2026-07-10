@@ -12,6 +12,9 @@ jobs:
     permissions:
       contents: write
 
+    env:
+      REPORT_NAME: ${{ vars.REPORT_NAME || 'ReqsAI-Report' }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -39,14 +42,14 @@ jobs:
             --pdf-options '{"format":"A4","margin":{"top":"20mm","right":"20mm","bottom":"20mm","left":"20mm"},"printBackground":true}' \
             --launch-options '{"args":["--no-sandbox","--disable-setuid-sandbox"]}' \
             --basedir .
-          mv README.pdf ReqsAI-Report.pdf
+          mv README.pdf "${REPORT_NAME}.pdf"
 
       - name: Upload artifact
         id: upload
         uses: actions/upload-artifact@v7
         with:
-          name: ReqsAI-Report-PDF
-          path: ReqsAI-Report.pdf
+          name: ${{ env.REPORT_NAME }}-PDF
+          path: ${{ env.REPORT_NAME }}.pdf
           retention-days: 90
 
       - name: Job summary
@@ -58,7 +61,7 @@ jobs:
           echo "| **Commit** | \`${{ github.sha }}\` |" >> $GITHUB_STEP_SUMMARY
           echo "| **Branch** | \`${{ github.ref_name }}\` |" >> $GITHUB_STEP_SUMMARY
           echo "| **Fecha** | $(date +'%Y-%m-%d %H:%M UTC') |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Tamaño** | $(du -sh ReqsAI-Report.pdf | cut -f1) |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Tamaño** | $(du -sh "${REPORT_NAME}.pdf" | cut -f1) |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### [Descargar PDF](${{ steps.upload.outputs.artifact-url }})" >> $GITHUB_STEP_SUMMARY
 
@@ -66,4 +69,4 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v3
         with:
-          files: ReqsAI-Report.pdf
+          files: ${{ env.REPORT_NAME }}.pdf
