@@ -7946,6 +7946,19 @@ En la funcionalidad central de captura de requisitos por voz, la IA separa de ma
 **Recomendación:**  
 Permita la edición o renombrado directo de las etiquetas de los interlocutores desde la misma pantalla de transcripción, o posibilite la vinculación automática de estas etiquetas con los nombres de los miembros del equipo que ya se encuentran registrados en la organización.
 
+**PROBLEMA #5: Fricción operativa en el flujo de captura remota de audio**
+
+**Severidad:** 3  
+**Heurística violada:** Flexibilidad y eficiencia de uso
+
+**Problema:**  
+Para efectuar la captura de audio y procesamiento de requisitos en entornos remotos de videoconferencia (como Zoom), se requiere un flujo de trabajo externo complejo donde los participantes deben silenciarse en la plataforma principal y realizar una llamada telefónica paralela. Esto evidencia la falta de un mecanismo nativo para capturar el audio del sistema o de la pestaña del navegador, generando una alta fricción en escenarios de trabajo a distancia cotidianos.
+
+![problema-5](assets/interviews/heuristics/problema-5.png)
+
+**Recomendación:**  
+Implementar soporte para la captura nativa de audio del sistema (compartir audio de la pestaña o ventana del navegador) o desarrollar una integración directa (mediante un bot asistente o extensión) compatible con las principales herramientas de videoconferencia del mercado como Zoom, Microsoft Teams o Google Meet.
+
 ---
 
 ## 7.4. Video About-the-Product
