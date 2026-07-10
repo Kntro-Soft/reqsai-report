@@ -55,8 +55,46 @@ jobs:
       - name: Install pandoc
         run: sudo apt-get install -y -qq pandoc
 
+      - name: Render full HTML for Word conversion
+        run: |
+          md-to-pdf README.md --as-html --basedir .
+          mv README.html report-source.html
+
       - name: Generate Word document
-        run: pandoc README.md -o "${REPORT_NAME}.docx"
+        run: |
+          pandoc report-source.html \
+            --reference-doc=.github/templates/word-reference-template.docx \
+            --toc --toc-depth=3 \
+            --metadata title="${REPORT_NAME}" --metadata lang=es-PE \
+            -o "${REPORT_NAME}.docx"
+
+      - name: Enable auto-update of the Word table of contents
+        run: |
+          python3 - "${REPORT_NAME}.docx" <<'PY'
+          import re
+          import sys
+          import zipfile
+
+          path = sys.argv[1]
+          with zipfile.ZipFile(path, "r") as zin:
+              items = zin.infolist()
+              data = {item.filename: zin.read(item.filename) for item in items}
+
+          settings = data["word/settings.xml"].decode("utf-8")
+          if "<w:updateFields" not in settings:
+              anchor = re.search(r"<w:compat\b", settings)
+              insert_at = anchor.start()
+              settings = (
+                  settings[:insert_at]
+                  + '<w:updateFields w:val="true"/>'
+                  + settings[insert_at:]
+              )
+              data["word/settings.xml"] = settings.encode("utf-8")
+
+          with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as zout:
+              for item in items:
+                  zout.writestr(item, data[item.filename])
+          PY
 
       - name: Upload Word artifact
         id: upload-docx
