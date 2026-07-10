@@ -7892,6 +7892,192 @@ No están incluidas en esta versión de la evaluación las siguientes tareas:
 
 #### TABLA RESUMEN:
 
+| #  | Problema                                                                                   | Escala de severidad | Heurística / Principio Violado                                               |
+|----|--------------------------------------------------------------------------------------------|---------------------|------------------------------------------------------------------------------|
+| 1  | Uso de terminología técnica compleja para perfiles no especializados                       | 2                   | Relación entre el sistema y el mundo real                                    |
+| 2  | Identificación genérica de interlocutores en la transcripción de voz                       | 2                   | Relación entre el sistema y el mundo real / Flexibilidad y eficiencia de uso |
+| 3  | Fricción operativa en el flujo de captura remota de audio                                  | 3                   | Flexibilidad y eficiencia de uso                                             |
+| 4  | Falta de claridad en la distinción de campos opcionales durante la creación del proyecto   | 2                   | Flexibilidad y eficiencia de uso / Prevención de errores                     |
+| 5  | Deficiencia en el dimensionamiento y legibilidad de las historias de usuario generadas     | 2                   | Estética y diseño minimalista                                                |
+| 6  | Ausencia de estado de carga o procesamiento durante la generación en tiempo real de la IA  | 2                   | Visibilidad del estado del sistema                                           |
+| 7  | Saturación cognitiva por acumulación de elementos de distinta naturaleza en un solo feed   | 2                   | Estética y diseño minimalista / Arquitectura de información                  |
+| 8  | Restricción del entorno operativo a interacciones estrictamente presenciales               | 3                   | Flexibilidad y eficiencia de uso / Relación entre el sistema y el mundo real |
+| 9  | Ambigüedad en el criterio de ordenamiento y jerarquía de las historias de usuario listadas | 2                   | Visibilidad del estado del sistema                                           |
+| 10 | Limitación estructural de las historias de usuario para entornos de nivel Enterprise       | 2                   | Flexibilidad y eficiencia de uso / Relación entre el sistema y el mundo real |
+| 11 | Incertidumbre y falta de trazabilidad sobre la fiabilidad del contenido generado por la IA | 2                   | Visibilidad del estado del sistema / Prevención de errores                   |
+| 12 | Falta de contraste y diferenciación visual entre módulos del flujo de trabajo              | 2                   | Visibilidad del estado del sistema / Estética y diseño minimalista           |
+| 13 | Fricción operativa por el ingreso fragmentado y repetitivo de metadatos técnicos           | 2                   | Flexibilidad y eficiencia de uso                                             |
+
+**DESCRIPCIÓN DE PROBLEMAS:**
+
+**PROBLEMA #1: Ausencia de estado de carga o procesamiento durante la generación en tiempo real de la IA**
+
+**Severidad:** 2  
+**Heurística violada:** Visibilidad del estado del sistema
+
+**Problema:**  
+Durante el proceso de entrevista en vivo, el sistema presenta una demora perceptible mientras la inteligencia artificial analiza el audio, formula preguntas aclaratorias y redacta la historia de usuario estructurada. Al no existir un indicador visual activo (como una animación de carga, un esqueleto de marcador de posición o un indicador de escritura), el usuario experimenta incertidumbre respecto a si la aplicación sigue procesando o si se ha congelado temporalmente.
+
+![problema-1](assets/interviews/heuristics/problema-1.png)
+
+**Recomendación:**  
+Implementar un indicador visual dinámico en la interfaz de captura (por ejemplo, una animación de tres puntos suspensivos parpadeantes o un texto que indique "La IA está procesando...") para mantener al usuario informado sobre las operaciones internas del sistema y reducir la latencia percibida.
+
+**PROBLEMA #2: Saturación cognitiva por acumulación de elementos de distinta naturaleza en un solo feed**
+
+**Severidad:** 2  
+**Heurística violada:** Estética y diseño minimalista / Arquitectura de información
+
+**Problema:**  
+El sistema concentra la transcripción literal del diálogo, las preguntas sugeridas por la IA para guiar al entrevistador y las propuestas formales de historias de usuario dentro de un mismo espacio o contenedor similar a un chat. Mezclar elementos de soporte interactivo temporal (preguntas guía) con registros históricos (transcripción) y entregables finales (historias) genera desorden visual y dificulta que el líder técnico escanee la pantalla de forma eficiente.
+
+![problema-2](assets/interviews/heuristics/problema-2.png)
+
+**Recomendación:**  
+Rediseñar la pantalla de captura segmentando la información por su propósito operativo: mantener una columna limpia para el flujo de transcripción de voz, un panel lateral o flotante secundario para las sugerencias de preguntas en tiempo real, y un contenedor independiente para la previsualización y aceptación de las historias de usuario.
+
+**PROBLEMA #3: Uso de terminología técnica compleja para perfiles no especializados**
+
+**Severidad:** 2  
+**Heurística violada:** Relación entre el sistema y el mundo real
+
+**Problema:**  
+Durante la navegación por los módulos de "Glosario", "Restricciones" y la visualización de las historias generadas de manera automática en formato Gherkin, se identificó que el sistema utiliza un lenguaje técnico muy especializado de la ingeniería de software. Esto puede representar una barrera de comprensión o causar confusión para los usuarios finales pertenecientes a perfiles administrativos o clientes del segmento Enterprise que no dominen dichos conceptos.
+
+![problema-3](assets/interviews/heuristics/problema-3.png)
+
+**Recomendación:**  
+Incorporar tooltips descriptivos o pequeños iconos de ayuda informativa `(?)` junto a los términos y formatos técnicos complejos. Esto permitirá ofrecer explicaciones sencillas o ejemplos prácticos sin saturar la interfaz principal.
+
+**PROBLEMA #4: Identificación genérica de interlocutores en la transcripción de voz**
+
+**Severidad:** 2  
+**Heurística violada:** Relación entre el sistema y el mundo real / Flexibilidad y eficiencia de uso
+
+**Problema:**  
+En la funcionalidad central de captura de requisitos por voz, la IA separa de manera óptima las intervenciones de los participantes, pero les asigna etiquetas genéricas automatizadas como "usuario 1" y "usuario 2". Al revisar el historial de la transcripción, esto obliga al usuario a realizar un esfuerzo cognitivo extra para asociar mentalmente cada etiqueta con el participante real de la reunión.
+
+![problema-4](assets/interviews/heuristics/problema-4.png)
+
+**Recomendación:**  
+Permita la edición o renombrado directo de las etiquetas de los interlocutores desde la misma pantalla de transcripción, o posibilite la vinculación automática de estas etiquetas con los nombres de los miembros del equipo que ya se encuentran registrados en la organización.
+
+**PROBLEMA #5: Fricción operativa en el flujo de captura remota de audio**
+
+**Severidad:** 3  
+**Heurística violada:** Flexibilidad y eficiencia de uso
+
+**Problema:**  
+Para efectuar la captura de audio y procesamiento de requisitos en entornos remotos de videoconferencia (como Zoom), se requiere un flujo de trabajo externo complejo donde los participantes deben silenciarse en la plataforma principal y realizar una llamada telefónica paralela. Esto evidencia la falta de un mecanismo nativo para capturar el audio del sistema o de la pestaña del navegador, generando una alta fricción en escenarios de trabajo a distancia cotidianos.
+
+![problema-5](assets/interviews/heuristics/problema-5.png)
+
+**Recomendación:**  
+Implementar soporte para la captura nativa de audio del sistema (compartir audio de la pestaña o ventana del navegador) o desarrollar una integración directa (mediante un bot asistente o extensión) compatible con las principales herramientas de videoconferencia del mercado como Zoom, Microsoft Teams o Google Meet.
+
+**PROBLEMA #6: Falta de claridad en la distinción de campos opcionales durante la creación del proyecto**
+
+**Severidad:** 2
+**Heurística violada:** Flexibilidad y eficiencia de uso / Prevención de errores
+
+**Problema:**  
+Durante el despliegue del formulario para registrar un nuevo proyecto, se solicita información técnica especializada como el lenguaje de programación, la base de datos y el tipo de arquitectura. El sistema no explicita visualmente cuáles de estos campos son opcionales, lo que genera confusión e incertidumbre en el usuario si se encuentra en una etapa inicial del diseño donde aún no define dichos componentes.
+
+![problema-6](assets/interviews/heuristics/problema-6.png)
+
+**Recomendación:**  
+Añadir una aclaración visual explícita (como la palabra "Opcional") al lado de cada campo no obligatorio, permitiendo que el líder técnico avance fluidamente y edite estos parámetros en los ajustes avanzados posteriormente.
+
+**PROBLEMA #7: Deficiencia en el dimensionamiento y legibilidad de las historias de usuario generadas**
+
+**Severidad:** 2
+**Heurística violada:** Estética y diseño minimalista
+
+**Problema:**  
+Una vez que la inteligencia artificial procesa el audio y genera la estructura formal de la historia de usuario, los espacios y campos destinados a mostrar el bloque de texto consolidado son excesivamente reducidos. Esto provoca que la información se visualice muy junta y apretada, afectando negativamente la legibilidad y obligando al usuario a realizar un esfuerzo visual innecesario para revisar el contenido.
+
+![problema-7](assets/interviews/heuristics/problema-7.png)
+
+**Recomendación:**  
+Incrementar el espaciado (padding) de los contenedores de texto, ajustar el tamaño de la fuente a un estándar cómodo de lectura y configurar los campos de visualización para que se expandan dinámicamente según la extensión del texto redactado por la IA.
+
+**PROBLEMA #8: Restricción del entorno operativo a interacciones estrictamente presenciales**
+
+**Severidad:** 3
+**Heurística violada:** Flexibilidad y eficiencia de uso / Relación entre el sistema y el mundo real
+
+**Problema:**  
+El sistema se encuentra limitado en su versión actual a un enfoque operativo netamente presencial, careciendo de soporte nativo para capturar e interactuar de forma directa con plataformas de reuniones virtuales. Esto genera una alta fricción en el flujo de trabajo diario de un analista de sistemas, forzándolo a implementar simulaciones complejas e incómodas (como realizar llamadas paralelas por canales externos) para lograr que la herramienta escuche y procese el diálogo remoto.
+
+![problema-8](assets/interviews/heuristics/problema-8.png)
+
+**Recomendación:**  
+Desarrollar soporte técnico para la captura de audio interna del sistema (compartir el audio de una pestaña o ventana del navegador) o integrar de forma nativa la extensión del servicio dentro de los flujos de herramientas de videoconferencia corporativa.
+
+**PROBLEMA #9: Ambigüedad en el criterio de ordenamiento y jerarquía de las historias de usuario listadas**
+
+**Severidad:** 2
+**Heurística violada:** Visibilidad del estado del sistema
+
+**Problema:**  
+En la vista o sección donde se despliega el listado consolidado de las historias de usuario generadas, la interfaz no comunica visualmente el criterio utilizado para organizar las tarjetas. Esta ausencia de orden explícito obliga al analista a deducir o suponer de manera empírica bajo qué lógica se estructuran (por ejemplo, asumiendo un orden de prioridad o cronología), afectando la claridad operativa en proyectos con una alta densidad de requisitos.
+
+![problema-9](assets/interviews/heuristics/problema-9.png)
+
+**Recomendación:**  
+Incorporar selectores de ordenamiento explícitos y visibles (tales como "Más recientes", "Por Prioridad", o "Por Módulo") junto con indicadores visuales claros dentro de cada tarjeta para explicitar de forma transparente la jerarquía de los elementos documentados.
+
+**PROBLEMA #10: Limitación estructural de las historias de usuario para entornos de nivel Enterprise**
+
+**Severidad:** 2
+**Heurística violada:** Flexibilidad y eficiencia de uso / Relación entre el sistema y el mundo real
+
+**Problema:**  
+Al revisar el módulo de visualización y edición de requisitos, la plataforma solo proporciona los campos estructurales básicos de una historia de usuario tradicional (título, rol, acción, beneficio y criterios de aceptación). El líder técnico entrevistado resalta que este formato plano solo cubre una "etapa inicial o intermedia" del proceso real de levantamiento , resultando insuficiente para las necesidades de un entorno Enterprise riguroso que demanda metadatos complejos como gestión de prioridades, estados del ciclo de vida del requisito o mapeo de componentes técnicos.
+
+![problema-10](assets/interviews/heuristics/problema-10.png)
+
+**Recomendación:**  
+Incorporar paneles expandibles de configuración avanzada dentro de cada historia de usuario, permitiendo a los equipos de nivel corporativo asignar etiquetas personalizadas, estados de flujo (Backlog, En Revisión, Aprobado), nivel de prioridad (p. ej., método MoSCoW) y componentes del sistema afectados.
+
+**PROBLEMA #11: Incertidumbre y falta de trazabilidad sobre la fiabilidad del contenido generado por la IA**
+
+**Severidad:** 2
+**Heurística violada:** Visibilidad del estado del sistema / Prevención de errores
+
+**Problema:**  
+Una vez procesado el audio, la herramienta entrega los artefactos finales consolidados de manera directa, pero no ofrece ninguna señal sobre el nivel de certeza del algoritmo ni referencias visuales hacia la transcripción de origen. Esta opacidad en el procesamiento automático siembra dudas en el líder técnico sobre "qué tan confiable es la información que se entrega" , induciendo a un esfuerzo cognitivo de sospecha y forzando una validación humana rigurosa y a ciegas para descartar posibles alucinaciones del modelo de lenguaje.
+
+![problema-11](assets/interviews/heuristics/problema-11.png)
+
+**Recomendación:**  
+Implementar un sistema de trazabilidad interactiva mediante un código de colores o enlaces directos (hipervínculos) que conecten partes de la historia de usuario generada con el fragmento de la transcripción textual del que fue extraída, acompañado de un indicador discreto de confianza (p. ej., "92% de precisión").
+
+**PROBLEMA #12: Falta de contraste y diferenciación visual entre módulos del flujo de trabajo**
+
+**Severidad:** 2
+**Heurística violada:** Visibilidad del estado del sistema / Estética y diseño minimalista
+
+**Problema:**  
+Durante la transición operacional entre la sesión de Discovery y el módulo de historias de usuario, la interfaz mantiene un diseño tan plano y homogéneo que el analista experimenta una sensación de monotonía visual donde "todo se ve un poco igual". La falta de un contraste claro o de señalizaciones gráficas distintivas dificulta que el usuario reconozca de un vistazo en qué zona o etapa específica del sistema se encuentra interactuando.
+
+![problema-12](assets/interviews/heuristics/problema-12.png)
+
+**Recomendación:**  
+Introducir variaciones sutiles pero efectivas en la jerarquía visual de los módulos; por ejemplo, utilizar banners superiores con esquemas de color ligeramente diferenciados, incluir iconografía temática exclusiva para cada sección y resaltar de forma más evidente la opción activa en el menú lateral.
+
+**PROBLEMA #13: Fricción operativa por el ingreso fragmentado y repetitivo de metadatos técnicos**
+
+**Severidad:** 2
+**Heurística violada:** Flexibilidad y eficiencia de uso
+
+**Problema:**  
+El flujo actual obliga al analista a registrar elementos como la arquitectura, el dominio y el lenguaje agregando los términos "uno por uno" a través de múltiples pasos o campos obligatorios. Esta fragmentación genera un esfuerzo operativo innecesario y ralentiza el ritmo de trabajo en entornos de alta velocidad, especialmente porque en muchos casos estos parámetros se sobreentienden o se repiten de un proyecto a otro.
+
+![problema-13](assets/interviews/heuristics/problema-13.png)
+
+**Recomendación:**  
+Agrupar estos metadatos técnicos en un único bloque consolidado dentro de una tarjeta o sección unificada, y transformarlos en opciones avanzadas y opcionales en lugar de requisitos estrictos de configuración inicial, permitiendo acelerar la creación del entorno de trabajo.
 
 ---
 
