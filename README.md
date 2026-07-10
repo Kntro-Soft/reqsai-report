@@ -7892,6 +7892,20 @@ No están incluidas en esta versión de la evaluación las siguientes tareas:
 
 #### TABLA RESUMEN:
 
+**DESCRIPCIÓN DE PROBLEMAS:**
+
+**PROBLEMA #1: Ausencia de estado de carga o procesamiento durante la generación en tiempo real de la IA**
+
+**Severidad:** 2  
+**Heurística violada:** Visibilidad del estado del sistema
+
+**Problema:**  
+Durante el proceso de entrevista en vivo, el sistema presenta una demora perceptible mientras la inteligencia artificial analiza el audio, formula preguntas aclaratorias y redacta la historia de usuario estructurada. Al no existir un indicador visual activo (como una animación de carga, un esqueleto de marcador de posición o un indicador de escritura), el usuario experimenta incertidumbre respecto a si la aplicación sigue procesando o si se ha congelado temporalmente.
+
+![problema-1](assets/interviews/heuristics/problema-1.png)
+
+**Recomendación:**  
+Implementar un indicador visual dinámico en la interfaz de captura (por ejemplo, una animación de tres puntos suspensivos parpadeantes o un texto que indique "La IA está procesando...") para mantener al usuario informado sobre las operaciones internas del sistema y reducir la latencia percibida.
 
 ---
 
