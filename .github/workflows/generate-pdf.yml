@@ -44,12 +44,26 @@ jobs:
             --basedir .
           mv README.pdf "${REPORT_NAME}.pdf"
 
-      - name: Upload artifact
-        id: upload
+      - name: Upload PDF artifact
+        id: upload-pdf
         uses: actions/upload-artifact@v7
         with:
           name: ${{ env.REPORT_NAME }}-PDF
           path: ${{ env.REPORT_NAME }}.pdf
+          retention-days: 90
+
+      - name: Install pandoc
+        run: sudo apt-get install -y -qq pandoc
+
+      - name: Generate Word document
+        run: pandoc README.md -o "${REPORT_NAME}.docx"
+
+      - name: Upload Word artifact
+        id: upload-docx
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ env.REPORT_NAME }}-DOCX
+          path: ${{ env.REPORT_NAME }}.docx
           retention-days: 90
 
       - name: Job summary
