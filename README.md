@@ -7972,6 +7972,19 @@ Durante el despliegue del formulario para registrar un nuevo proyecto, se solici
 **Recomendación:**  
 Añadir una aclaración visual explícita (como la palabra "Opcional") al lado de cada campo no obligatorio, permitiendo que el líder técnico avance fluidamente y edite estos parámetros en los ajustes avanzados posteriormente.
 
+**PROBLEMA #7: Deficiencia en el dimensionamiento y legibilidad de las historias de usuario generadas**
+
+**Severidad:** 2
+**Heurística violada:** Estética y diseño minimalista
+
+**Problema:**  
+Una vez que la inteligencia artificial procesa el audio y genera la estructura formal de la historia de usuario, los espacios y campos destinados a mostrar el bloque de texto consolidado son excesivamente reducidos. Esto provoca que la información se visualice muy junta y apretada, afectando negativamente la legibilidad y obligando al usuario a realizar un esfuerzo visual innecesario para revisar el contenido.
+
+![problema-7](assets/interviews/heuristics/problema-7.png)
+
+**Recomendación:**  
+Incrementar el espaciado (padding) de los contenedores de texto, ajustar el tamaño de la fuente a un estándar cómodo de lectura y configurar los campos de visualización para que se expandan dinámicamente según la extensión del texto redactado por la IA.
+
 ---
 
 ## 7.4. Video About-the-Product
