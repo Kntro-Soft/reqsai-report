@@ -7892,10 +7892,21 @@ No están incluidas en esta versión de la evaluación las siguientes tareas:
 
 #### TABLA RESUMEN:
 
-| # | Problema                                                                                               | Escala de severidad | Heurística / Principio Violado                                   |
-|---|--------------------------------------------------------------------------------------------------------|---------------------|------------------------------------------------------------------|
-| 1 | El menú de navegación no muestra con suficiente claridad la sección actual al hacer scroll.            | 2                   | Visibilidad del estado del sistema / Arquitectura de información |
-| 2 | Algunos términos técnicos pueden resultar poco claros para usuarios administrativos no especializados. | 2                   | Relación entre el sistema y el mundo real                        |
+| #  | Problema                                                                                   | Escala de severidad | Heurística / Principio Violado                                               |
+|----|--------------------------------------------------------------------------------------------|---------------------|------------------------------------------------------------------------------|
+| 1  | Uso de terminología técnica compleja para perfiles no especializados                       | 2                   | Relación entre el sistema y el mundo real                                    |
+| 2  | Identificación genérica de interlocutores en la transcripción de voz                       | 2                   | Relación entre el sistema y el mundo real / Flexibilidad y eficiencia de uso |
+| 3  | Fricción operativa en el flujo de captura remota de audio                                  | 3                   | Flexibilidad y eficiencia de uso                                             |
+| 4  | Falta de claridad en la distinción de campos opcionales durante la creación del proyecto   | 2                   | Flexibilidad y eficiencia de uso / Prevención de errores                     |
+| 5  | Deficiencia en el dimensionamiento y legibilidad de las historias de usuario generadas     | 2                   | Estética y diseño minimalista                                                |
+| 6  | Ausencia de estado de carga o procesamiento durante la generación en tiempo real de la IA  | 2                   | Visibilidad del estado del sistema                                           |
+| 7  | Saturación cognitiva por acumulación de elementos de distinta naturaleza en un solo feed   | 2                   | Estética y diseño minimalista / Arquitectura de información                  |
+| 8  | Restricción del entorno operativo a interacciones estrictamente presenciales               | 3                   | Flexibilidad y eficiencia de uso / Relación entre el sistema y el mundo real |
+| 9  | Ambigüedad en el criterio de ordenamiento y jerarquía de las historias de usuario listadas | 2                   | Visibilidad del estado del sistema                                           |
+| 10 | Limitación estructural de las historias de usuario para entornos de nivel Enterprise       | 2                   | Flexibilidad y eficiencia de uso / Relación entre el sistema y el mundo real |
+| 11 | Incertidumbre y falta de trazabilidad sobre la fiabilidad del contenido generado por la IA | 2                   | Visibilidad del estado del sistema / Prevención de errores                   |
+| 12 | Falta de contraste y diferenciación visual entre módulos del flujo de trabajo              | 2                   | Visibilidad del estado del sistema / Estética y diseño minimalista           |
+| 13 | Fricción operativa por el ingreso fragmentado y repetitivo de metadatos técnicos           | 2                   | Flexibilidad y eficiencia de uso                                             |
 
 **DESCRIPCIÓN DE PROBLEMAS:**
 
