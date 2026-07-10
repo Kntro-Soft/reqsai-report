@@ -7920,6 +7920,19 @@ El sistema concentra la transcripción literal del diálogo, las preguntas suger
 **Recomendación:**  
 Rediseñar la pantalla de captura segmentando la información por su propósito operativo: mantener una columna limpia para el flujo de transcripción de voz, un panel lateral o flotante secundario para las sugerencias de preguntas en tiempo real, y un contenedor independiente para la previsualización y aceptación de las historias de usuario.
 
+**PROBLEMA #3: Uso de terminología técnica compleja para perfiles no especializados**
+
+**Severidad:** 2  
+**Heurística violada:** Relación entre el sistema y el mundo real
+
+**Problema:**  
+Durante la navegación por los módulos de "Glosario", "Restricciones" y la visualización de las historias generadas de manera automática en formato Gherkin, se identificó que el sistema utiliza un lenguaje técnico muy especializado de la ingeniería de software. Esto puede representar una barrera de comprensión o causar confusión para los usuarios finales pertenecientes a perfiles administrativos o clientes del segmento Enterprise que no dominen dichos conceptos.
+
+![problema-3](assets/interviews/heuristics/problema-3.png)
+
+**Recomendación:**  
+Incorporar tooltips descriptivos o pequeños iconos de ayuda informativa `(?)` junto a los términos y formatos técnicos complejos. Esto permitirá ofrecer explicaciones sencillas o ejemplos prácticos sin saturar la interfaz principal.
+
 ---
 
 ## 7.4. Video About-the-Product
