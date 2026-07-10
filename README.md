@@ -7959,6 +7959,19 @@ Para efectuar la captura de audio y procesamiento de requisitos en entornos remo
 **Recomendación:**  
 Implementar soporte para la captura nativa de audio del sistema (compartir audio de la pestaña o ventana del navegador) o desarrollar una integración directa (mediante un bot asistente o extensión) compatible con las principales herramientas de videoconferencia del mercado como Zoom, Microsoft Teams o Google Meet.
 
+**PROBLEMA #6: Falta de claridad en la distinción de campos opcionales durante la creación del proyecto**
+
+**Severidad:** 2
+**Heurística violada:** Flexibilidad y eficiencia de uso / Prevención de errores
+
+**Problema:**  
+Durante el despliegue del formulario para registrar un nuevo proyecto, se solicita información técnica especializada como el lenguaje de programación, la base de datos y el tipo de arquitectura. El sistema no explicita visualmente cuáles de estos campos son opcionales, lo que genera confusión e incertidumbre en el usuario si se encuentra en una etapa inicial del diseño donde aún no define dichos componentes.
+
+![problema-6](assets/interviews/heuristics/problema-6.png)
+
+**Recomendación:**  
+Añadir una aclaración visual explícita (como la palabra "Opcional") al lado de cada campo no obligatorio, permitiendo que el líder técnico avance fluidamente y edite estos parámetros en los ajustes avanzados posteriormente.
+
 ---
 
 ## 7.4. Video About-the-Product
