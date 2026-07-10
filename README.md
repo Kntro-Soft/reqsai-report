@@ -7985,6 +7985,19 @@ Una vez que la inteligencia artificial procesa el audio y genera la estructura f
 **Recomendación:**  
 Incrementar el espaciado (padding) de los contenedores de texto, ajustar el tamaño de la fuente a un estándar cómodo de lectura y configurar los campos de visualización para que se expandan dinámicamente según la extensión del texto redactado por la IA.
 
+**PROBLEMA #8: Restricción del entorno operativo a interacciones estrictamente presenciales**
+
+**Severidad:** 3
+**Heurística violada:** Flexibilidad y eficiencia de uso / Relación entre el sistema y el mundo real
+
+**Problema:**  
+El sistema se encuentra limitado en su versión actual a un enfoque operativo netamente presencial, careciendo de soporte nativo para capturar e interactuar de forma directa con plataformas de reuniones virtuales. Esto genera una alta fricción en el flujo de trabajo diario de un analista de sistemas, forzándolo a implementar simulaciones complejas e incómodas (como realizar llamadas paralelas por canales externos) para lograr que la herramienta escuche y procese el diálogo remoto.
+
+![problema-8](assets/interviews/heuristics/problema-8.png)
+
+**Recomendación:**  
+Desarrollar soporte técnico para la captura de audio interna del sistema (compartir el audio de una pestaña o ventana del navegador) o integrar de forma nativa la extensión del servicio dentro de los flujos de herramientas de videoconferencia corporativa.
+
 ---
 
 ## 7.4. Video About-the-Product
