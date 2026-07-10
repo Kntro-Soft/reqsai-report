@@ -7892,6 +7892,11 @@ No están incluidas en esta versión de la evaluación las siguientes tareas:
 
 #### TABLA RESUMEN:
 
+| # | Problema                                                                                               | Escala de severidad | Heurística / Principio Violado                                   |
+|---|--------------------------------------------------------------------------------------------------------|---------------------|------------------------------------------------------------------|
+| 1 | El menú de navegación no muestra con suficiente claridad la sección actual al hacer scroll.            | 2                   | Visibilidad del estado del sistema / Arquitectura de información |
+| 2 | Algunos términos técnicos pueden resultar poco claros para usuarios administrativos no especializados. | 2                   | Relación entre el sistema y el mundo real                        |
+
 **DESCRIPCIÓN DE PROBLEMAS:**
 
 **PROBLEMA #1: Ausencia de estado de carga o procesamiento durante la generación en tiempo real de la IA**
@@ -8010,6 +8015,19 @@ En la vista o sección donde se despliega el listado consolidado de las historia
 
 **Recomendación:**  
 Incorporar selectores de ordenamiento explícitos y visibles (tales como "Más recientes", "Por Prioridad", o "Por Módulo") junto con indicadores visuales claros dentro de cada tarjeta para explicitar de forma transparente la jerarquía de los elementos documentados.
+
+**PROBLEMA #10: Limitación estructural de las historias de usuario para entornos de nivel Enterprise**
+
+**Severidad:** 2
+**Heurística violada:** Flexibilidad y eficiencia de uso / Relación entre el sistema y el mundo real
+
+**Problema:**  
+Al revisar el módulo de visualización y edición de requisitos, la plataforma solo proporciona los campos estructurales básicos de una historia de usuario tradicional (título, rol, acción, beneficio y criterios de aceptación). El líder técnico entrevistado resalta que este formato plano solo cubre una "etapa inicial o intermedia" del proceso real de levantamiento , resultando insuficiente para las necesidades de un entorno Enterprise riguroso que demanda metadatos complejos como gestión de prioridades, estados del ciclo de vida del requisito o mapeo de componentes técnicos.
+
+![problema-10](assets/interviews/heuristics/problema-10.png)
+
+**Recomendación:**  
+Incorporar paneles expandibles de configuración avanzada dentro de cada historia de usuario, permitiendo a los equipos de nivel corporativo asignar etiquetas personalizadas, estados de flujo (Backlog, En Revisión, Aprobado), nivel de prioridad (p. ej., método MoSCoW) y componentes del sistema afectados.
 
 ---
 
