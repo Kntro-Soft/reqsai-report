@@ -56,73 +56,84 @@ node "User Workstations  [Windows / macOS / Linux]" as workstations {
 }
 
 ' ────────────────────────────────────────────────────────────────────
-' AWS EDGE LOCATION
+' AWS GLOBAL / EDGE  (DNS + CDN son servicios globales, sin region)
 ' ────────────────────────────────────────────────────────────────────
-node "AWS Edge Location  [Amazon CloudFront]" as edgeLayer {
-  artifact "CDN & Reverse Proxy\n[Amazon CloudFront]\nSirve SPA estatico + enruta API" as cdn
-}
+node "AWS Global  [DNS + Edge Network]" as awsGlobal {
+  artifact "Amazon Route 53\n[Hosted Zone: tamci.app]\napp.tamci.app -> CloudFront\napi.tamci.app -> ALB (solo como origen)" as route53
+  artifact "AWS Certificate Manager\n[ACM]\nCertificados TLS:\napi.tamci.app, app.tamci.app" as acm
 
-' ────────────────────────────────────────────────────────────────────
-' AWS NORTH AMERICA  (us-east-1 — Virginia)
-' ────────────────────────────────────────────────────────────────────
-node "AWS North America  [AWS Region us-east-1 (Virginia)]" as awsNorthAmerica {
-
-  node "API Gateway  [AWS API Gateway]" as apiGatewayNode {
-    artifact "API Gateway\n[AWS API Gateway]\nRouting REST + WebSocket" as apiGw
-  }
-
-  node "ECS Cluster  [AWS ECS + Fargate]" as ecsCluster {
-    component "ReqsAI Backend Service\n[Java 25 + Spring Boot 4 / Docker Container]\n\nModulos: IAM · Billing · Workspace\nRequirement Discovery · Integration Gateway" as backend
-    artifact "Grafana Alloy\n[Sidecar Container]\nColecta metricas, logs y trazas\ndel backend y los envia al\nservidor de observabilidad" as alloy
-  }
-
-  node "Observability Server  [AWS EC2 + Docker Compose]" as obsServer {
-    component "Prometheus\n[Metricas]" as prometheus
-    component "Loki\n[Logs]" as loki
-    component "Tempo\n[Trazas distribuidas]" as tempo
-    component "Grafana\n[Dashboards]" as grafana
+  node "Amazon CloudFront Distribution  [app.tamci.app]" as cdn {
+    artifact "CloudFront Function\n[Viewer Request]\nRechaza Host != app.tamci.app\n(bloquea el dominio *.cloudfront.net\ny cualquier acceso directo)" as cfFunction
+    artifact "Cache Behaviors\nDefault /* -> S3 (SPA estatico)\n/api/*, /ws/* -> ALB (sin cache)" as cfBehaviors
   }
 }
 
 ' ────────────────────────────────────────────────────────────────────
-' AWS RDS
+' AWS North America  (us-east-1 — Virginia) — VPC
 ' ────────────────────────────────────────────────────────────────────
-node "AWS RDS  [Managed Relational Database]" as dbNode {
-  database "PostgreSQL + pgvector\n[ReqsAI Main Database]" as db
+node "AWS North America  [AWS Region us-east-1 (Virginia) — VPC]" as awsNorthAmerica {
+
+  node "Public Subnets" as publicSubnets {
+    artifact "Application Load Balancer\n[HTTPS :443, cert api.tamci.app]\nHTTP :80 -> redirect HTTPS\nSecurity Group: solo trafico desde\nCloudFront (managed prefix list)" as alb
+    artifact "NAT Gateway" as nat
+  }
+
+  node "Private Subnets" as privateSubnets {
+    node "ECS Cluster  [AWS ECS + Fargate]" as ecsCluster {
+      component "ReqsAI Backend Service\n[Java 25 + Spring Boot 4 / Docker]\n1 vCPU / 2 GB — Fargate\n\nModulos: IAM · Billing · Workspace\nRequirement Discovery · Integration Gateway\n\nSecurity Group: solo trafico desde el ALB" as backend
+    }
+  }
+
+  node "Database Subnets" as dbSubnets {
+    database "AWS RDS — PostgreSQL + pgvector\n[db.t4g.micro, single-AZ, cifrado]\nSecurity Group: solo trafico\ndesde las tareas ECS" as db
+  }
+}
+
+' ────────────────────────────────────────────────────────────────────
+' AWS MANAGED SERVICES (soporte al runtime, sin servidor propio)
+' ────────────────────────────────────────────────────────────────────
+node "AWS Managed Services  [sin infraestructura propia que administrar]" as awsManaged {
+  artifact "Amazon ECR\n[Registro de imagenes Docker]" as ecr
+  artifact "AWS Secrets Manager\n[JWT keys, credenciales SMTP,\nAPI keys de IA, password de RDS]" as secretsManager
+  artifact "Amazon CloudWatch Logs\n[Logs de aplicacion via awslogs]" as cloudwatch
+  artifact "Amazon S3\n[Bucket privado — build Angular\nsolo legible via CloudFront OAC]" as s3web
 }
 
 ' ────────────────────────────────────────────────────────────────────
 ' RELATIONS
 ' ────────────────────────────────────────────────────────────────────
 ' Web: pasa por CloudFront
-webApp  --> cdn    : "HTTPS"
-cdn     --> webApp : "Sirve SPA estatico\n(Edge Locations)"
-cdn     --> apiGw  : "Enruta trafico API\nHTTPS"
+webApp --> cdn    : "HTTPS\napp.tamci.app"
+cdn    --> webApp : "Sirve SPA estatico\n(Edge Locations)"
 
-' Mobile: directo al API Gateway (app instalada, no servida por CDN)
-mobileApp --> apiGw : "Llamadas API directas\nHTTPS / REST + WebSocket"
+' Mobile: tambien pasa por CloudFront -- el ALB no acepta trafico\ndirecto (Security Group solo confia en CloudFront)
+mobileApp --> cdn : "Llamadas API\nHTTPS / REST + WebSocket\napp.tamci.app/api, /ws"
 
-apiGw --> backend : "Route all requests\nHTTPS / REST"
+cdn --> s3web : "Origen 1: assets estaticos\n(Origin Access Control)"
+cdn --> alb   : "Origen 2: /api/*, /ws/*\nHTTPS, SNI = api.tamci.app"
 
-' Observabilidad: Alloy como sidecar recolecta del backend
-backend --> alloy      : "Metricas /actuator/prometheus\nLogs stdout · Trazas OTLP"
-alloy   --> prometheus : "Push metricas\nRemote Write"
-alloy   --> loki       : "Push logs"
-alloy   --> tempo      : "Push trazas\nOTLP"
-grafana --> prometheus : "Query metricas\nPromQL"
-grafana --> loki       : "Query logs\nLogQL"
-grafana --> tempo      : "Query trazas\nTraceQL"
+route53 ..> cdn : "resuelve\napp.tamci.app"
+route53 ..> alb : "resuelve\napi.tamci.app"
+acm     ..> cdn : "certificado TLS"
+acm     ..> alb : "certificado TLS"
 
-' Persistencia
-backend --> db : "Reads and writes\nJDBC / JPA"
+alb --> backend : "Forward\nHTTP :8080"
+
+' Persistencia y soporte runtime
+backend    --> db             : "Reads and writes\nJDBC / JPA"
+backend    --> secretsManager : "Lee secretos en el arranque\n(inyectados como env vars)"
+backend    --> cloudwatch     : "Logs stdout/stderr\n(awslogs driver)"
+backend    ..> nat            : "Salida a internet\n(APIs externas: LLM, STT, SMTP)"
+ecsCluster ..> ecr            : "Pull de la imagen\nal iniciar la tarea"
 
 legend bottom right
   |= Elemento                                                              |= Descripcion                              |
   |<back:$REQSAI_NEUTRAL_100><color:$REQSAI_NEUTRAL_800><b> Nodo </b></color></back>        | Infraestructura / entorno de despliegue   |
-  |<back:$REQSAI_BLUE_700><color:#FFFFFF><b> Artefacto </b></color></back>                  | Aplicacion o servicio desplegado          |
+  |<back:$REQSAI_BLUE_700><color:#FFFFFF><b> Artefacto </b></color></back>                  | Servicio administrado o desplegado        |
   |<back:$REQSAI_NAVY_800><color:#FFFFFF><b> Componente </b></color></back>                 | Modulo de aplicacion (Spring Modulith)    |
   |<back:$REQSAI_TEAL_800><color:#FFFFFF><b> Base de datos </b></color></back>              | Almacenamiento relacional (PostgreSQL)    |
-  | ->                                                                     | Comunicacion entre nodos                  |
+  | ->                                                                     | Comunicacion de trafico / datos           |
+  | ..>                                                                    | Resolucion DNS / certificado / soporte    |
 endlegend
 
 @enduml
