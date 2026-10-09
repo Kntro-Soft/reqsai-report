@@ -1,0 +1,67 @@
+name: Produccion
+
+# A push to main (a merged release/X.Y.Z or hotfix/X.Y.Z pull request): find the candidate vX.Y.Z-rc.N whose
+# tree hash equals this commit's tree (otherwise fail: main differs from what was reviewed), check the SHA-256
+# of its documents and publish those same files as the GitHub Release vX.Y.Z on this commit, then open the
+# back-merge pull request main → develop. Nothing is rebuilt and nothing is deployed, so there is no approval.
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: produccion-${{ github.repository }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    name: Publish the release and back-merge
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Publish the documents of the matching candidate as vX.Y.Z
+        id: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(.github/scripts/candidate.sh version VERSION)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/v$version" >/dev/null 2>&1; then
+            echo "released=true" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Nothing to release::v$version is already released."
+            exit 0
+          fi
+          echo "released=false" >> "$GITHUB_OUTPUT"
+          json=$(.github/scripts/candidate.sh find "$version" "$(git rev-parse 'HEAD^{tree}')")
+          tag=$(jq -r .tag <<<"$json")
+          dir="$RUNNER_TEMP/candidate"
+          .github/scripts/candidate.sh fetch "$tag" "$dir"
+          printf '%s' "$json" > "$RUNNER_TEMP/candidate.json"
+          mapfile -t assets < <(jq -r --arg dir "$dir" '.assets | keys[] | "\($dir)/\(.)"' "$RUNNER_TEMP/candidate.json")
+          url=$(.github/scripts/candidate.sh final "$RUNNER_TEMP/candidate.json" "$GITHUB_SHA" "${assets[@]}")
+          echo "Released $url from $tag (same files, SHA-256 checked)." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Open the back-merge pull request into develop
+        if: steps.release.outputs.released == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          body="$RUNNER_TEMP/back-merge.md"
+          {
+            echo "Gitflow back-merge of release $VERSION, now published as [v$VERSION]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/tag/v$VERSION)."
+            echo
+            echo "Brings the fixes made on the release or hotfix branch (and its version bump) back into \`develop\`."
+          } > "$body"
+          url=$(.github/scripts/candidate.sh pr main develop "chore: merge release $VERSION back into develop" "$body")
+          echo "Back-merge: ${url:-not needed}" >> "$GITHUB_STEP_SUMMARY"

@@ -1,8 +1,11 @@
 name: Generate PDF from README
 
+# Builds the PDF, Word and ZIP of the report. release.yml calls it ONCE per release candidate and stores the files
+# as assets of the pre-release vX.Y.Z-rc.N; produccion.yml publishes those same files in vX.Y.Z. Run it by hand
+# to preview the documents of any branch.
 on:
-  push:
-    branches: [main]
+  workflow_call:
+  workflow_dispatch:
 
 jobs:
   generate-pdf:
@@ -10,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: write
+      contents: read
 
     env:
       REPORT_NAME: ${{ vars.REPORT_NAME || 'ReqsAI-Report' }}
@@ -117,27 +120,26 @@ jobs:
           retention-days: 90
 
       - name: Job summary
+        env:
+          SHA: ${{ github.sha }}
+          REF_NAME: ${{ github.ref_name }}
+          PDF_URL: ${{ steps.upload-pdf.outputs.artifact-url }}
+          DOCX_URL: ${{ steps.upload-docx.outputs.artifact-url }}
+          ZIP_URL: ${{ steps.upload-zip.outputs.artifact-url }}
         run: |
-          echo "## ReqsAI Report — documentos generados" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| | |" >> $GITHUB_STEP_SUMMARY
-          echo "|---|---|" >> $GITHUB_STEP_SUMMARY
-          echo "| **Commit** | \`${{ github.sha }}\` |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Branch** | \`${{ github.ref_name }}\` |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Fecha** | $(date +'%Y-%m-%d %H:%M UTC') |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Tamaño PDF** | $(du -sh "${REPORT_NAME}.pdf" | cut -f1) |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Tamaño Word** | $(du -sh "${REPORT_NAME}.docx" | cut -f1) |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Tamaño ZIP** | $(du -sh "${REPORT_NAME}.zip" | cut -f1) |" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### [Descargar PDF](${{ steps.upload-pdf.outputs.artifact-url }})" >> $GITHUB_STEP_SUMMARY
-          echo "### [Descargar Word](${{ steps.upload-docx.outputs.artifact-url }})" >> $GITHUB_STEP_SUMMARY
-          echo "### [Descargar ZIP](${{ steps.upload-zip.outputs.artifact-url }})" >> $GITHUB_STEP_SUMMARY
-
-      - name: Attach to release (if tagged)
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v3
-        with:
-          files: |
-            ${{ env.REPORT_NAME }}.pdf
-            ${{ env.REPORT_NAME }}.docx
-            ${{ env.REPORT_NAME }}.zip
+          {
+            echo "## ReqsAI Report — documentos generados"
+            echo ""
+            echo "| | |"
+            echo "|---|---|"
+            echo "| **Commit** | \`$SHA\` |"
+            echo "| **Branch** | \`$REF_NAME\` |"
+            echo "| **Fecha** | $(date +'%Y-%m-%d %H:%M UTC') |"
+            echo "| **Tamaño PDF** | $(du -sh "${REPORT_NAME}.pdf" | cut -f1) |"
+            echo "| **Tamaño Word** | $(du -sh "${REPORT_NAME}.docx" | cut -f1) |"
+            echo "| **Tamaño ZIP** | $(du -sh "${REPORT_NAME}.zip" | cut -f1) |"
+            echo ""
+            echo "### [Descargar PDF]($PDF_URL)"
+            echo "### [Descargar Word]($DOCX_URL)"
+            echo "### [Descargar ZIP]($ZIP_URL)"
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,122 @@
+name: Release
+
+# Gitflow release flow, model C + tag at the end. A push to release/X.Y.Z or hotfix/X.Y.Z:
+#   Markdown lint → the PDF, Word and ZIP built ONCE (generate-pdf.yml) → stored as assets of the pre-release
+#   vX.Y.Z-rc.N with their SHA-256 and the tree hash → the pull request release/X.Y.Z → main.
+# This repository deploys nothing: there is no staging or produccion environment. Merging the pull request runs
+# produccion.yml, which publishes these same files as the GitHub Release vX.Y.Z.
+
+on:
+  push:
+    branches: ['release/**', 'hotfix/**']
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    name: Version and candidate number
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      version: ${{ steps.candidate.outputs.version }}
+      candidate: ${{ steps.candidate.outputs.candidate }}
+      tag: ${{ steps.candidate.outputs.tag }}
+      tree: ${{ steps.candidate.outputs.tree }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Check the version and number the candidate
+        id: candidate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          version=$(.github/scripts/candidate.sh branch "$BRANCH" VERSION)
+          read -r rc reused < <(.github/scripts/candidate.sh next "$version" "$GITHUB_SHA")
+          tree=$(git rev-parse 'HEAD^{tree}')
+          {
+            echo "version=$version"
+            echo "candidate=$version-rc.$rc"
+            echo "tag=v$version-rc.$rc"
+            echo "tree=$tree"
+          } >> "$GITHUB_OUTPUT"
+          echo "### reqsai-report $version-rc.$rc from \`$BRANCH\` at \`${GITHUB_SHA:0:12}\` (tree \`${tree:0:12}\`, reused: $reused)" >> "$GITHUB_STEP_SUMMARY"
+
+  lint:
+    name: Markdown lint
+    uses: ./.github/workflows/markdown-lint.yml
+    permissions:
+      contents: read
+
+  documents:
+    name: Build the documents once
+    needs: [prepare, lint]
+    uses: ./.github/workflows/generate-pdf.yml
+    permissions:
+      contents: read
+
+  ready:
+    name: Release candidate ready
+    needs: [prepare, documents]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Download the documents
+        uses: actions/download-artifact@v8
+        with:
+          path: ${{ runner.temp }}/documents
+          merge-multiple: true
+
+      - name: Store the candidate as a pre-release and open or update the release pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.prepare.outputs.version }}
+          CANDIDATE: ${{ needs.prepare.outputs.candidate }}
+          TAG: ${{ needs.prepare.outputs.tag }}
+          TREE: ${{ needs.prepare.outputs.tree }}
+          BRANCH: ${{ github.ref_name }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          dir="$RUNNER_TEMP/documents"
+          mapfile -t files < <(find "$dir" -maxdepth 1 -type f \( -name '*.pdf' -o -name '*.docx' -o -name '*.zip' \) | sort)
+          if [ "${#files[@]}" -ne 3 ]; then
+            echo "::error::Expected the PDF, Word and ZIP files, found: ${files[*]}"
+            exit 1
+          fi
+          assets=$(for f in "${files[@]}"; do jq -n --arg k "$(basename "$f")" --arg v "$(sha256sum "$f" | cut -d' ' -f1)" '{($k): $v}'; done | jq -s add)
+          jq -n --arg repository "$GITHUB_REPOSITORY" --arg version "$VERSION" --arg candidate "$CANDIDATE" \
+            --arg tag "$TAG" --arg commit "$GITHUB_SHA" --arg tree "$TREE" --arg branch "$BRANCH" \
+            --arg build "$GITHUB_RUN_NUMBER" --arg run_url "$RUN_URL" --argjson assets "$assets" \
+            '{repository: $repository, version: $version, candidate: $candidate, tag: $tag, commit: $commit,
+              tree: $tree, branch: $branch, build: $build, run_url: $run_url, stage: "built", stage_url: $run_url,
+              assets: $assets}' > "$RUNNER_TEMP/candidate.json"
+          url=$(.github/scripts/candidate.sh create "$RUNNER_TEMP/candidate.json" "${files[@]}")
+          echo "Candidate: [$TAG]($url)" >> "$GITHUB_STEP_SUMMARY"
+
+          body="$RUNNER_TEMP/pr.md"
+          {
+            echo "## Release $VERSION"
+            echo
+            echo "Candidate **[$TAG]($url)**: commit \`$GITHUB_SHA\`, tree \`$TREE\`, build $GITHUB_RUN_NUMBER."
+            echo
+            jq -r 'to_entries[] | "- `\(.key)` sha256 `\(.value)`"' <<<"$assets"
+            echo
+            echo "Review the documents attached to the pre-release. Merging into \`main\` runs **Produccion** (\`produccion.yml\`): it finds this candidate by tree hash, publishes these same files as the GitHub Release \`v$VERSION\` and opens the back-merge into \`develop\`. This repository deploys nothing."
+            echo "A new push to \`$BRANCH\` builds the next candidate and updates this description."
+          } > "$body"
+          pr=$(.github/scripts/candidate.sh pr "$BRANCH" main "release: $VERSION" "$body")
+          echo "Release pull request: $pr" >> "$GITHUB_STEP_SUMMARY"
