@@ -11,11 +11,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 ### Added
 
 - Contribution guide: issue-based branch names (`feature/<issue>-<slug>`), the ReqsAI project board, the `main`/`develop` rulesets and the traceability Issue → Branch → PR; the PR template asks for `Closes #<issue>`
+- Release flow (model C + tag at the end): `release.yml` builds the PDF, Word and ZIP once on `release/X.Y.Z` as the pre-release `vX.Y.Z-rc.N` (SHA-256 and tree hash) and opens the release pull request; `produccion.yml` publishes those same files as `vX.Y.Z` when it is merged into `main` and opens the back-merge; `VERSION` holds the deliverable version
 - Section 7.1 (Software Configuration Management) covering development environment configuration, source code management (GitFlow and Conventional Commits), style guides (Angular/Service-as-a-Store and Spring Modulith conventions), and AWS deployment configuration with C4 Model diagram
 - Sprint 1 Solution Implementation sections (Sprint Planning 1 and Sprint Backlog 1) detailing the decomposition of 22 User Stories and 21 Technical Stories/API Endpoints, Sprint goals, velocity, and Jira board screenshot integration
 
 ### Changed
 
+- `generate-pdf.yml` no longer runs on every push to `main`: `release.yml` calls it once per release candidate and it can be run by hand
 - Workspace `Organization`: `OrgStatus` now documents the `PENDING` state (the window between persisting the organization and finishing tenant-schema provisioning; the `TenantSchemaResolver` excludes it until it becomes `ACTIVE`)
 - Workspace `GenerationSettings.meetingLanguage` retyped from `String` to the `LanguageCode` value object, now documented as part of the **Shared Kernel** (reused by the Discovery context's `DiscoverySession.language`)
 
