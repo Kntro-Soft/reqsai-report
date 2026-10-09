@@ -2,7 +2,7 @@ name: Check Broken Links
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, develop, 'release/**', 'hotfix/**']
   pull_request:
     branches: [main, develop]
 
@@ -22,6 +22,7 @@ jobs:
             --no-progress
             --exclude "sharepoint\.com"
             --exclude "pmi\.org"
+            --exclude "standishgroup\.com"
             README.md
           fail: true
         env:

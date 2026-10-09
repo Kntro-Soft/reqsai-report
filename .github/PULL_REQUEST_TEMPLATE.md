@@ -6,6 +6,8 @@
 
 **Motivation:** <!-- e.g., Feedback from instructor during TP1 presentation -->
 
+Closes # <!-- issue number on the ReqsAI project board, e.g. Closes #12 -->
+
 ---
 
 ## Type of Change
@@ -23,7 +25,8 @@
 ## Checklist Before Requesting Review
 
 - [ ] The PR targets `develop` (not `main`)
-- [ ] The branch name follows the convention `feature/*` or `bugfix/*`
+- [ ] The branch name follows `feature/<issue>-<slug>` or `bugfix/<issue>-<slug>`
+- [ ] The issue is linked above and is on the ReqsAI project board
 - [ ] Commits follow the Conventional Commits convention (`feat:`, `fix:`, `docs:`, etc.)
 - [ ] `CHANGELOG.md` has been updated with the change made
 - [ ] New images are placed in the correct `assets/` subfolder
