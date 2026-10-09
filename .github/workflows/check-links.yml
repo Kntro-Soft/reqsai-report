@@ -22,6 +22,7 @@ jobs:
             --no-progress
             --exclude "sharepoint\.com"
             --exclude "pmi\.org"
+            --exclude "standishgroup\.com"
             README.md
           fail: true
         env:
