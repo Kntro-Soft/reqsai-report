@@ -6126,7 +6126,7 @@ A continuación se presentan los productos de software seleccionados para apoyar
 | **Herramienta / Tecnología** | **Propósito** | **Enlace / Ruta de Descarga** |
 |---|---|---|
 | **Gherkin** | Lenguaje de definición de comportamiento de software para modelar criterios de aceptación de historias de usuario. | [https://cucumber.io/docs/gherkin](https://cucumber.io/docs/gherkin) |
-| **JUnit 5 & Mockito** | Frameworks de pruebas automatizadas del backend para validar la funcionalidad y lógica de dominio con aislamiento. | [https://junit.org/junit5](https://junit.org/junit5) |
+| **JUnit 5 & Mockito** | Frameworks de pruebas automatizadas del backend para validar la funcionalidad y lógica de dominio con aislamiento. | [https://junit.org/junit5](https://junit.org/junit5/) |
 | **Jasmine & Karma** | Biblioteca y corredor de pruebas automatizadas para asegurar la estabilidad de componentes y stores en Angular. | [https://jasmine.github.io](https://jasmine.github.io) |
 
 <br>
