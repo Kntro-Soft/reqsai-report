@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 - Release flow (model C + tag at the end): `release.yml` builds the PDF, Word and ZIP once on `release/X.Y.Z` as the pre-release `vX.Y.Z-rc.N` (SHA-256 and tree hash) and opens the release pull request; `produccion.yml` publishes those same files as `vX.Y.Z` when it is merged into `main` and opens the back-merge; `VERSION` holds the deliverable version
 - Section 7.1 (Software Configuration Management) covering development environment configuration, source code management (GitFlow and Conventional Commits), style guides (Angular/Service-as-a-Store and Spring Modulith conventions), and AWS deployment configuration with C4 Model diagram
 - Sprint 1 Solution Implementation sections (Sprint Planning 1 and Sprint Backlog 1) detailing the decomposition of 22 User Stories and 21 Technical Stories/API Endpoints, Sprint goals, velocity, and Jira board screenshot integration
+- A weekly `branch-cleanup.yml` (Mondays 04:00 UTC, or by hand with a dry run) deletes branches merged 7+ days ago and unmerged branches with no commits for 30+ days; it never touches `main`, `develop`, `release/*`, `hotfix/*`, branches with an open pull request or pull requests labelled `do-not-delete`, and `BRANCH_CLEANUP_ENABLED=false` turns it off.
 
 ### Changed
 
