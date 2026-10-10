@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-10-10
+
 ### Added
 
 - Contribution guide: issue-based branch names (`feature/<issue>-<slug>`), the ReqsAI project board, the `main`/`develop` rulesets and the traceability Issue → Branch → PR; the PR template asks for `Closes #<issue>`
