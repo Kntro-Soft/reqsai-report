@@ -138,18 +138,21 @@ flowchart TD
    `X.Y.Z` and adds the `CHANGELOG.md` section.
 2. Every push to the branch runs **Release** (`release.yml`): Markdown lint, the documents built once by
    `generate-pdf.yml`, the pre-release `vX.Y.Z-rc.N` with the three files, their SHA-256 and the git tree hash,
-   and the pull request `release: X.Y.Z` to `main` (opened or updated by the workflow). Review the files attached
+   and the pull request `release: X.Y.Z` to `main` (opened or updated by the GitHub App `reqsai-release-bot`, so
+   its CI runs). Review the files attached
    to the pre-release; a correction is a new commit on the release branch and produces `rc.N+1`.
 3. Merging the pull request into `main` (approval of all active team members) runs **Produccion**
    (`produccion.yml`): it finds the candidate whose tree hash equals the `main` commit (otherwise it fails: *main
    differs from the reviewed candidate*), checks the SHA-256 of its files, publishes those same files as the
-   GitHub Release `vX.Y.Z`, and opens `chore: merge release X.Y.Z back into develop`.
+   GitHub Release `vX.Y.Z`, and opens `chore: merge release X.Y.Z back into develop` as `reqsai-release-bot`,
+   with auto-merge (merge commit) when the repository allows it.
 
 `generate-pdf.yml` can also be run by hand (*Actions → Generate PDF from README → Run workflow*) to preview the
 documents of any branch as workflow artifacts. CI (`Lint Markdown files`, link check) also runs on pushes to
-`release/**` and `hotfix/**`, because the release pull request is opened by a workflow and starts no
-`pull_request` run. The workflows need *Allow GitHub Actions to create and approve pull requests*; while it is
-off, the run prints the link to open the pull request by hand.
+`release/**` and `hotfix/**`. The release and back-merge pull requests are opened with a short-lived token of the
+GitHub App `reqsai-release-bot` (organization variable `RELEASE_APP_ID`, organization secret
+`RELEASE_APP_PRIVATE_KEY`): opened with `GITHUB_TOKEN` they would start no `pull_request` workflow. Without that
+configuration the job fails with *Release bot not configured*; nothing falls back to `GITHUB_TOKEN`.
 
 ---
 
