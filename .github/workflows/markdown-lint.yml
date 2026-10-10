@@ -1,7 +1,7 @@
 name: Markdown Lint
 
-# Pushes to release/** and hotfix/** too: a release pull request opened by a workflow starts no pull_request
-# run, so the required check of its head commit comes from the push. release.yml reuses it (workflow_call).
+# Pushes to release/** and hotfix/** too, so the head commit of the release pull request (opened by the GitHub App
+# reqsai-release-bot, with its own pull_request run) is also checked on push. release.yml reuses it (workflow_call).
 on:
   push:
     branches: [main, develop, 'release/**', 'hotfix/**']
